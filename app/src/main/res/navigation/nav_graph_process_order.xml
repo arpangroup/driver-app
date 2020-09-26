@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_process_order"
+    app:startDestination="@id/acceptOrderFragment">
+
+    <fragment
+        android:id="@+id/acceptOrderFragment"
+        android:name="com.example.driverapp.views.order.AcceptOrderFragment"
+        android:label="fragment_accept_order"
+        tools:layout="@layout/fragment_accept_order" >
+        <action
+            android:id="@+id/action_acceptOrderFragment_to_reachPickUpLocationFragment"
+            app:destination="@id/reachPickUpLocationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/reachPickUpLocationFragment"
+        android:name="com.example.driverapp.views.order.ReachPickUpLocationFragment"
+        android:label="fragment_reach_pick_up_location"
+        tools:layout="@layout/fragment_reach_pick_up_location" >
+        <action
+            android:id="@+id/action_reachPickUpLocationFragment_to_pickOrderFragment"
+            app:destination="@id/pickOrderFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pickOrderFragment"
+        android:name="com.example.driverapp.views.order.PickOrderFragment"
+        android:label="fragment_pick_order"
+        tools:layout="@layout/fragment_pick_order" >
+        <action
+            android:id="@+id/action_pickOrderFragment_to_reachDropLocationFragment"
+            app:destination="@id/reachDropLocationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/reachDropLocationFragment"
+        android:name="com.example.driverapp.views.order.ReachDropLocationFragment"
+        android:label="fragment_reach_drop_location"
+        tools:layout="@layout/fragment_reach_drop_location" >
+        <action
+            android:id="@+id/action_reachDropLocationFragment_to_deliverOrderFragment"
+            app:destination="@id/deliverOrderFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/deliverOrderFragment"
+        android:name="com.example.driverapp.views.order.DeliverOrderFragment"
+        android:label="fragment_deliver_order"
+        tools:layout="@layout/fragment_deliver_order" />
+</navigation>
