@@ -1,0 +1,268 @@
+<resources>
+    <string name="app_name">PureEats Rider</string>
+
+    <string name="multitext">
+        <font fgcolor="#1c1a2f">Top 47 Restaurants  </font><font fgcolor="#fa6c3c">near you</font>
+    </string>
+
+    <string name="res157">
+        <font fgcolor="#1c1a2f">Top 157 Restaurants </font>
+        <font fgcolor="#fa6c3c">near by</font>
+    </string>
+
+    <string name="search_text">
+        <font fgcolor="#1c1a2f">|   </font>
+        <font fgcolor="#ad1c1a2f">Search plate</font>
+    </string>
+
+
+    <string name="res53">
+        <font fgcolor="#1c1a2f">Top 53 Restaurants </font>
+        <font fgcolor="#fa6c3c">near by</font>
+    </string>
+    <string name="multitextcolor">
+        <font fgcolor="#1c1a2f">Search   </font>
+        <font fgcolor="#90959f"> Search  Biryani, Burgur, Manchurian </font>
+    </string>
+
+
+    <string name="restaurants">
+        <font fgcolor="#1c1a2f">2 Restaurants</font>
+        <font fgcolor="#fa6c3c">Found</font>
+    </string>
+
+
+    <string name="dishesM">
+        <font fgcolor="#1c1a2f">3 Dish</font>
+        <font fgcolor="#fa6c3c">Found</font>
+    </string>
+    <string name="food">
+        <font fgcolor="#1c1a2f">Rate your food -   </font>
+        <font fgcolor="#2546b0">Sourav Catering &amp; Restaurant</font>
+    </string>
+    <string name="add_new_card">ADD NEW CARD</string>
+    <string name="_1_item_to_pay_280">1 item, To pay : ₹ 280</string>
+    <string name="card_number">CARD NUMBER</string>
+    <string name="valid_thru_mm_yy">VALID THRU ( MM/YY )</string>
+    <string name="name_on_card">NAME ON CARD</string>
+    <string name="cvv">CVC</string>
+    <string name="securely_save_card_details">Securely save card details</string>
+    <string name="apply">APPLY</string>
+    <string name="lunchbox">(Lunchbox)</string>
+    <string name="cart">CART</string>
+    <string name="welcome_to">Welcome to</string>
+    <string name="enter_email_id">Enter Email ID</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="login">LOGIN</string>
+    <string name="login_to_your_account">LOGIN TO YOUR ACCOUNT</string>
+    <string name="star_delivery">PURE EATS</string>
+    <string name="continue_with_social_accounts">CONTINUE WITH SOCIAL ACCOUNTS</string>
+    <string name="continue_with_facebook">Continue with Facebook</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="dont_have_an_account">Dont have an account?</string>
+    <string name="create_now">CREATE NOW</string>
+    <string name="by_continuing_you_are_agree">By continuing, you are agree to our \n Terms of Service Privacy Policy Content Polivy</string>
+    <string name="create_account">CREATE ACCOUNT</string>
+    <string name="enter_your_full_name">Enter Your Full Name</string>
+    <string name="by_creating_account_you_accept_terms_and_conditions">By creating account, you accept terms and conditions</string>
+    <string name="cuisine_s">CUISINE’s</string>
+    <string name="order_food_from_your_favourite_cuisine_s">Order food from your favourite cuisine’s.</string>
+    <string name="_31_restaurants">31 Restaurants</string>
+    <string name="chinesse">CHINESSE</string>
+    <string name="get_upto_60_off">GET UPTO 60% OFF</string>
+    <string name="use_code">Use Code :</string>
+    <string name="tiptop60">TIPTOP60</string>
+    <string name="valid_once_every_2_hours_additional_rs_30_cashback_via_namazon_pay_valid_10_times_per_user_till_12th_june">
+        Valid once every 2 hours | Additional RS 30 Cashback via\nAmazon pay ( Valid 10 times per user till 12th june)</string>
+    <string name="filter">Filter</string>
+    <string name="saved_addresses">SAVED ADDRESSES</string>
+    <string name="title_activity_track_order">Map</string>
+    <string name="food_is_being_prepared">Food is being Prepared</string>
+    <string name="title_activity_add_delivery_location">Map</string>
+    <string name="any_instructions_we_promise_to_pass_them_on">Any instructions? We promise to pass them on</string>
+    <string name="apply_coupon">APPLY COUPON</string>
+    <string name="bill_details">BILL DETAILS</string>
+    <string name="item_total">Item Total</string>
+    <string name="_50">- ₹ 50</string>
+    <string name="delivery_fee">Delivery Fee</string>
+    <string name="_10">₹ 10</string>
+    <string name="total">TOTAL</string>
+    <string name="_280">₹ 280</string>
+    <string name="delivery_address">DELIVERY ADDRESS</string>
+    <string name="work">Work</string>
+    <string name="_393_seventh_street_durga_nagar">393,Seventh street, durga nagar …</string>
+    <string name="change_address">CHANGE ADDRESS</string>
+    <string name="view_detailed_bill">VIEW DETAILED BILL</string>
+    <string name="proceed_to_pay">PROCEED TO PAY</string>
+    <string name="_393_seventh_street_durga_nagar_maletiost">393, Seventh street, durga nagar, Maletiost…</string>
+    <string name="other">Other</string>
+    <string name="_488_eighth_street_moleskin_pintisery_op_roa">488, Eighth street, moleskin, pintisery, op roa…</string>
+    <string name="add_new_address">ADD NEW ADDRESS</string>
+    <string name="india_s_fastest_growing_nfood_delivery_platform">
+        INDIA’S FASTEST GROWING\nFOOD DELIVERY PLATFORM</string>
+    <string name="add">+ Add</string>
+    <string name="_142">₹ 142</string>
+    <string name="indian_cuisine">INDIAN CUISINE</string>
+    <string name="indian_cuisine_txt">
+        Indian cuisine consists of a wide variety of\nregional and traditional cuisines native to the\nIndian subcontinent.</string>
+    <string name="_31_a_rk_flats_near_vasushisti_mall">31 A, RK Flats, near Vasushisti Mall. …</string>
+    <string name="offers">Offers</string>
+    <string name="your_food_is_on_the_way">Your food is on the way.</string>
+    <string name="view">VIEW</string>
+    <string name="rajesh_kumar">
+        Rajesh kumar has arrived at the restaurant\nand will pickup your order soon</string>
+    <string name="set_delivery_location">SET DELIVERY LOCATION</string>
+    <string name="search_for_area_street_name">Search for area, street name…</string>
+    <string name="current_location">Current Location</string>
+    <string name="enable_location_services">Enable location services</string>
+    <string name="recent_searches">RECENT SEARCHES</string>
+    <string name="hush_restaurant">Hush Restaurant</string>
+    <string name="brown_burger">Brown burger</string>
+    <string name="payments">PAYMENTS</string>
+    <string name="wallets">WALLETS</string>
+    <string name="amazon_pay">Amazon Pay</string>
+    <string name="linked">LINKED</string>
+    <string name="get_flat_10_cashback_on_payment_above_99rs">Get flat 10% Cashback on payment above 99Rs</string>
+    <string name="paypal">Paypal</string>
+    <string name="link_account">LINK ACCOUNT</string>
+    <string name="paytm">PayTM</string>
+    <string name="razorpay">Razorpay</string>
+    <string name="googlepay">GooglePay</string>
+    <string name="payumoney">PayUmoney</string>
+    <string name="upi">Pay via UPI</string>
+    <string name="credit_debit_card">CREDIT/DEBIT CARD</string>
+    <string name="_3432_xxxxxxxx_1231">3432-XXXXXXXX-1231</string>
+    <string name="make_payment">MAKE PAYMENT</string>
+    <string name="pay_on_delivery">PAY ON DELIVERY</string>
+    <string name="cash">Cash</string>
+    <string name="please_keep_extra_change_when_delivery_boy_arrive_for_ndelivery">
+        Please keep extra change when delivery boy arrive for\ndelivery.</string>
+    <string name="pay_with_cash">PAY WITH CASH</string>
+    <string name="search_plate">Search Plate</string>
+    <string name="north_indian_italian_deserts">North Indian, italian, deserts</string>
+    <string name="vadiwadi_road">Vadiwadi Road</string>
+    <string name="_4_6">4.6</string>
+    <string name="_1000_ratings">1000+ Ratings</string>
+    <string name="rs_450">Rs 450</string>
+    <string name="for_two">For Two</string>
+    <string name="delivery_time">Delivery Time</string>
+    <string name="_30_min">30 Min</string>
+    <string name="opens_next_at_11_15_am_wednesday">
+        Opens next at 11:15 am, Wednesday</string>
+    <string name="recommended">Recommended</string>
+    <string name="_5_items">5 Items</string>
+    <string name="kulcha_bread_lunchbox">Kulcha Bread Lunchbox</string>
+    <string name="menu">MENU</string>
+    <string name="_1_item_220">1 Item | ₹220</string>
+    <string name="view_cart">VIEW CART</string>
+    <string name="more">more</string>
+    <string name="home">Home</string>
+    <string name="john_woosh">JOHN WOOSH</string>
+    <string name="edit">EDIT</string>
+    <string name="my_accounts">MY ACCOUNTS</string>
+    <string name="help">HELP</string>
+    <string name="santushti_smoothies_and_shakes">Santushti Smoothies and Shakes</string>
+    <string name="north_indian">North Indian</string>
+    <string name="fatehgunj">Fatehgunj</string>
+    <string name="deliver_in_20_min">Deliver in 20 min.</string>
+    <string name="restaurants_txt">RESTAURANTS</string>
+    <string name="dishes">DISHES</string>
+    <string name="panner_txt">Paneer Biryani</string>
+    <string name="search_restaurant_cafe">Search Restaurant / Cafe</string>
+    <string name="recent_search">RECENT SEARCH</string>
+    <string name="basmati_rice_lunchbox">Basmati Rice Lunchbox</string>
+    <string name="best_seller">BEST SELLER</string>
+    <string name="paneer_biryani">Paneer Biryani</string>
+    <string name="recommended_1_8">Recommended 1/8</string>
+    <string name="total_discount">Total Discount</string>
+    <string name="delivert_txt">Set Delivery Location</string>
+    <string name="location">LOCATION</string>
+    <string name="bay_terrace_cross_island_prey">Bay terrace, cross island prey</string>
+    <string name="enter_landmark">Enter Landmark</string>
+    <string name="landmark">LANDMARK</string>
+    <string name="house_flat_no">HOUSE/FLAT NO.</string>
+    <string name="save_as">SAVE AS</string>
+    <string name="save_location">SAVE LOCATION</string>
+    <string name="rate_your_food_brown_burger_co">Rate your food - Brown Burger Co.</string>
+    <string name="what_did_you_like_the_best">WHAT DID YOU LIKE THE BEST?</string>
+    <string name="food_packaging">FOOD PACKAGING</string>
+    <string name="rate_delivery">RATE DELIVERY</string>
+    <string name="got_any_other_suggestions_let_us_know">Got any other suggestions? Let us know</string>
+    <string name="manage_address">Manage Address</string>
+    <string name="add_new_address_small">Add New Address</string>
+    <string name="_318738713_john_gmail_com">318738713 | john@gmail.com</string>
+    <string name="addresses_payments_favourites_redderals_amp_offers"><![CDATA[Addresses, Payments, Favourites, Referrals & Offers]]></string>
+    <string name="payment">Payment</string>
+    <string name="wallet">Wallet</string>
+    <string name="favourites">Favourites</string>
+    <string name="referrals">Referrals</string>
+    <string name="share">Share</string>
+    <string name="rate_us">Rate Us</string>
+    <string name="help_center_related_your_orders_and_queries">Help center related your orders and queries</string>
+    <string name="recent_orders">RECENT ORDERS</string>
+    <string name="view_all_recent_orders">View all recent orders</string>
+    <string name="logout">LOGOUT</string>
+    <string name="clear_all">CLEAR ALL</string>
+    <string name="sort">Sort</string>
+    <string name="cuisines">Cuisines</string>
+    <string name="offers_amp_more"><![CDATA[Offers & More]]></string>
+    <string name="relevance">Relevance</string>
+    <string name="cost_for_two">Cost For Two</string>
+    <string name="rating">Rating</string>
+    <string name="punjabi_sabji">Punjabi Sabji</string>
+    <string name="butter_milk">Butter milk</string>
+    <string name="parathas">Parathas</string>
+    <string name="roti_s">Roti’s</string>
+    <string name="rice">Rice</string>
+    <string name="salad">Salad</string>
+    <string name="re_order">RE ORDER</string>
+    <string name="_10_january_2019">10 january 2019</string>
+    <string name="chole_kulche_1x_kulcha_3x_npepsi_500ml_3x">Chole Kulche 1X, Kulcha 3X,\nPepsi 500ml 3X</string>
+    <string name="pavbhaji_2x_extra_bun_4x">Pavbhaji 2X, Extra bun 4X</string>
+    <string name="_220">₹ 220</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_track_order22">Map</string>
+    <string name="title_activity_track_order1">Map</string>
+    <string name="title_activity_track_order3">Map</string>
+    <string name="title_activity_track_order4">Map</string>
+    <string name="title_activity_google_demo2">Map</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="google_maps_key">AIzaSyDHOCpobHOC5KsYSoIMV5l7i6s-iQxCIXA</string>
+    <string name="title_activity_success">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+
+    <string name="pureeats">CancelReasonSingleChoiceDialog</string>
+    <string-array name="choice_items">
+        <item>My order was placed by mistake.</item>
+        <item>I just moved to another place.</item>
+        <item>I ordered food from somewhere.</item>
+        <item>Total cart price has been increased.</item>
+        <item>I want to update my new address.</item>
+        <item>Food delivery address is wrong.</item>
+        <item>Delivery boy is not picking my call.</item>
+        <item>I am not at my home right now.</item>
+        <item>It seems like food is staled…</item>
+    </string-array>
+    <string name="title_activity_first_scree">FullscreenActivity</string>
+    <string name="permission_denied_location">Pureeats uses this permission to detect your current location and show you great restaurants near you. It also enables you to get turn-by-turn driving directions to restaurants. Are you sure you want to deny this permission?</string>
+    <string name="permission_denied_location_never_show_again">It looks like you have turned off permissions required for this feature. It can be enabled under Phone Settings > Apps > PureEats > Permissions </string>
+    <string name="RUPEE_SYMBOL">₹</string>
+    <string name="complete_address">Complete Address *</string>
+    <string name="complete_address_hint">House no. / Flat no. / Floor / Building</string>
+    <string name="floor_optional">Floor (Optional)</string>
+    <string name="floor_optional_hint">e.g. Ground Floor (Optional)</string>
+    <string name="how_to_reach_optional">How to reach (Optional)</string>
+    <string name="how_to_reach_optional_hint">Landmark / Entry gate / Street</string>
+    <string-array name="country">
+        <item>India</item>
+        <item>Bangladesh</item>
+        <item>Pakisthan</item>
+        <item>China</item>
+    </string-array>
+
+</resources>

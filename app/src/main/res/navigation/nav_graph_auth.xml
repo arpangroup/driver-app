@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_auth"
+    app:startDestination="@id/otpSentFragment">
+
+    <fragment
+        android:id="@+id/otpSentFragment"
+        android:name="com.example.mainactivity.views.auth.LoginFragment"
+        android:label="fragment_otp_sent"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_otpSentFragment_to_loginUsingPasswordFragment"
+            app:destination="@id/loginUsingPasswordFragment"
+            app:popUpTo="@id/otpSentFragment" />
+        <action
+            android:id="@+id/action_otpSentFragment_to_signupFragment"
+            app:destination="@id/signupFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signupFragment"
+        android:name="com.example.mainactivity.views.auth.SignupFragment"
+        android:label="fragment_signup"
+        tools:layout="@layout/fragment_signup" />
+    <fragment
+        android:id="@+id/loginUsingPasswordFragment"
+        android:name="com.example.mainactivity.views.auth.LoginUsingPasswordFragment"
+        android:label="fragment_login_using_password"
+        tools:layout="@layout/fragment_login_using_password" >
+        <action
+            android:id="@+id/action_loginUsingPasswordFragment_to_loginUsingOTPFragment"
+            app:destination="@id/loginUsingOTPFragment"
+            app:popUpTo="@id/loginUsingPasswordFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginUsingOTPFragment"
+        android:name="com.example.mainactivity.views.auth.LoginUsingOTPFragment"
+        android:label="fragment_login_using_o_t_p"
+        tools:layout="@layout/fragment_login_using_o_t_p" >
+        <action
+            android:id="@+id/action_loginUsingOTPFragment_to_loginUsingPasswordFragment"
+            app:destination="@id/loginUsingPasswordFragment"
+            app:popUpTo="@id/loginUsingPasswordFragment" />
+    </fragment>
+</navigation>

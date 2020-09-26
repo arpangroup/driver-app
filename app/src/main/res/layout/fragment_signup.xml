@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".views.auth.SignupFragment">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scrollbars="none"
+                android:overScrollMode="never">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="16.7dp"
+                    android:layout_marginRight="16.7dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="55dp"
+                        android:fontFamily="@font/sfpro_text_medium"
+                        android:text="Let's get started"
+                        android:textColor="@color/gray"
+                        android:textSize="14.3sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sfpro_text_heavy"
+                        android:letterSpacing="0.0525"
+                        android:text="PURE EATS PARTNER"
+                        android:textColor="@color/black"
+                        android:textSize="28.7sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="42dp"
+                        android:fontFamily="@font/sfpro_display_semibold"
+                        android:text="Enter your basic details here"
+                        android:textColor="@color/black"
+                        android:textSize="11sp" />
+
+
+
+
+
+                    <!--outletName-->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/text_input_outlet_name_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:errorEnabled="true">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_outlet_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/sfpro_text_medium"
+                            android:hint="Outlet name"
+                            android:text=""
+                            android:inputType="text"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <!--address-->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/text_input_address_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:errorEnabled="true">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_address"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/sfpro_text_medium"
+                            android:hint="Outlet address"
+                            android:text=""
+                            android:inputType="text"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <!--City-->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/text_input_city_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:errorEnabled="true">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_city"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/sfpro_text_medium"
+                            android:hint="City"
+                            android:text=""
+                            android:inputType="text"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <!--state-->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/text_input_state_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:errorEnabled="true">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_state"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/sfpro_text_medium"
+                            android:hint="State"
+                            android:editable="false"
+                            android:text=""
+                            android:inputType="text"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <!--PIN-->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/text_input_pin_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:errorEnabled="true">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_pin"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/sfpro_text_medium"
+                            android:hint="Pincode"
+                            android:text=""
+                            android:inputType="number"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <!--Contact Person Name-->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/text_input_contact_name_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:errorEnabled="true">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_contact_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/sfpro_text_medium"
+                            android:hint="Contact person's name"
+                            android:text=""
+                            android:inputType="number"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <!--Phone-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8sp"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/sfpro_display_semibold"
+                            android:text="Mobile No."
+                            android:textColor="@color/black"
+                            android:textSize="11sp" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center">
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/flag_india" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="2dp"
+                                android:text="+91"
+                                android:textFontWeight="900"
+                                android:textSize="20sp"/>
+                            <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:background="@color/transferent"
+                                android:fontFamily="@font/sfpro_text_medium"
+                                android:hint="Mobile number"
+                                android:inputType="number"
+                                android:textColor="@color/black"
+                                android:textColorHint="@color/gray"
+                                android:textSize="20sp" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@color/gray" />
+
+
+
+                    </LinearLayout>
+                    <!--Email-->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/text_input_email_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        app:errorEnabled="true">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/sfpro_text_medium"
+                            android:hint="Email"
+                            android:text=""
+                            android:inputType="textEmailAddress"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+            </ScrollView>
+            <Button
+                android:id="@+id/btn_register"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="#FA0F30"
+                android:fontFamily="@font/sfpro_text_medium"
+                android:text="Confirm"
+                android:textAlignment="center"
+                android:layout_marginLeft="16.7dp"
+                android:layout_marginRight="16.7dp"
+                android:textColor="@color/white"
+                android:textSize="18.3sp" />
+
+        </LinearLayout>
+    </FrameLayout>
+
+
+</RelativeLayout>

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "97657025376",
+    "firebase_url": "https://pureeatsnotification.firebaseio.com",
+    "project_id": "pureeatsnotification",
+    "storage_bucket": "pureeatsnotification.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:97657025376:android:dbd2b7cb3b6da5fd55a405",
+        "android_client_info": {
+          "package_name": "com.example.mainactivity"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "97657025376-4t11c7p96s6rbudvcm0qmf9r71vtgoln.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mainactivity",
+            "certificate_hash": "22dc4b5907d8b25f9ca04cce0b5d0b31f846163c"
+          }
+        },
+        {
+          "client_id": "97657025376-oehrnttrdudhqpgfrklo59c0b5q2dvdi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCs-SNoL3sVv6NGx6oGQi4359nwThs0eZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "97657025376-oehrnttrdudhqpgfrklo59c0b5q2dvdi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
