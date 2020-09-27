@@ -43,5 +43,8 @@ public class PickOrderFragment extends Fragment {
         // Initialize NavController
         navController = Navigation.findNavController(rootView);
 
+
+        mBinding.pickOrder.toolbar.title.setText("Pick: 147875736");
+
     }
 }

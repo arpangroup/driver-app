@@ -35,13 +35,14 @@ public class ReachPickUpLocationFragment extends Fragment {
     public void onViewCreated(@NonNull View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
 
-
         // Initialize ViewModel
         authenticationViewModel = new ViewModelProvider(requireActivity()).get(AuthenticationViewModel.class);
         authenticationViewModel.init();
 
         // Initialize NavController
         navController = Navigation.findNavController(rootView);
+
+        mBinding.reachPickup.toolbar.title.setText("Reach Restaurant");
 
     }
 }

@@ -43,5 +43,7 @@ public class ReachDropLocationFragment extends Fragment {
         // Initialize NavController
         navController = Navigation.findNavController(rootView);
 
+        mBinding.reachDropLocation.toolbar.title.setText("Reach Drop Location");
+
     }
 }

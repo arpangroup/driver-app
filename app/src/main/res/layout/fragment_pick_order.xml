@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".views.order.PickOrderFragment">
-    <include layout="@layout/layout_pick_order"/>
+    <include
+        android:id="@+id/pick_order"
+        layout="@layout/layout_pick_order"/>
 
 </FrameLayout>

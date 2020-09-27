@@ -43,5 +43,7 @@ public class DeliverOrderFragment extends Fragment {
         // Initialize NavController
         navController = Navigation.findNavController(rootView);
 
+        mBinding.deliverOrder.toolbar.title.setText("Deliver: 147875736");
+
     }
 }
