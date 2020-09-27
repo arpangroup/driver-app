@@ -43,12 +43,12 @@
                 android:layout_gravity="end"
                 android:background="@color/transferent"
                 android:fontFamily="@font/sfpro_display_semibold"
-                android:hint="Accepting orders"
+                android:hint="Duty Status"
                 android:letterSpacing="0.0525"
                 android:maxLines="1"
                 android:textColor="@color/black"
                 android:textStyle="bold"
-                android:textColorHint="@color/silver"
+                android:textColorHint="@color/black"
                 android:textSize="18sp" />
         </LinearLayout>
 

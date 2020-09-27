@@ -36,4 +36,10 @@ public class User {
 
     @SerializedName("push_token")
     private String pushToken;
+
+
+    @SerializedName("onGoingCount")
+    private int onGoingCount;
+    @SerializedName("completedCount")
+    private int completedCount;
 }

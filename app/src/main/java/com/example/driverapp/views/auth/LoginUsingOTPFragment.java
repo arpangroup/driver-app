@@ -1,8 +1,10 @@
 package com.example.driverapp.views.auth;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +20,10 @@ import androidx.navigation.Navigation;
 
 import com.example.driverapp.databinding.FragmentLoginUsingOTPBinding;
 import com.example.driverapp.R;
+import com.example.driverapp.models.User;
+import com.example.driverapp.sharedprefs.UserSession;
 import com.example.driverapp.viewmodels.AuthenticationViewModel;
+import com.example.driverapp.views.MainActivity;
 
 public class LoginUsingOTPFragment extends Fragment {
     private final String TAG = this.getClass().getSimpleName();
@@ -65,8 +70,10 @@ public class LoginUsingOTPFragment extends Fragment {
             navController.navigate(R.id.action_loginUsingOTPFragment_to_loginUsingPasswordFragment);
         });
 
-        // Injecting the viewmodel to the view for data-binding
-        //mBinding.setAuthViewModel(authenticationViewModel);
+        mBinding.btnVerify.setOnClickListener(view -> {
+            String otp   = mBinding.et1.getText().toString() + mBinding.et2.getText().toString() + mBinding.et3.getText().toString() + mBinding.et4.getText().toString() + mBinding.et5.getText().toString();
+            loginNow();
+        });
     }
 
 
@@ -222,8 +229,31 @@ public class LoginUsingOTPFragment extends Fragment {
 
     }
 
-    private void loginNow() {
+
+    private void loginNow(){
+        String otp   = mBinding.et1.getText().toString() + mBinding.et2.getText().toString() + mBinding.et3.getText().toString() + mBinding.et4.getText().toString() + mBinding.et5.getText().toString();
+        Log.d(TAG, "Inside loginNow().....");
+        String phone = authenticationViewModel.getPhoneNumber().getValue();
+        authenticationViewModel.loginByOtp(phone, otp).observe(getViewLifecycleOwner(), userLoginResponse -> {
+            if(userLoginResponse.isSuccess()){
+                User user = userLoginResponse.getData();
+
+                UserSession.setUserData(user);
+
+                Intent intent = new Intent(requireActivity(), MainActivity.class);
+                startActivity(intent);
+                requireActivity().finish();
+
+            }else{
+                //Toast.makeText(requireActivity(), "Invalid OTP", Toast.LENGTH_LONG).show();
+                //showAlert("Invalid OTP");
+                mBinding.layoutAlert.setVisibility(View.VISIBLE);
+                mBinding.txtResend.setEnabled(true);
+
+            }
+        });
     }
+
 
 
 }

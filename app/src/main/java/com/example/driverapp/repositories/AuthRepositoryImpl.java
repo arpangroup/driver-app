@@ -54,7 +54,7 @@ public class AuthRepositoryImpl implements AuthRepository {
     }
 
     @Override
-    public LiveData<LoginResponse<User>> loginByOtp(@NonNull String phone, @NonNull String otp, Address defaultAddress, String pushToken) {
+    public LiveData<LoginResponse<User>> loginByOtp(@NonNull String phone, @NonNull String otp, String pushToken) {
         if(loginResponse == null){
             loginResponse = new MutableLiveData<>();
         }
@@ -118,7 +118,8 @@ public class AuthRepositoryImpl implements AuthRepository {
 
     private LiveData<ApiResponse> sendOtp(String phone){
         isLoading.setValue(true);
-
+        Log.d(TAG, "Inside sendOtp()......................");
+        Log.d(TAG, "PHONE: "+ phone);
         ApiInterface apiInterface = ApiService.getApiService();
         apiInterface.sendLoginOtp(phone).enqueue(new Callback<ApiResponse>() {
             @Override

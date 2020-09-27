@@ -124,7 +124,7 @@
                                     android:textColor="@color/white"
                                     android:textStyle="bold"
                                     android:textSize="24sp"
-                                    android:text="@{`₹`+ String.format(`%.2f`, dashboard.todaysTotalEarning)}"
+
                                     android:hint="₹ 377" />
 
                                 <TextView
@@ -134,7 +134,6 @@
                                     android:textColor="@color/white"
                                     android:textStyle="normal"
                                     android:textSize="14sp"
-                                    android:text="@{dashboard.todaysAllCancelledOrders.size() +` orders`}"
                                     android:hint="2 orders" />
 
                             </LinearLayout>
@@ -162,7 +161,6 @@
                                     android:textColor="@color/white"
                                     android:textStyle="bold"
                                     android:textSize="24sp"
-                                    android:text="@{`₹`+ String.format(`%.2f`, dashboard.yesterdaysTotalEarning)}"
                                     android:hint="₹ 1255" />
 
                                 <TextView
@@ -172,7 +170,6 @@
                                     android:textColor="@color/white"
                                     android:textStyle="normal"
                                     android:textSize="14sp"
-                                    android:text="@{dashboard.yesterdaysAllCompletedOrders.size() +` orders`}"
                                     android:hint="9 orders" />
                             </LinearLayout>
                         </LinearLayout>
@@ -207,7 +204,6 @@
                                     android:textColor="@color/white"
                                     android:textStyle="bold"
                                     android:textSize="24sp"
-                                    android:text="@{`₹`+ String.format(`%.2f`, dashboard.oneWeekTotalEarning)}"
                                     android:hint="₹ 9,418" />
 
                                 <TextView
@@ -217,7 +213,6 @@
                                     android:textColor="@color/white"
                                     android:textStyle="normal"
                                     android:textSize="14sp"
-                                    android:text="@{dashboard.oneWeekAllCompletedOrders.size()+` orders`}"
                                     android:hint="36 orders" />
                             </LinearLayout>
 
@@ -244,7 +239,6 @@
                                     android:textColor="@color/white"
                                     android:textStyle="bold"
                                     android:textSize="24sp"
-                                    android:text="@{`₹`+ String.format(`%.2f`, dashboard.oneMonthTotalEarning)}"
                                     android:hint="₹ 1,69849" />
 
                                 <TextView
@@ -254,7 +248,6 @@
                                     android:textColor="@color/white"
                                     android:textStyle="normal"
                                     android:textSize="14sp"
-                                    android:text="@{dashboard.oneMonthsAllCancelledOrders.size()+` orders`}"
                                     android:hint="580 orders" />
                             </LinearLayout>
                         </LinearLayout>
@@ -469,7 +462,6 @@
                                     android:textColor="@color/black"
                                     android:textStyle="bold"
                                     android:textSize="24sp"
-                                    android:text="@{`₹`+ String.format(`%.2f`, dashboard.todaysTotalLoss)}"
                                     android:hint="₹ 377" />
 
                                 <TextView
@@ -478,7 +470,6 @@
                                     android:textColor="@color/black"
                                     android:textStyle="normal"
                                     android:textSize="14sp"
-                                    android:text="@{dashboard.todaysAllCancelledOrders.size() +` orders`}"
                                     android:hint="2 orders" />
 
                             </LinearLayout>
@@ -505,7 +496,6 @@
                                     android:textColor="@color/black"
                                     android:textStyle="bold"
                                     android:textSize="24sp"
-                                    android:text="@{`₹`+ String.format(`%.2f`, dashboard.yesterdaysTotalLoss)}"
                                     android:hint="₹ 1255" />
 
                                 <TextView
@@ -514,7 +504,6 @@
                                     android:textColor="@color/black"
                                     android:textStyle="normal"
                                     android:textSize="14sp"
-                                    android:text="@{dashboard.yesterdaysAllCancelledOrders.size() +` orders`}"
                                     android:hint="9 orders" />
                             </LinearLayout>
                         </LinearLayout>
@@ -548,7 +537,6 @@
                                     android:textColor="@color/black"
                                     android:textStyle="bold"
                                     android:textSize="24sp"
-                                    android:text="@{`₹`+ String.format(`%.2f`, dashboard.oneWeekTotalLoss)}"
                                     android:hint="₹ 9,418" />
 
                                 <TextView
@@ -557,7 +545,6 @@
                                     android:textColor="@color/black"
                                     android:textStyle="normal"
                                     android:textSize="14sp"
-                                    android:text="@{dashboard.oneWeeksAllCancelledOrders.size() +` orders`}"
                                     android:hint="36 orders" />
                             </LinearLayout>
 
@@ -583,7 +570,6 @@
                                     android:textColor="@color/black"
                                     android:textStyle="bold"
                                     android:textSize="24sp"
-                                    android:text="@{`₹`+ String.format(`%.2f`, dashboard.oneMonthTotalLoss)}"
                                     android:hint="₹ 1,69849" />
 
                                 <TextView
@@ -592,7 +578,6 @@
                                     android:textColor="@color/black"
                                     android:textStyle="normal"
                                     android:textSize="14sp"
-                                    android:text="@{dashboard.oneMonthsAllCancelledOrders.size() +` orders`}"
                                     android:hint="580 orders" />
                             </LinearLayout>
                         </LinearLayout>

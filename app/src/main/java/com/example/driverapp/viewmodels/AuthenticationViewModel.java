@@ -40,10 +40,10 @@ public class AuthenticationViewModel extends ViewModel {
     public LiveData<ApiResponse> sendLoginOtp(String phone){
         return authRepository.sendLoginOtp(phone);
     }
-    public LiveData<LoginResponse<User>> loginByOtp(@NonNull String phone, @NonNull String otp, Address defaultAddress){
+    public LiveData<LoginResponse<User>> loginByOtp(@NonNull String phone, @NonNull String otp){
         mutableLoginAttempt.setValue(++LOGIN_ATTEMPT);
         String pushToken = authRepository.getPushNotificationToken();
-        return authRepository.loginByOtp(phone, otp, defaultAddress, pushToken);
+        return authRepository.loginByOtp(phone, otp, pushToken);
     }
     public LiveData<LoginResponse<User>> loginByMobileAndPassword(@NonNull String phone, @NonNull String password, Address defaultAddress){
         mutableLoginAttempt.setValue(++LOGIN_ATTEMPT);

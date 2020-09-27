@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,7 +8,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/btnAccept"
         android:layout_marginBottom="16dp"
         android:weightSum="3"
         android:orientation="vertical">
@@ -24,6 +24,7 @@
                 android:padding="8dp"
                 android:orientation="horizontal">
                 <ImageButton
+                    android:id="@+id/btn_close"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
@@ -57,15 +58,34 @@
 <!--                   android:layout_height="match_parent"/>-->
 
 
-                <ProgressBar
-                    android:id="@+id/progress_bar"
-                    style="@style/CircularDeterminateProgressBar"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true"
-                    android:layout_margin="16dp"
-                    tools:progress="60" />
+                    android:layout_height="match_parent">
+                    <ProgressBar
+                        android:id="@+id/progress_bar"
+                        style="@style/CircularDeterminateProgressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:layout_margin="16dp"
+                        tools:progress="60" />
+
+                    <TextView
+                        android:id="@+id/txt_progress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="60%"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:textSize="60sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/progress_bar"
+                        app:layout_constraintEnd_toEndOf="@+id/progress_bar"
+                        app:layout_constraintStart_toStartOf="@+id/progress_bar"
+                        app:layout_constraintTop_toTopOf="@+id/progress_bar" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
                 <TextView
+                    android:id="@+id/approx_distance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -87,6 +107,7 @@
             android:padding="16dp"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/restaurant_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
@@ -94,6 +115,7 @@
                 android:textColor="@color/black"
                 android:text="Sourav Catering &amp; Restaurant"/>
             <TextView
+                android:id="@+id/restaurant_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
@@ -103,23 +125,28 @@
         </LinearLayout>
 
     </LinearLayout>
-    <com.ncorti.slidetoact.SlideToActView
-        android:id="@+id/btnAccept"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:elevation="6dp"
-        app:area_margin="4dp"
-        app:animation_duration="250"
-        app:outer_color="@color/orange"
-        app:inner_color="@color/white"
-        app:slider_icon="@drawable/slidetoact_ic_arrow"
-        app:slider_icon_color="@color/blue"
-        app:border_radius="30dp"
-        app:text="Slide to Accept"
-        app:text_style="bold"
-        app:text_size="16sp"
-        app:slider_height="60dp"
-        app:slider_locked="false" />
+        android:background="@color/orange"
+        android:layout_alignParentBottom="true">
+        <com.ncorti.slidetoact.SlideToActView
+            android:id="@+id/btnAccept"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            app:area_margin="4dp"
+            app:animation_duration="250"
+            app:outer_color="@color/orange"
+            app:inner_color="@color/white"
+            app:slider_icon="@drawable/slidetoact_ic_arrow"
+            app:slider_icon_color="@color/blue"
+            app:border_radius="30dp"
+            app:text="Slide to Accept"
+            app:text_style="bold"
+            app:text_size="16sp"
+            app:slider_height="60dp"
+            app:slider_locked="false" />
+    </LinearLayout>
 
 </RelativeLayout>

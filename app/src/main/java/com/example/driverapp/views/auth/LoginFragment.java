@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -77,23 +78,23 @@ public class LoginFragment extends Fragment {
                 authenticationViewModel.setPhoneNumber(phone);
                 navController.navigate(R.id.action_otpSentFragment_to_loginUsingPasswordFragment);
 
-//                authenticationViewModel.sendLoginOtp(phone).observe(getViewLifecycleOwner(), apiResponse -> {
-//                    if(apiResponse.isSuccess()){
-//                        navController.navigate(R.id.action_loginUsingPasswordFragment_to_loginUsingOTPFragment);
-//                    }
-//                    else {
-//                        if(authenticationViewModel.getIsLoading().getValue() == false){
-//                            String message = apiResponse.getMessage();
-//                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
+                authenticationViewModel.sendLoginOtp(phone).observe(getViewLifecycleOwner(), apiResponse -> {
+                    if(apiResponse.isSuccess()){
+                        navController.navigate(R.id.action_otpSentFragment_to_loginUsingOTPFragment);
+                    }
+                    else {
+                        if(authenticationViewModel.getIsLoading().getValue() == false){
+                            String message = apiResponse.getMessage();
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
             }
         });
 
         mBinding.signup.setOnClickListener(view -> {
-            navController.navigate(R.id.action_otpSentFragment_to_signupFragment);
+            //navController.navigate(R.id.action_otpSentFragment_to_signupFragment);
         });
 
         mBinding.layoutHeader.setOnClickListener(view -> {
