@@ -12,18 +12,23 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.driverapp.R;
+import com.example.driverapp.commons.CommonUtils;
 import com.example.driverapp.databinding.FragmentPickOrderBinding;
 import com.example.driverapp.databinding.FragmentReachPickUpLocationBinding;
+import com.example.driverapp.models.Order;
 import com.example.driverapp.viewmodels.AuthenticationViewModel;
+import com.example.driverapp.viewmodels.OrderViewModel;
 
 public class PickOrderFragment extends Fragment {
     private final String TAG = this.getClass().getSimpleName();
 
     private FragmentPickOrderBinding mBinding;
-    AuthenticationViewModel authenticationViewModel;
+    OrderViewModel orderViewModel;
     NavController navController;
+    Order mOrder = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -37,14 +42,62 @@ public class PickOrderFragment extends Fragment {
 
 
         // Initialize ViewModel
-        authenticationViewModel = new ViewModelProvider(requireActivity()).get(AuthenticationViewModel.class);
-        authenticationViewModel.init();
+        orderViewModel = new ViewModelProvider(requireActivity()).get(OrderViewModel.class);
+        orderViewModel.init();
 
         // Initialize NavController
         navController = Navigation.findNavController(rootView);
+        initClicks();
 
 
-        mBinding.pickOrder.toolbar.title.setText("Pick: 147875736");
+        orderViewModel.getAllAcceptedOrders().observe(requireActivity(), orders -> {
+            mOrder = orders.get(0);
+            mBinding.pickOrder.toolbar.title.setText("PICK: " + mOrder.getUniqueOrderId());
+            mBinding.pickOrder.setOrder(mOrder);
+        });
 
+
+        mBinding.pickOrder.btnAccept.setOnSlideCompleteListener(slideToActView -> {
+            orderViewModel.pickedUpOrder(orderViewModel.getOrder()).observe(requireActivity(), isPickedUp -> {
+                if(isPickedUp){
+                    navController.navigate(R.id.action_pickOrderFragment_to_reachDropLocationFragment);
+                }else {
+                    Toast.makeText(requireActivity(), "Something error happened", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+
+
+
+    }
+
+    private void initClicks() {
+        mBinding.pickOrder.toggleRestaurantDetails.setOnClickListener(view -> {
+
+        });
+        mBinding.pickOrder.toggleItems.setOnClickListener(view -> {
+            if(mBinding.pickOrder.dishRecycler.getVisibility() ==  View.GONE){
+                mBinding.pickOrder.dishRecycler.setVisibility(View.VISIBLE);
+                mBinding.pickOrder.imgToggleItem.setRotation(-90);
+            }else{
+                mBinding.pickOrder.dishRecycler.setVisibility(View.GONE);
+                mBinding.pickOrder.imgToggleItem.setRotation(270);
+            }
+
+        });
+        mBinding.pickOrder.callToRestaurant.setOnClickListener(view -> {
+            CommonUtils.makePhoneCall(requireActivity(), mOrder.getRestaurant().getContactNumber());
+        });
+
+        mBinding.pickOrder.callToCustomer.setOnClickListener(view -> {
+            CommonUtils.makePhoneCall(requireActivity(), mOrder.getUser().getPhone());
+        });
+
+        mBinding.pickOrder.btnClickPhoto.setOnClickListener(view -> {
+
+        });
+        mBinding.pickOrder.radioConfirm.setOnCheckedChangeListener((compoundButton, b) -> {
+            if(b) mBinding.pickOrder.btnAccept.setEnabled(true);
+        });
     }
 }

@@ -23,20 +23,25 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.driverapp.R;
+import com.example.driverapp.commons.Constants;
 import com.example.driverapp.databinding.FragmentAcceptOrderBinding;
 import com.example.driverapp.databinding.FragmentLoginBinding;
+import com.example.driverapp.directionhelpers.ConstructDirectionUrl;
+import com.example.driverapp.directionhelpers.FetchURL;
+import com.example.driverapp.directionhelpers.TaskLoadedCallback;
 import com.example.driverapp.firebase.MessagingService;
 import com.example.driverapp.models.Order;
 import com.example.driverapp.models.Restaurant;
 import com.example.driverapp.viewmodels.AuthenticationViewModel;
 import com.example.driverapp.viewmodels.OrderViewModel;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.ncorti.slidetoact.SlideToActView;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class AcceptOrderFragment extends Fragment {
+public class AcceptOrderFragment extends Fragment implements TaskLoadedCallback {
     private final String TAG = this.getClass().getSimpleName();
 
     private int mProgress = 0;
@@ -103,6 +108,12 @@ public class AcceptOrderFragment extends Fragment {
 
         // Initialize NavController
         navController = Navigation.findNavController(rootView);
+        mBinding.setOrder(orderViewModel.getOrder());
+        //mBinding.approxDistance.setText(restaurant.getA);
+        //LatLng place1  = new LatLng(Double.parseDouble(restaurant.getLatitude()), Double.parseDouble(restaurant.getLongitude()));
+        //LatLng place2  = new LatLng(Double.parseDouble(address.getLatitude()), Double.parseDouble(address.getLongitude()));
+        //String url = ConstructDirectionUrl.getUrl(place1, place2, "driving", Constants.GOOGLE_MAP_AUTH_KEY);
+        //new FetchURL(requireActivity(), FetchURL.DISTANCE_PARSER).execute(url, "driving");
 
 
         setupMediaPlayer();
@@ -116,6 +127,7 @@ public class AcceptOrderFragment extends Fragment {
             @Override
             public void onFinish() {
                 //counttime.setText("Finished");
+                //requireActivity().finish();
             }
         }.start();
 
@@ -123,21 +135,16 @@ public class AcceptOrderFragment extends Fragment {
 
         mBinding.btnClose.setOnClickListener(view -> requireActivity().finish());
 
-        mBinding.btnAccept.setOnSlideCompleteListener(new SlideToActView.OnSlideCompleteListener() {
-            @Override
-            public void onSlideComplete(SlideToActView slideToActView) {
-                Toast.makeText(requireActivity(), "SLIDE_COMPLETE", Toast.LENGTH_SHORT).show();
-                navController.navigate(R.id.action_acceptOrderFragment_to_reachPickUpLocationFragment);
-            }
+        mBinding.btnAccept.setOnSlideCompleteListener(slideToActView -> {
+            orderViewModel.acceptOrder(orderViewModel.getOrder()).observe(requireActivity(), isAccepted -> {
+                if(isAccepted){
+                    navController.navigate(R.id.action_acceptOrderFragment_to_reachPickUpLocationFragment);
+                }else {
+                    Toast.makeText(requireActivity(), "Something error happened", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
 
-        orderViewModel.getAllAcceptedOrders().observe(requireActivity(), orders -> {
-            Order order = orders.get(0);
-            Restaurant restaurant = order.getRestaurant();
-            //mBinding.incomingOrder.restaurantName.setText("");
-            //mBinding.incomingOrder.restaurantAddress.setText("");
-            //mBinding.incomingOrder.approxDistance.setText("");
-        });
 
 
 
@@ -167,5 +174,21 @@ public class AcceptOrderFragment extends Fragment {
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
+    }
+
+    @Override
+    public void onTaskDone(Object... values) {
+//        try{
+//            Direction direction =(Direction) values[0];
+//            deliveryTime.setText(direction.getDeliveryDuration());
+//            if(SettingSession.getDeliveryType() == 1){
+//                deliveryTime.setText(direction.getDeliveryDuration());
+//            }else{
+//                deliveryTime.setText(direction.getDistance().getText());
+//                //deliveryTimeLabel.setText("Distance");
+//            }
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
     }
 }

@@ -42,8 +42,13 @@ public class OrderRepository {
         return isLoading;
     }
 
-    public void acceptOrder(Order order){
+    public LiveData<Boolean> acceptOrder(Order order){
+        //mutableAcceptedOrders.setValue(Collections.singletonList(order));
         mutableAcceptedOrders.setValue(Collections.singletonList(order));
+        return acceptOrderApi(order);
+    }
+    public LiveData<Boolean> pickedUpOrder(Order order){
+        return pickUpOrderApi(order);
     }
     public LiveData<List<Order>> getAllAcceptedOrders(){
         if(mutableAcceptedOrders == null){
@@ -79,21 +84,54 @@ public class OrderRepository {
 
 
     /*========================================================API_CALLS==============================================*/
-    private LiveData<ApiResponse> acceptOrderApi(ProcessOrderRequest processOrderRequest){
-        MutableLiveData<ApiResponse> apiResponseMutableLiveData = new MutableLiveData<>();
+    private LiveData<Boolean> acceptOrderApi(Order order){
+        ProcessOrderRequest request = new ProcessOrderRequest(order.getId());
+        MutableLiveData<Boolean> apiResponseMutableLiveData = new MutableLiveData<>();
         Log.d(TAG, "Inside acceptOrderApi()....");
-        Log.d(TAG, "REQUEST: "+ new Gson().toJson(processOrderRequest));
+        Log.d(TAG, "REQUEST: "+ new Gson().toJson(request));
         ApiInterface apiInterface = ApiService.getApiService();
         isLoading.setValue(true);
-        apiInterface.acceptOrder(processOrderRequest).enqueue(new Callback<Order>() {
+        apiInterface.acceptOrder(request).enqueue(new Callback<Order>() {
             @Override
             public void onResponse(Call<Order> call, Response<Order> response) {
-
+                if(response.isSuccessful()){
+                    Log.d(TAG, "Setting accepted orders to the list...");
+                    isLoading.setValue(false);
+                    apiResponseMutableLiveData.setValue(true);
+                }
             }
 
             @Override
             public void onFailure(Call<Order> call, Throwable t) {
+                isLoading.setValue(false);
+                Log.d(TAG, "FAIL");
+                apiResponseMutableLiveData.setValue(false);
+            }
+        });
+        return apiResponseMutableLiveData;
+    }
+    private LiveData<Boolean> pickUpOrderApi(Order order){
+        ProcessOrderRequest request = new ProcessOrderRequest(order.getId());
+        MutableLiveData<Boolean> apiResponseMutableLiveData = new MutableLiveData<>();
+        Log.d(TAG, "Inside acceptOrderApi()....");
+        Log.d(TAG, "REQUEST: "+ new Gson().toJson(request));
+        ApiInterface apiInterface = ApiService.getApiService();
+        isLoading.setValue(true);
+        apiInterface.pickedUpOrder(request).enqueue(new Callback<Order>() {
+            @Override
+            public void onResponse(Call<Order> call, Response<Order> response) {
+                if(response.isSuccessful()){
+                    Log.d(TAG, "Setting accepted orders to the list...");
+                    isLoading.setValue(false);
+                    apiResponseMutableLiveData.setValue(true);
+                }
+            }
 
+            @Override
+            public void onFailure(Call<Order> call, Throwable t) {
+                isLoading.setValue(false);
+                Log.d(TAG, "FAIL");
+                apiResponseMutableLiveData.setValue(false);
             }
         });
         return apiResponseMutableLiveData;

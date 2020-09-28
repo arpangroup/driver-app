@@ -5,6 +5,7 @@ import androidx.databinding.BindingAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.driverapp.adapters.DishListAdapter;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -81,6 +82,15 @@ public class Order {
     private int toggle = 1;
     private boolean isAutoCancelled = false;
 
+
+    @BindingAdapter(value = "setDishes")
+    public static void setDishes(RecyclerView recyclerView, List<Dish> dishes){
+        if(dishes != null){
+            DishListAdapter dishListAdapter = new DishListAdapter();
+            dishListAdapter.submitList(dishes);
+            recyclerView.setAdapter(dishListAdapter);
+        }
+    }
 
 
     public static DiffUtil.ItemCallback<Order> itemCallback = new DiffUtil.ItemCallback<Order>() {

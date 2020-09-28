@@ -1,32 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layoutDirection="rtl"
-    android:orientation="horizontal">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:visibility="gone"
-        android:id="@+id/price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:fontFamily="@font/sfpro_display_medium"
-        android:text="₹100"
-        android:hint="₹120"
-        android:textColor="@color/black"
-        android:textSize="18sp" />
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="dish"
+            type="com.example.driverapp.models.Dish" />
+    </data>
 
-    <TextView
-        android:id="@+id/name"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/sfpro_display_medium"
-        android:text="3 x Dal Makhani"
-        android:hint="3 x Dal Makhani"
-        android:textColor="@color/black"
-        android:textSize="18sp" />
+        android:layoutDirection="rtl"
+        android:orientation="horizontal">
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:fontFamily="@font/sfpro_display_medium"
+            android:text="₹100"
+            android:hint="₹120"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sfpro_display_medium"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:text="@{dish.quantity + ` x ` + dish.name}"
+            android:hint="3 x Dal Makhani"/>
 
 
-</LinearLayout>
+    </LinearLayout>
+</layout>

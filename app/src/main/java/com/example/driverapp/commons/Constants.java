@@ -3,6 +3,7 @@ package com.example.driverapp.commons;
 import com.google.android.gms.maps.model.LatLng;
 
 public class Constants {
+    public static final String GOOGLE_MAP_AUTH_KEY = "AIzaSyDHOCpobHOC5KsYSoIMV5l7i6s-iQxCIXA";
     public static final int GPS_REQUEST_CODE = 100;
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 101;
     public static final int PLAY_SERVICE_ERROR_CODE = 102;
@@ -13,6 +14,9 @@ public class Constants {
     public static final int REQUEST_IMAGE_EXTERNAL = 107;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 108;
     public static final int REQUEST_NO_INTERNET_ACTIVITY = 200;
+
+    public static final int PER_KM_DELIVERY_TIME_IN_MINUTE = 6;
+    public static final int DELIVERY_TIME_HOLD_IN_MINUTE = 30;
 
 
     private static LatLng DEFAULT_LOCATION_KOLKATA = new LatLng(22.5714427, 88.3428709);

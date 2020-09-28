@@ -1,5 +1,7 @@
 package com.example.driverapp.models.request;
 
+import android.content.Context;
+
 import com.google.gson.annotations.SerializedName;
 
 import lombok.Getter;
