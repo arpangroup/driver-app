@@ -73,9 +73,11 @@ public class EndlessService extends Service {
         wakeLock.acquire(60 * 1000L /*1 minutes*/);
 
         // we're starting a loop in a coroutine
-        while (isServiceStarted){
-            //pingFakeServer();
-        }
+        new Thread(() -> {
+            while (isServiceStarted){
+                //pingFakeServer();
+            }
+        });
         Log.d(TAG, "End of the loop for the service");
     }
     private void stopService() {
@@ -142,8 +144,7 @@ public class EndlessService extends Service {
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_CALL)
-                .setFullScreenIntent(pendingIntent, true)
+                .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setOngoing(true);
