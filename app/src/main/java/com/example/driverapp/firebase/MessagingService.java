@@ -12,17 +12,12 @@ import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.driverapp.R;
-import com.example.driverapp.models.Order;
-import com.example.driverapp.services.NewOrderFetchService;
 import com.example.driverapp.sharedprefs.UserSession;
 import com.example.driverapp.views.App;
 import com.example.driverapp.views.ProcessOrderActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.google.gson.Gson;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 public class MessagingService extends FirebaseMessagingService {
@@ -99,8 +94,6 @@ public class MessagingService extends FirebaseMessagingService {
         }
 
     }
-
-
 
     private void openAcceptOrderDialog(String orderJson, String  title, String message){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, App.CHANNEL_ID_NEW_ORDER);
