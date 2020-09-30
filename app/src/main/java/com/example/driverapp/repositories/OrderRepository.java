@@ -12,6 +12,7 @@ import com.example.driverapp.api.ApiService;
 import com.example.driverapp.commons.OrderStatus;
 import com.example.driverapp.models.ApiResponse;
 import com.example.driverapp.models.Order;
+import com.example.driverapp.models.request.DeliverOrderRequest;
 import com.example.driverapp.models.request.ProcessOrderRequest;
 import com.google.gson.Gson;
 
@@ -70,6 +71,12 @@ public class OrderRepository {
         order.setOrderStatus(OrderStatus.REACHED_DELIVERY_LOCATION);
         mutableAcceptedOrders.setValue(Collections.singletonList(order));
         return reachDeliveryLocationApi(order);
+    }
+
+    public LiveData<Boolean> deliverOrder(Order order, String deliveryPin){
+        order.setOrderStatus(OrderStatus.DELIVERED);
+        mutableAcceptedOrders.setValue(Collections.singletonList(order));
+        return deliverOrderApi(order, deliveryPin);
     }
 
 
@@ -191,6 +198,33 @@ public class OrderRepository {
         ApiInterface apiInterface = ApiService.getApiService();
         isLoading.setValue(true);
         apiInterface.reachToPickUpLocation(request).enqueue(new Callback<Order>() {
+            @Override
+            public void onResponse(Call<Order> call, Response<Order> response) {
+                if(response.isSuccessful()){
+                    Log.d(TAG, "Setting accepted orders to the list...");
+                    isLoading.setValue(false);
+                    apiResponseMutableLiveData.setValue(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Order> call, Throwable t) {
+                isLoading.setValue(false);
+                Log.d(TAG, "FAIL");
+                apiResponseMutableLiveData.setValue(false);
+            }
+        });
+        return apiResponseMutableLiveData;
+    }
+
+    private LiveData<Boolean> deliverOrderApi(Order order, String deliveryPin){
+        DeliverOrderRequest request = new DeliverOrderRequest(order.getId(), deliveryPin);
+        MutableLiveData<Boolean> apiResponseMutableLiveData = new MutableLiveData<>();
+        Log.d(TAG, "Inside deliverOrderApi()....");
+        Log.d(TAG, "REQUEST: "+ new Gson().toJson(request));
+        ApiInterface apiInterface = ApiService.getApiService();
+        isLoading.setValue(true);
+        apiInterface.deliverOrder(request).enqueue(new Callback<Order>() {
             @Override
             public void onResponse(Call<Order> call, Response<Order> response) {
                 if(response.isSuccessful()){

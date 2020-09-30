@@ -40,7 +40,6 @@ public class PickOrderFragment extends Fragment {
     public void onViewCreated(@NonNull View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
 
-
         // Initialize ViewModel
         orderViewModel = new ViewModelProvider(requireActivity()).get(OrderViewModel.class);
         orderViewModel.init();
@@ -99,7 +98,13 @@ public class PickOrderFragment extends Fragment {
 
         });
         mBinding.pickOrder.radioConfirm.setOnCheckedChangeListener((compoundButton, b) -> {
-            if(b) mBinding.pickOrder.btnAccept.setEnabled(true);
+            if(b){
+                mBinding.pickOrder.btnAccept.setEnabled(true);
+                mBinding.pickOrder.btnAccept.setOuterColor(R.color.orange);
+            }else{
+                mBinding.pickOrder.btnAccept.setEnabled(false);
+                mBinding.pickOrder.btnAccept.setOuterColor(R.color.gray);
+            }
         });
     }
 }

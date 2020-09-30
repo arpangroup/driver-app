@@ -1,6 +1,7 @@
 package com.example.driverapp.api;
 
 import com.example.driverapp.models.ApiResponse;
+import com.example.driverapp.models.request.DeliverOrderRequest;
 import com.example.driverapp.models.request.DeliveryGuyGpsRequest;
 import com.example.driverapp.models.request.LoginRequest;
 import com.example.driverapp.models.LoginResponse;
@@ -44,6 +45,9 @@ public interface ApiInterface {
 
     @POST("/api/delivery/reached-to-deliver-location")
     Call<Order> reachToDeliverLocation(@Body ProcessOrderRequest processOrderRequest);
+
+    @POST("/api/delivery/deliver-order")
+    Call<Order> deliverOrder(@Body DeliverOrderRequest deliverOrderRequest);
 
 
 }

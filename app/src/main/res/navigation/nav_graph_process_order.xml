@@ -27,7 +27,11 @@
         android:id="@+id/deliverOrderFragment"
         android:name="com.example.driverapp.views.order.DeliverOrderFragment"
         android:label="fragment_deliver_order"
-        tools:layout="@layout/fragment_deliver_order" />
+        tools:layout="@layout/fragment_deliver_order" >
+        <action
+            android:id="@+id/action_deliverOrderFragment_to_tripDetailsFragment"
+            app:destination="@id/tripDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/reachDirectionFragment"
         android:name="com.example.driverapp.views.order.ReachDirectionFragment"
@@ -40,4 +44,9 @@
             android:id="@+id/action_reachDirectionFragment_to_deliverOrderFragment"
             app:destination="@id/deliverOrderFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/tripDetailsFragment"
+        android:name="com.example.driverapp.views.order.TripDetailsFragment"
+        android:label="fragment_trip_details"
+        tools:layout="@layout/fragment_trip_details" />
 </navigation>
