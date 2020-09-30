@@ -1,18 +1,15 @@
 package com.example.driverapp.viewmodels;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.driverapp.models.ApiResponse;
+import com.example.driverapp.models.Direction;
+import com.example.driverapp.models.Duration;
 import com.example.driverapp.models.Order;
 import com.example.driverapp.repositories.OrderRepository;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class OrderViewModel extends ViewModel {
@@ -52,6 +49,7 @@ public class OrderViewModel extends ViewModel {
     public LiveData<List<Order>> getAllAcceptedOrders(){
         return orderRepository.getAllAcceptedOrders();
     }
+
 
     public void setPolyline(PolylineOptions polyline){
         if(mutablePolyline == null){

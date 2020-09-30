@@ -13,17 +13,24 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.driverapp.R;
+import com.example.driverapp.commons.CommonUtils;
 import com.example.driverapp.commons.Constants;
 import com.example.driverapp.databinding.ActivityProcessOrderBinding;
+import com.example.driverapp.directionhelpers.ConstructDirectionUrl;
+import com.example.driverapp.directionhelpers.FetchURL;
 import com.example.driverapp.directionhelpers.TaskLoadedCallback;
 import com.example.driverapp.firebase.MessagingService;
+import com.example.driverapp.models.Direction;
 import com.example.driverapp.models.Order;
 import com.example.driverapp.sharedprefs.UserSession;
+import com.example.driverapp.viewmodels.LocationViewModel;
 import com.example.driverapp.viewmodels.OrderViewModel;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class ProcessOrderActivity extends AppCompatActivity implements TaskLoadedCallback {
@@ -31,6 +38,7 @@ public class ProcessOrderActivity extends AppCompatActivity implements TaskLoade
     ActivityProcessOrderBinding mBinding;
     private Polyline currentPolyline;
     OrderViewModel orderViewModel;
+    LocationViewModel locationViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,17 +50,22 @@ public class ProcessOrderActivity extends AppCompatActivity implements TaskLoade
         View rootView = mBinding.getRoot();
         setContentView(rootView);
         UserSession userSession = new UserSession(this);
-        //setContentView(R.layout.activity_process_order);
-        System.out.println("INSIDE onCreate(0 of ProcessOrderActivity============================");
 
         orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
+        locationViewModel = new ViewModelProvider(this).get(LocationViewModel.class);
         orderViewModel.init();
+
 
 
         try{
             String orderJson = getIntent().getStringExtra(MessagingService.INTENT_EXTRA_ORDER_STATUS);
             Order order = new Gson().fromJson(orderJson, Order.class);
             orderViewModel.setOrder(order);
+
+            LatLng place1  = CommonUtils.getRestaurantLocation(order.getRestaurant());
+            LatLng place2  = CommonUtils.getUserLocation(order.getLocation());
+            String url = ConstructDirectionUrl.getUrl(place1, place2, "driving", Constants.GOOGLE_MAP_AUTH_KEY);
+            new FetchURL(this, FetchURL.DISTANCE_PARSER).execute(url, "driving");
         }catch (Exception e){
             e.printStackTrace();
             Toast.makeText(this, "INTENT: EXCEPTION", Toast.LENGTH_SHORT).show();
@@ -71,7 +84,19 @@ public class ProcessOrderActivity extends AppCompatActivity implements TaskLoade
     @Override
     public void onTaskDone(Object... values) {
         Log.d(TAG, "Inside onTaskDone()......");
-        Log.d(TAG, "INSTANCE: POLYLINE");
-        orderViewModel.setPolyline((PolylineOptions) values[0]);
+        try{
+            if(values[0] instanceof Direction){
+                Log.d(TAG, "INSTANCE: Direction");
+                Direction direction = (Direction) values[0];
+                locationViewModel.setDirection(direction);
+                Log.d(TAG, "DURATION: "+direction.getDuration());
+            }else{
+                Log.d(TAG, "INSTANCE: POLYLINE");
+                orderViewModel.setPolyline((PolylineOptions) values[0]);
+
+            }
+        }catch (Exception  e){
+            e.printStackTrace();
+        }
     }
 }

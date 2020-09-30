@@ -30,9 +30,11 @@ import com.example.driverapp.directionhelpers.ConstructDirectionUrl;
 import com.example.driverapp.directionhelpers.FetchURL;
 import com.example.driverapp.directionhelpers.TaskLoadedCallback;
 import com.example.driverapp.firebase.MessagingService;
+import com.example.driverapp.models.Direction;
 import com.example.driverapp.models.Order;
 import com.example.driverapp.models.Restaurant;
 import com.example.driverapp.viewmodels.AuthenticationViewModel;
+import com.example.driverapp.viewmodels.LocationViewModel;
 import com.example.driverapp.viewmodels.OrderViewModel;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -51,6 +53,7 @@ public class AcceptOrderFragment extends Fragment implements TaskLoadedCallback 
 
     private FragmentAcceptOrderBinding mBinding;
     OrderViewModel orderViewModel;
+    LocationViewModel locationViewModel;
     NavController navController;
 
     public int counter;
@@ -104,6 +107,7 @@ public class AcceptOrderFragment extends Fragment implements TaskLoadedCallback 
 
         // Initialize ViewModel
         orderViewModel = new ViewModelProvider(requireActivity()).get(OrderViewModel.class);
+        locationViewModel = new ViewModelProvider(requireActivity()).get(LocationViewModel.class);
         orderViewModel.init();
 
         // Initialize NavController
@@ -131,7 +135,9 @@ public class AcceptOrderFragment extends Fragment implements TaskLoadedCallback 
             }
         }.start();
 
-
+        locationViewModel.getDirection().observe(requireActivity(), direction -> {
+            mBinding.approxDistance.setText("Approx dist " + direction.getDistance().getText());
+        });
 
         mBinding.btnClose.setOnClickListener(view -> requireActivity().finish());
 
