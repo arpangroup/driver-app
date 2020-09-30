@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
 
     <data>
         <import type="android.view.View"/>
+        <import type="com.example.driverapp.commons.OrderStatus"/>
         <variable
             name="order"
             type="com.example.driverapp.models.Order" />
@@ -14,7 +16,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/white"
+        tools:context=".views.order.ReachDirectionFragment">
+
 
         <include
             android:id="@+id/toolbar"
@@ -89,6 +93,7 @@
                 android:orientation="vertical">
 
                 <androidx.cardview.widget.CardView
+                    android:visibility="@{order.orderStatus == OrderStatus.DELIVERY_GUY_ASSIGNED ? View.VISIBLE : View.GONE}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:elevation="0dp"
@@ -270,11 +275,12 @@
             app:slider_icon="@drawable/slidetoact_ic_arrow"
             app:slider_icon_color="@color/blue"
             app:border_radius="30dp"
-            app:text="Reached Pickup Location"
+            app:text="@{order.orderStatus == OrderStatus.DELIVERY_GUY_ASSIGNED ? `Reached Pickup Locaton` : `Reached Drop Location`}"
             app:text_style="bold"
             app:text_size="16sp"
             app:slider_height="60dp"
             app:slider_locked="false" />
+
 
     </RelativeLayout>
 </layout>

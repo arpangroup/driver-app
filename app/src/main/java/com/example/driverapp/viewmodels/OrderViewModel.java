@@ -49,6 +49,12 @@ public class OrderViewModel extends ViewModel {
     public LiveData<List<Order>> getAllAcceptedOrders(){
         return orderRepository.getAllAcceptedOrders();
     }
+    public LiveData<Boolean> reachedPickupLocation(Order order){
+        return orderRepository.reachedPickUpLocation(order);
+    }
+    public LiveData<Boolean> reachedDeliveryLocation(Order order){
+        return orderRepository.reachedDeliveryLocation(order);
+    }
 
 
     public void setPolyline(PolylineOptions polyline){

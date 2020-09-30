@@ -1,4 +1,4 @@
-package com.example.driverapp.views.order;
+package com.example.driverapp.views.temp;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -99,7 +99,7 @@ public class ReachDropLocationFragment extends Fragment  implements OnMapReadyCa
         });
 
         mBinding.reachDropLocation.btnAccept.setOnSlideCompleteListener(slideToActView -> {
-            navController.navigate(R.id.action_reachDropLocationFragment_to_deliverOrderFragment);
+            //navController.navigate(R.id.action_reachDropLocationFragment_to_deliverOrderFragment);
         });
 
 

@@ -1,6 +1,5 @@
 package com.example.driverapp.views.order;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -25,15 +24,13 @@ import com.example.driverapp.R;
 import com.example.driverapp.commons.CommonUtils;
 import com.example.driverapp.commons.Constants;
 import com.example.driverapp.commons.DrawMarker;
-import com.example.driverapp.databinding.FragmentAcceptOrderBinding;
+import com.example.driverapp.commons.OrderStatus;
+import com.example.driverapp.databinding.FragmentReachDirectionBinding;
 import com.example.driverapp.databinding.FragmentReachPickUpLocationBinding;
 import com.example.driverapp.directionhelpers.ConstructDirectionUrl;
 import com.example.driverapp.directionhelpers.FetchURL;
-import com.example.driverapp.directionhelpers.TaskLoadedCallback;
-import com.example.driverapp.models.Address;
 import com.example.driverapp.models.Order;
-import com.example.driverapp.models.Restaurant;
-import com.example.driverapp.viewmodels.AuthenticationViewModel;
+import com.example.driverapp.viewmodels.LocationViewModel;
 import com.example.driverapp.viewmodels.OrderViewModel;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -43,20 +40,17 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.gson.Gson;
-import com.ncorti.slidetoact.SlideToActView;
 
 import java.util.Locale;
 
-public class ReachPickUpLocationFragment extends Fragment implements OnMapReadyCallback {
+public class ReachDirectionFragment extends Fragment implements OnMapReadyCallback {
     private final String TAG = this.getClass().getSimpleName();
 
-    private FragmentReachPickUpLocationBinding mBinding;
+    private FragmentReachDirectionBinding mBinding;
     OrderViewModel orderViewModel;
+    LocationViewModel locationViewModel;
     NavController navController;
     Order mOrder;
     MarkerOptions mPlace1, mPlace2;
@@ -67,7 +61,7 @@ public class ReachPickUpLocationFragment extends Fragment implements OnMapReadyC
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mBinding = FragmentReachPickUpLocationBinding.inflate(inflater, container, false);
+        mBinding = FragmentReachDirectionBinding.inflate(inflater, container, false);
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map1);
@@ -85,31 +79,67 @@ public class ReachPickUpLocationFragment extends Fragment implements OnMapReadyC
 
         // Initialize ViewModel
         orderViewModel = new ViewModelProvider(requireActivity()).get(OrderViewModel.class);
+        locationViewModel = new ViewModelProvider(requireActivity()).get(LocationViewModel.class);
         orderViewModel.init();
 
         // Initialize NavController
         navController = Navigation.findNavController(rootView);
         initClicks();
 
-        mBinding.reachPickup.toolbar.title.setText("Reach Restaurant");
+
 
         orderViewModel.getAllAcceptedOrders().observe(requireActivity(), orders -> {
             mOrder = orders.get(0);
-            mBinding.reachPickup.setOrder(mOrder);
-
+            mBinding.setOrder(mOrder);
             LatLng latLngRestaurant = CommonUtils.getRestaurantLocation(mOrder.getRestaurant());
-            LatLng latLngUser = CommonUtils.getUserLocation(mOrder.getLocation());
+            LatLng latLngCustomer = CommonUtils.getUserLocation(mOrder.getLocation());
+            LatLng latLngDriver = locationViewModel.getCurrentLocation().getValue();
+            if(latLngDriver == null) latLngDriver = new LatLng(0.0, 0.0);
 
-            mPlace1 = new MarkerOptions().position(latLngRestaurant).title("Location 1");
-            mPlace2 = new MarkerOptions().position(latLngUser).title("Location 2");
-
+            switch (mOrder.getOrderStatus()){
+                case DELIVERY_GUY_ASSIGNED:
+                    // Reach to the restaurant
+                    mBinding.toolbar.title.setText("Reach Restaurant");
+                    mPlace1 = new MarkerOptions().position(latLngDriver).title("Location 1");
+                    mPlace2 = new MarkerOptions().position(latLngRestaurant).title("Location 2");
+                    break;
+                case ON_THE_WAY:
+                    //Reach to the customers location
+                    mBinding.toolbar.title.setText("Reach Drop Location");
+                    mPlace1 = new MarkerOptions().position(latLngRestaurant).title("Location 1");
+                    mPlace2 = new MarkerOptions().position(latLngCustomer).title("Location 2");
+                    break;
+                default:
+                    Log.d(TAG, "Inside switch case default condition");
+                    Log.d(TAG, "Something error happened");
+                    break;
+            }
             String url = ConstructDirectionUrl.getUrl(mPlace1.getPosition(), mPlace2.getPosition(), "driving", Constants.GOOGLE_MAP_AUTH_KEY);
             new FetchURL(this.getContext(), FetchURL.POINT_PARSER).execute(url, "driving");
 
+
         });
 
-        mBinding.reachPickup.btnAccept.setOnSlideCompleteListener(slideToActView -> {
-            navController.navigate(R.id.action_reachPickUpLocationFragment_to_pickOrderFragment);
+        mBinding.btnAccept.setOnSlideCompleteListener(slideToActView -> {
+            if(mOrder.getOrderStatus() == OrderStatus.DELIVERY_GUY_ASSIGNED){
+                orderViewModel.reachedPickupLocation(mOrder).observe(requireActivity(), aBoolean -> {
+                    if(aBoolean){
+                        navController.navigate(R.id.action_reachDirectionFragment_to_pickOrderFragment);
+                    }else{
+                        Toast.makeText(requireActivity(), "Something error happened", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }else if(mOrder.getOrderStatus() == OrderStatus.ON_THE_WAY){
+                orderViewModel.reachedDeliveryLocation(mOrder).observe(requireActivity(), aBoolean -> {
+                    if(aBoolean){
+                        navController.navigate(R.id.action_reachDirectionFragment_to_deliverOrderFragment);
+                    }else{
+                        Toast.makeText(requireActivity(), "Something error happened", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }else{
+                Toast.makeText(requireActivity(), "Condition Mismatch", Toast.LENGTH_SHORT).show();
+            }
         });
 
 
@@ -130,21 +160,34 @@ public class ReachPickUpLocationFragment extends Fragment implements OnMapReadyC
     }
 
     private void initClicks() {
-        mBinding.reachPickup.layoutCallRestaurant.setOnClickListener(view -> {
+        mBinding.layoutCallRestaurant.setOnClickListener(view -> {
             CommonUtils.makePhoneCall(requireActivity(), mOrder.getRestaurant().getContactNumber());
         });
-        mBinding.reachPickup.layoutCallCustomer.setOnClickListener(view -> {
+        mBinding.layoutCallCustomer.setOnClickListener(view -> {
             CommonUtils.makePhoneCall(requireActivity(), mOrder.getUser().getPhone());
         });
-        mBinding.reachPickup.layoutDirection.setOnClickListener(view -> {
-            double destinationLatitude = Double.parseDouble(mOrder.getRestaurant().getLatitude());
-            double destinationLongitude = Double.parseDouble(mOrder.getRestaurant().getLongitude());
+        mBinding.layoutDirection.setOnClickListener(view -> {
+            double destinationLatitude = 0.0;
+            double destinationLongitude = 0.0;
+            if(mOrder.getOrderStatus() == OrderStatus.DELIVERY_GUY_ASSIGNED){
+                // Need to travel to restaurant location
+                destinationLatitude = Double.parseDouble(mOrder.getRestaurant().getLatitude());
+                destinationLongitude = Double.parseDouble(mOrder.getRestaurant().getLongitude());
+            }else if(mOrder.getOrderStatus() == OrderStatus.ON_THE_WAY){
+                // Need to travel to customers location
+                LatLng latLngCustomer = CommonUtils.getUserLocation(mOrder.getLocation());
+                destinationLatitude = latLngCustomer.latitude;
+                destinationLongitude = latLngCustomer.longitude;
+            }else{
+                //....
+            }
             String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%f,%f (%s)", destinationLatitude, destinationLongitude, "Where the party is at");
             Intent intentDirection = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri));
             intentDirection.setPackage("com.google.android.apps.maps");
             startActivity(intentDirection);
         });
     }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {

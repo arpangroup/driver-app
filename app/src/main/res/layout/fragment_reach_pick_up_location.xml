@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.order.ReachPickUpLocationFragment">
+    tools:context=".views.temp.ReachPickUpLocationFragment">
     <include
         android:id="@+id/reach_pickup"
         layout="@layout/layout_reach_pickup_location"/>

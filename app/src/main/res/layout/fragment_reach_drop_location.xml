@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.order.ReachDropLocationFragment">
+    tools:context=".views.temp.ReachDropLocationFragment">
     <include
         android:id="@+id/reach_drop_location"
         layout="@layout/layout_reach_drop_location"/>

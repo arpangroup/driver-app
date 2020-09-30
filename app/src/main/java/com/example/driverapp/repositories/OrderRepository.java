@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.driverapp.api.ApiInterface;
 import com.example.driverapp.api.ApiService;
+import com.example.driverapp.commons.OrderStatus;
 import com.example.driverapp.models.ApiResponse;
 import com.example.driverapp.models.Order;
 import com.example.driverapp.models.request.ProcessOrderRequest;
@@ -42,19 +43,33 @@ public class OrderRepository {
         return isLoading;
     }
 
-    public LiveData<Boolean> acceptOrder(Order order){
-        //mutableAcceptedOrders.setValue(Collections.singletonList(order));
-        mutableAcceptedOrders.setValue(Collections.singletonList(order));
-        return acceptOrderApi(order);
-    }
-    public LiveData<Boolean> pickedUpOrder(Order order){
-        return pickUpOrderApi(order);
-    }
     public LiveData<List<Order>> getAllAcceptedOrders(){
         if(mutableAcceptedOrders == null){
             mutableAcceptedOrders = new MutableLiveData<>(new ArrayList<>());
         }
         return mutableAcceptedOrders;
+    }
+
+    public LiveData<Boolean> acceptOrder(Order order){
+        //mutableAcceptedOrders.setValue(Collections.singletonList(order));
+        order.setOrderStatus(OrderStatus.DELIVERY_GUY_ASSIGNED);
+        mutableAcceptedOrders.setValue(Collections.singletonList(order));
+        return acceptOrderApi(order);
+    }
+    public LiveData<Boolean> reachedPickUpLocation(Order order){
+        order.setOrderStatus(OrderStatus.REACHED_PICKUP_LOCATION);
+        mutableAcceptedOrders.setValue(Collections.singletonList(order));
+        return reachPickupLocationApi(order);
+    }
+    public LiveData<Boolean> pickedUpOrder(Order order){
+        order.setOrderStatus(OrderStatus.ON_THE_WAY);
+        mutableAcceptedOrders.setValue(Collections.singletonList(order));
+        return pickUpOrderApi(order);
+    }
+    public LiveData<Boolean> reachedDeliveryLocation(Order order){
+        order.setOrderStatus(OrderStatus.REACHED_DELIVERY_LOCATION);
+        mutableAcceptedOrders.setValue(Collections.singletonList(order));
+        return reachDeliveryLocationApi(order);
     }
 
 
@@ -110,14 +125,72 @@ public class OrderRepository {
         });
         return apiResponseMutableLiveData;
     }
-    private LiveData<Boolean> pickUpOrderApi(Order order){
+    private LiveData<Boolean> reachPickupLocationApi(Order order){
         ProcessOrderRequest request = new ProcessOrderRequest(order.getId());
         MutableLiveData<Boolean> apiResponseMutableLiveData = new MutableLiveData<>();
-        Log.d(TAG, "Inside acceptOrderApi()....");
+        Log.d(TAG, "Inside reachPickupLocationApi()....");
+        Log.d(TAG, "REQUEST: "+ new Gson().toJson(request));
+        ApiInterface apiInterface = ApiService.getApiService();
+        isLoading.setValue(true);
+        apiInterface.reachToPickUpLocation(request).enqueue(new Callback<Order>() {
+            @Override
+            public void onResponse(Call<Order> call, Response<Order> response) {
+                if(response.isSuccessful()){
+                    Log.d(TAG, "Setting accepted orders to the list...");
+                    isLoading.setValue(false);
+                    apiResponseMutableLiveData.setValue(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Order> call, Throwable t) {
+                isLoading.setValue(false);
+                Log.d(TAG, "FAIL");
+                apiResponseMutableLiveData.setValue(false);
+            }
+        });
+        return apiResponseMutableLiveData;
+    }
+    private LiveData<Boolean> pickUpOrderApi(Order order){
+        ProcessOrderRequest request = new ProcessOrderRequest(order.getId());
+        MutableLiveData<Boolean> apiResponseMutableLiveData = new MutableLiveData<>(false);
+        Log.d(TAG, "Inside pickUpOrderApi()....");
         Log.d(TAG, "REQUEST: "+ new Gson().toJson(request));
         ApiInterface apiInterface = ApiService.getApiService();
         isLoading.setValue(true);
         apiInterface.pickedUpOrder(request).enqueue(new Callback<Order>() {
+            @Override
+            public void onResponse(Call<Order> call, Response<Order> response) {
+                isLoading.setValue(false);
+                try{
+                    Log.d(TAG, "RESPONSE: "+response.body());
+                    if(response.isSuccessful()){
+                        apiResponseMutableLiveData.setValue(true);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Log.e(TAG, "Error in pickUpOrderApi()......");
+                    apiResponseMutableLiveData.setValue(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Order> call, Throwable t) {
+                isLoading.setValue(false);
+                Log.d(TAG, "FAIL");
+                apiResponseMutableLiveData.setValue(false);
+            }
+        });
+        return apiResponseMutableLiveData;
+    }
+    private LiveData<Boolean> reachDeliveryLocationApi(Order order){
+        ProcessOrderRequest request = new ProcessOrderRequest(order.getId());
+        MutableLiveData<Boolean> apiResponseMutableLiveData = new MutableLiveData<>();
+        Log.d(TAG, "Inside reachDeliveryLocationApi()....");
+        Log.d(TAG, "REQUEST: "+ new Gson().toJson(request));
+        ApiInterface apiInterface = ApiService.getApiService();
+        isLoading.setValue(true);
+        apiInterface.reachToPickUpLocation(request).enqueue(new Callback<Order>() {
             @Override
             public void onResponse(Call<Order> call, Response<Order> response) {
                 if(response.isSuccessful()){

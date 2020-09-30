@@ -30,6 +30,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 
+import java.net.URL;
 import java.util.Calendar;
 import java.util.List;
 
@@ -65,7 +66,10 @@ public class ProcessOrderActivity extends AppCompatActivity implements TaskLoade
             LatLng place1  = CommonUtils.getRestaurantLocation(order.getRestaurant());
             LatLng place2  = CommonUtils.getUserLocation(order.getLocation());
             String url = ConstructDirectionUrl.getUrl(place1, place2, "driving", Constants.GOOGLE_MAP_AUTH_KEY);
+            Log.d(TAG, "REQUEST FOR POLYLINE");
+            Log.d(TAG, "URL: "+ url);
             new FetchURL(this, FetchURL.DISTANCE_PARSER).execute(url, "driving");
+            new FetchURL(this, FetchURL.POINT_PARSER).execute(url, "driving");
         }catch (Exception e){
             e.printStackTrace();
             Toast.makeText(this, "INTENT: EXCEPTION", Toast.LENGTH_SHORT).show();
@@ -98,5 +102,10 @@ public class ProcessOrderActivity extends AppCompatActivity implements TaskLoade
         }catch (Exception  e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

@@ -144,7 +144,7 @@ public class AcceptOrderFragment extends Fragment implements TaskLoadedCallback 
         mBinding.btnAccept.setOnSlideCompleteListener(slideToActView -> {
             orderViewModel.acceptOrder(orderViewModel.getOrder()).observe(requireActivity(), isAccepted -> {
                 if(isAccepted){
-                    navController.navigate(R.id.action_acceptOrderFragment_to_reachPickUpLocationFragment);
+                    navController.navigate(R.id.action_acceptOrderFragment_to_reachDirectionFragment);
                 }else {
                     Toast.makeText(requireActivity(), "Something error happened", Toast.LENGTH_SHORT).show();
                 }

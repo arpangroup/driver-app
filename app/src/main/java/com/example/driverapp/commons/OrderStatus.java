@@ -7,7 +7,9 @@ public enum OrderStatus {
     ORDER_READY(7),//Order ready to deliver to  DeliveryGuy               [READY]
     ON_THE_WAY(4),// Order is pickedUp and is on its way to deliver [PICKED]
     DELIVERED(5),
-    CANCELED(6);
+    CANCELED(6),
+    REACHED_PICKUP_LOCATION(8),
+    REACHED_DELIVERY_LOCATION(8);
 
 
     private final int value;

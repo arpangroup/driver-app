@@ -52,7 +52,7 @@ public class PickOrderFragment extends Fragment {
 
         orderViewModel.getAllAcceptedOrders().observe(requireActivity(), orders -> {
             mOrder = orders.get(0);
-            mBinding.pickOrder.toolbar.title.setText("PICK: " + mOrder.getUniqueOrderId());
+            mBinding.pickOrder.toolbar.title.setText("PICK ORDER");
             mBinding.pickOrder.setOrder(mOrder);
         });
 
@@ -60,9 +60,11 @@ public class PickOrderFragment extends Fragment {
         mBinding.pickOrder.btnAccept.setOnSlideCompleteListener(slideToActView -> {
             orderViewModel.pickedUpOrder(orderViewModel.getOrder()).observe(requireActivity(), isPickedUp -> {
                 if(isPickedUp){
-                    navController.navigate(R.id.action_pickOrderFragment_to_reachDropLocationFragment);
-                }else {
-                    Toast.makeText(requireActivity(), "Something error happened", Toast.LENGTH_SHORT).show();
+                    navController.navigate(R.id.action_pickOrderFragment_to_reachDirectionFragment);
+                }else{
+                    //mBinding.pickOrder.btnAccept.setLocked(true);
+                    mBinding.pickOrder.btnAccept.resetSlider();
+                    Toast.makeText(requireActivity(), "Order is not ready yet", Toast.LENGTH_LONG).show();
                 }
             });
         });

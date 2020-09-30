@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.driverapp.adapters.DishListAdapter;
+import com.example.driverapp.commons.OrderStatus;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -72,6 +73,8 @@ public class Order {
 
     @SerializedName("user")
     private User user;
+
+    private OrderStatus orderStatus;
 
     public Order(int id, String uniqueOrderId) {
         this.id = id;

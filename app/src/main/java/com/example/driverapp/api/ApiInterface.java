@@ -39,4 +39,11 @@ public interface ApiInterface {
     Call<Order> pickedUpOrder(@Body ProcessOrderRequest processOrderRequest);
 
 
+    @POST("/api/delivery/reached-to-pickup-location")
+    Call<Order> reachToPickUpLocation(@Body ProcessOrderRequest processOrderRequest);
+
+    @POST("/api/delivery/reached-to-deliver-location")
+    Call<Order> reachToDeliverLocation(@Body ProcessOrderRequest processOrderRequest);
+
+
 }
