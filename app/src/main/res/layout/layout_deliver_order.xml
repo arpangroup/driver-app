@@ -348,7 +348,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:elevation="6dp"
-            android:saveEnabled="false"
             app:area_margin="4dp"
             app:animation_duration="250"
             app:outer_color="@color/gray"

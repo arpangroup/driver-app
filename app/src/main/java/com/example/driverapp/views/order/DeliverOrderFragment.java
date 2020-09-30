@@ -56,6 +56,7 @@ public class DeliverOrderFragment extends Fragment {
         navController = Navigation.findNavController(rootView);
         initClicks();
         mBinding.deliverOrder.btnItemGivenToCustomer.setVisibility(View.GONE);
+        mBinding.deliverOrder.btnAccept.setLocked(true);
 
 
         orderViewModel.getAllAcceptedOrders().observe(requireActivity(), orders -> {
@@ -114,6 +115,7 @@ public class DeliverOrderFragment extends Fragment {
                     otp = input.getText().toString();
                     if(otp.equals(mOrder.getDeliveryPin())){
                         mBinding.deliverOrder.btnAccept.setEnabled(true);
+                        mBinding.deliverOrder.btnAccept.setLocked(false);
                         mBinding.deliverOrder.btnAccept.setOuterColor(R.color.orange);
                     }else{
                         Toast.makeText(requireActivity(), "Invalid Delivery PIN", Toast.LENGTH_LONG).show();
