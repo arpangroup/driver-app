@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.example.driverapp.R;
 import com.example.driverapp.databinding.FragmentPickOrderBinding;
 import com.example.driverapp.databinding.FragmentTripDetailsBinding;
 import com.example.driverapp.models.Order;
+import com.example.driverapp.viewmodels.LocationViewModel;
 import com.example.driverapp.viewmodels.OrderViewModel;
 
 public class TripDetailsFragment extends Fragment {
@@ -24,8 +26,9 @@ public class TripDetailsFragment extends Fragment {
 
     private FragmentTripDetailsBinding mBinding;
     OrderViewModel orderViewModel;
+    LocationViewModel locationViewModel;
     NavController navController;
-    Order mOrder = null;
+    Order mOrder;
 
 
     @Override
@@ -40,11 +43,24 @@ public class TripDetailsFragment extends Fragment {
 
         // Initialize ViewModel
         orderViewModel = new ViewModelProvider(requireActivity()).get(OrderViewModel.class);
+        locationViewModel = new ViewModelProvider(requireActivity()).get(LocationViewModel.class);
         orderViewModel.init();
 
         // Initialize NavController
         navController = Navigation.findNavController(rootView);
         mBinding.tripDetails.toolbar.title.setText("Trip Summary");
+
+
+        orderViewModel.getAllAcceptedOrders().observe(requireActivity(), orders -> {
+            mOrder =  orders.get(0);
+            mBinding.tripDetails.setOrder(mOrder);
+        });
+        locationViewModel.getDirection().observe(requireActivity(), direction -> {
+            Log.d(TAG, "DIRECTION: "+direction);
+            Log.d(TAG, "DISTANCE: "+direction.getDistance());
+            Log.d(TAG, "DURATION: "+direction.getDuration());
+            mBinding.tripDetails.setDirection(direction);
+        });
 
         mBinding.tripDetails.btnFinish.setOnClickListener(view -> requireActivity().finish());
 

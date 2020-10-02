@@ -15,12 +15,8 @@ import com.example.driverapp.R;
 
 public class App extends Application {
     public static final String CHANNEL_ID_NEW_ORDER = "channel_new_orders";
-    public static final String CHANNEL_ID_PUSH_NOTIFICATION = "channel_push_notifications";
-    public static final String CHANNEL_ID_NEW_ORDER_FETCH_SERVICE = "channel_new_order_fetch_service";
     public static final String CHANNEL_NAME_NEW_ORDER = "channel new orders";
-    public static final String CHANNEL_NAME_PUSH_NOTIFICATION = "channel push notifications";
-    public static final String CHANNEL_NAME_NEW_ORDER_FETCH_SERVICE = "channel new order fetch service";
-    public static final int NOTIFICATION_ID_NEW_ORDER = 600;
+    public static final int NOTIFICATION_ID_NEW_ORDER = 700;
 
     @Override
     public void onCreate() {

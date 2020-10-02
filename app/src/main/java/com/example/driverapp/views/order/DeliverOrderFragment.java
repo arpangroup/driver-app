@@ -118,6 +118,8 @@ public class DeliverOrderFragment extends Fragment {
                         mBinding.deliverOrder.btnAccept.setLocked(false);
                         mBinding.deliverOrder.btnAccept.setOuterColor(R.color.orange);
                     }else{
+                        Log.d(TAG, "ORIGINAL_OTP: " + mOrder.getDeliveryPin());
+                        Log.d(TAG, "PROVIDE_OTP : " + otp);
                         Toast.makeText(requireActivity(), "Invalid Delivery PIN", Toast.LENGTH_LONG).show();
                     }
                 }

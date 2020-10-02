@@ -25,6 +25,7 @@ import com.example.driverapp.models.Order;
 import com.example.driverapp.sharedprefs.UserSession;
 import com.example.driverapp.viewmodels.LocationViewModel;
 import com.example.driverapp.viewmodels.OrderViewModel;
+import com.example.driverapp.views.order.VerifyBillDialog;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -34,7 +35,7 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.List;
 
-public class ProcessOrderActivity extends AppCompatActivity implements TaskLoadedCallback {
+public class ProcessOrderActivity extends AppCompatActivity implements TaskLoadedCallback,  VerifyBillDialog.VerifyBillDialogListener {
     private final String TAG = this.getClass().getSimpleName();
     ActivityProcessOrderBinding mBinding;
     private Polyline currentPolyline;
@@ -107,5 +108,15 @@ public class ProcessOrderActivity extends AppCompatActivity implements TaskLoade
     @Override
     public void onBackPressed() {
         finish();
+    }
+
+    @Override
+    public void onClickPhotoOfBill() {
+
+    }
+
+    @Override
+    public void onClickHaveNoBill() {
+
     }
 }

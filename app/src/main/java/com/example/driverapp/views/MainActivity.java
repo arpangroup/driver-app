@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -62,6 +64,10 @@ public class MainActivity extends AppCompatActivity {
         FirebaseMessaging.getInstance().setAutoInitEnabled(false);
         locationViewModel = new ViewModelProvider(this).get(LocationViewModel.class);
         getCurrentLocation();
+
+        mBinding.toolbar.navMenu.setOnClickListener(view -> {
+            mBinding.drawerLayout.openDrawer(GravityCompat.START);
+        });
 
 
         ServiceTracker.ServiceState currentServiceState = getServiceState(this);

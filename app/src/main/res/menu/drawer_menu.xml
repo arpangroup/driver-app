@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_baseline_local_offer_24"
+            android:title="PureEats Offer" />
+
+        <item
+            android:id="@+id/nav_bus"
+            android:icon="@drawable/ic_baseline_message_24"
+            android:title="Message Center" />
+    </group>
+
+    <item android:title="Profile">
+
+        <menu>
+
+            <group android:checkableBehavior="single">
+
+                <item
+                    android:id="@+id/nav_cycle"
+                    android:icon="@drawable/ic_baseline_access_alarms_24"
+                    android:title="Login History" />
+
+                <item
+                    android:id="@+id/nav_profile"
+                    android:icon="@drawable/ic_baseline_account_box_24"
+                    android:title="Profile" />
+
+                <item
+                    android:id="@+id/nav_logout"
+                    android:icon="@drawable/ic_baseline_power_settings_new_24"
+                    android:title="Logout" />
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="Communicate">
+
+        <menu>
+
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_baseline_share_24"
+                android:title="Share" />
+
+            <item
+                android:id="@+id/nav_rate"
+                android:icon="@drawable/ic_baseline_rate_review_24"
+                android:title="Rate Us" />
+        </menu>
+    </item>
+
+</menu>

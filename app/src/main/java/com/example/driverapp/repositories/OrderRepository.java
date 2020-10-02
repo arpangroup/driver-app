@@ -197,13 +197,15 @@ public class OrderRepository {
         Log.d(TAG, "REQUEST: "+ new Gson().toJson(request));
         ApiInterface apiInterface = ApiService.getApiService();
         isLoading.setValue(true);
-        apiInterface.reachToPickUpLocation(request).enqueue(new Callback<Order>() {
+        apiInterface.reachToDeliverLocation(request).enqueue(new Callback<Order>() {
             @Override
             public void onResponse(Call<Order> call, Response<Order> response) {
                 if(response.isSuccessful()){
                     Log.d(TAG, "Setting accepted orders to the list...");
                     isLoading.setValue(false);
                     apiResponseMutableLiveData.setValue(true);
+                }else{
+                    Log.d(TAG, "Invalid response");
                 }
             }
 

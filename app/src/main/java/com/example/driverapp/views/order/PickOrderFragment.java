@@ -1,5 +1,6 @@
 package com.example.driverapp.views.order;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,12 +18,10 @@ import android.widget.Toast;
 import com.example.driverapp.R;
 import com.example.driverapp.commons.CommonUtils;
 import com.example.driverapp.databinding.FragmentPickOrderBinding;
-import com.example.driverapp.databinding.FragmentReachPickUpLocationBinding;
 import com.example.driverapp.models.Order;
-import com.example.driverapp.viewmodels.AuthenticationViewModel;
 import com.example.driverapp.viewmodels.OrderViewModel;
 
-public class PickOrderFragment extends Fragment {
+public class PickOrderFragment extends Fragment{
     private final String TAG = this.getClass().getSimpleName();
 
     private FragmentPickOrderBinding mBinding;
@@ -70,6 +69,8 @@ public class PickOrderFragment extends Fragment {
 
 
 
+
+
     }
 
     private void initClicks() {
@@ -95,6 +96,8 @@ public class PickOrderFragment extends Fragment {
         });
 
         mBinding.pickOrder.btnClickPhoto.setOnClickListener(view -> {
+            VerifyBillDialog dialog = new VerifyBillDialog();
+            dialog.show(requireActivity().getSupportFragmentManager(), "View Order Id From Bill");
 
         });
         mBinding.pickOrder.radioConfirm.setOnCheckedChangeListener((compoundButton, b) -> {
@@ -107,4 +110,7 @@ public class PickOrderFragment extends Fragment {
             }
         });
     }
+
+
+
 }

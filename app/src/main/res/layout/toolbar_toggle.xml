@@ -31,25 +31,36 @@
                 app:track="@drawable/custom_track"
                 android:thumb="@drawable/custom_thumb"
                 android:text=""/>
-
-            <TextView
-                android:id="@+id/txt_search"
-                android:layout_marginTop="-1.5dp"
-                android:layout_marginRight="9dp"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center|left"
-                android:layout_marginLeft="16dp"
-                android:layout_gravity="end"
-                android:background="@color/transferent"
-                android:fontFamily="@font/sfpro_display_semibold"
-                android:hint="Duty Status"
-                android:letterSpacing="0.0525"
-                android:maxLines="1"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textColorHint="@color/black"
-                android:textSize="18sp" />
+                android:layout_height="wrap_content"
+                android:layoutDirection="ltr"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/nav_menu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/app_name"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_baseline_menu_24"/>
+                <TextView
+                    android:id="@+id/txt_search"
+                    android:layout_marginRight="9dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center|left"
+                    android:layout_marginLeft="16dp"
+                    android:layout_gravity="center"
+                    android:background="@color/transferent"
+                    android:fontFamily="@font/sfpro_display_medium"
+                    android:hint="Duty Status"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textColorHint="@color/black"
+                    android:textSize="18sp" />
+            </LinearLayout>
         </LinearLayout>
 
 
