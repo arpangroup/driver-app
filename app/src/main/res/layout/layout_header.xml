@@ -13,10 +13,11 @@
         android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/human"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ripple"
         app:riv_oval="true"/>
+<!--    android:src="@drawable/human"-->
     <View
         android:id="@+id/view_supporter"
         android:layout_width="1dp"
@@ -27,7 +28,7 @@
         app:layout_constraintTop_toTopOf="@+id/imgProfile"/>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/profile_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"

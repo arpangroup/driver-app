@@ -55,6 +55,10 @@ public class DashboardFragment extends Fragment {private final String TAG = this
         // Initialize NavController
         navController = Navigation.findNavController(rootView);
         //mBinding.setOrder(orderViewModel.getOrder());
+
+        mBinding.snackbar.btnSnackbarAction.setOnClickListener(view -> {
+            navController.navigate(R.id.acceptedOrderListFragment);
+        });
     }
 
 

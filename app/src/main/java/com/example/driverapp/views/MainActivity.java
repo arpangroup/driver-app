@@ -20,13 +20,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.driverapp.R;
 import com.example.driverapp.commons.Actions;
+import com.example.driverapp.commons.Constants;
 import com.example.driverapp.databinding.ActivityMainBinding;
+import com.example.driverapp.models.User;
 import com.example.driverapp.services.EndlessService;
 import com.example.driverapp.sharedprefs.ServiceTracker;
+import com.example.driverapp.sharedprefs.UserSession;
 import com.example.driverapp.utils.GpsUtils;
 import com.example.driverapp.viewmodels.LocationViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -34,6 +39,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.squareup.picasso.Picasso;
 
 import static com.example.driverapp.sharedprefs.ServiceTracker.getServiceState;
 
@@ -88,7 +94,14 @@ public class MainActivity extends AppCompatActivity{
         ServiceTracker.ServiceState currentServiceState = getServiceState(this);
         NavigationView navigationView = (NavigationView) mBinding.navView;
         View headerView = navigationView.getHeaderView(0);
+
+        ImageView profileImage = headerView.findViewById(R.id.imgProfile);
+        TextView profileName = headerView.findViewById(R.id.profile_name);
         SwitchCompat switchCompat = headerView.findViewById(R.id.dutyStatusToggleSwitch);
+
+        User user = UserSession.getUserData(this);
+        Picasso.get().load(Constants.DELIVERY_IMAGE_URL + user.getPhoto()).into(profileImage);
+        profileName.setText(user.getNickName());
 
         if(currentServiceState == ServiceTracker.ServiceState.STARTED){
             switchCompat.setChecked(true);

@@ -38,7 +38,7 @@
     <fragment
         android:id="@+id/acceptedOrderListFragment"
         android:name="com.example.driverapp.views.AcceptedOrderListFragment"
-        android:label="fAccepted Orders"
+        android:label="Accepted Orders"
         tools:layout="@layout/fragment_accepted_order_list" />
     <fragment
         android:id="@+id/chatFragment"

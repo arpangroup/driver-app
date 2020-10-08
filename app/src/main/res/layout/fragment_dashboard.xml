@@ -8,6 +8,7 @@
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
+        android:layout_above="@id/snackbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
@@ -591,4 +592,7 @@
     </androidx.core.widget.NestedScrollView>
 
 
+    <include
+        android:id="@+id/snackbar"
+        layout="@layout/layout_snackbar"/>
 </RelativeLayout>
