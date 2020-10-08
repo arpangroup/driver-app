@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.example.driverapp.models.Restaurant;
 import com.example.driverapp.models.User;
 import com.google.gson.Gson;
 

@@ -10,36 +10,44 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class User {
-    int id;
+    private int id;
     @SerializedName("auth_token")
     String authToken;
     private String name;
+
+    @SerializedName("nick_name")
+    private String nickName;
     private String email;
-    @SerializedName("email_verified_at")
-    private String emailVerifiedAt;
-    private String phone;
-    @SerializedName("default_address_id")
-    private int defaultAddressId;
-    @SerializedName("default_address")
-    private Address address;
-    @SerializedName("delivery_pin")
-    private String deliveryPin;
     @SerializedName("wallet_balance")
     private double walletBalance;
-    private String photo;
-    private String password;
-
-    @SerializedName("created_at")
-    private String createdAt;
-    @SerializedName("updated_at")
-    private String updatedAt;
-
-    @SerializedName("push_token")
-    private String pushToken;
-
-
     @SerializedName("onGoingCount")
     private int onGoingCount;
     @SerializedName("completedCount")
     private int completedCount;
+    private String age;
+    private String gender;
+    private String description;
+    private String phone;
+    private String photo;
+
+    @SerializedName("vehicle_number")
+    private String vehicleNumber;
+
+    @SerializedName("commission_rate")
+    private String commissionRate;
+
+    @SerializedName("is_notifiable")
+    private int isNotifiable;
+
+    @SerializedName("max_accept_delivery_limit")
+    private int maxAcceptDeliveryLimit;
+
+    @SerializedName("delivery_pin")
+    private String deliveryPin;
+
+    @SerializedName("push_token")
+    String pushToken;
+
+    private Address address;
+
 }

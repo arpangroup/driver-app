@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.driverapp.api.ApiInterface;
 import com.example.driverapp.api.ApiService;
-import com.example.driverapp.commons.LoginType;
 import com.example.driverapp.models.Address;
 import com.example.driverapp.models.ApiResponse;
 import com.example.driverapp.models.LoginResponse;

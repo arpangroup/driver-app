@@ -1,17 +1,239 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    tools:context=".views.ProfileFragment">
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="user"
+            type="com.example.driverapp.models.User" />
+    </data>
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:gravity="center"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Profile Fragment" />
+        android:weightSum="5"
+        android:background="@color/white"
+        android:orientation="vertical"
+        tools:context=".views.ProfileFragment">
 
-</RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
+            android:layout_above="@+id/card_view">
+
+            <ImageView
+                android:id="@+id/profile_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/person" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/image_overlay" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/card_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3.5"
+            android:layout_marginTop="-20dp"
+            android:layout_alignParentBottom="true">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="-16dp"
+                app:cardCornerRadius="16dp"
+                android:background="@color/white"
+                android:elevation="6dp"
+                app:cardPreventCornerOverlap="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="16dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layoutDirection="rtl"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/TextAppearance.AppCompat.Large"
+                            android:layout_marginLeft="8dp"
+                            android:textStyle="bold"
+                            android:text="@{user.age + ` Yrs`}"
+                            android:hint="24 Yrs" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@{user.nickName}"
+                            android:hint="John DoeDoe"
+                            android:textAlignment="textStart"
+                            style="@style/TextAppearance.AppCompat.Large"
+                            android:ellipsize="end"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{user.description != null ? user.description : ``}"
+                        android:textAlignment="textStart"
+                        style="@style/TextAppearance.AppCompat.Body2" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:background="@drawable/ripple_effect"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:id="@+id/phoneIcon"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/ic_baseline_phone_24"
+                                app:tint="#06A50C" />
+
+                            <TextView
+                                android:id="@+id/txt_phone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{`(+91) ` + user.phone}"
+                                android:hint="(+91) 345 32 45"
+                                android:layout_marginStart="32dp"
+                                android:textColor="#000"
+                                style="@style/TextAppearance.AppCompat.Medium" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/phoneDesc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Mobile"
+                            android:layout_marginStart="62dp"
+                            android:textColor="#8A000000"
+                            style="@style/TextAppearance.AppCompat.Body1" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:background="@drawable/ripple_effect"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/ic_baseline_mail_24"
+                                app:tint="#FF5722" />
+
+                            <TextView
+                                android:id="@+id/txt_user_email"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{user.email}"
+                                android:hint="workemail@gmail.com"
+                                android:layout_marginStart="32dp"
+                                android:textColor="#000"
+                                style="@style/TextAppearance.AppCompat.Medium" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Email"
+                            android:layout_marginStart="62dp"
+                            android:textColor="#8A000000"
+                            style="@style/TextAppearance.AppCompat.Body1" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:background="@drawable/ripple_effect"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/ic_baseline_motorcycle_24"
+                                app:tint="@color/blue" />
+
+                            <TextView
+                                android:id="@+id/txt_veichle_no"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{user.vehicleNumber}"
+                                android:hint="WB-85955555"
+                                android:layout_marginStart="32dp"
+                                android:textColor="#000"
+                                style="@style/TextAppearance.AppCompat.Medium" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Vehicle"
+                            android:layout_marginStart="62dp"
+                            android:textColor="#8A000000"
+                            style="@style/TextAppearance.AppCompat.Body1" />
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="bottom">
+
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="64dp"
+                            android:text="Chance Profile Image"
+                            android:layout_gravity="bottom"
+                            android:layout_marginTop="24dp"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            style="@style/TextAppearance.AppCompat.Button"
+                            android:background="@drawable/rounded_blue_button" />
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+
+    </LinearLayout>
+</layout>

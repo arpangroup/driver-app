@@ -25,7 +25,6 @@
             android:paddingBottom="20dp">
 
             <LinearLayout
-                android:id="@+id/layout_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -91,7 +90,7 @@
                         android:background="@color/transferent"
                         android:fontFamily="@font/sfpro_text_medium"
                         android:hint="Enter mobile number"
-                        android:text="9831098310"
+                        android:text=""
                         android:inputType="number"
                         android:maxLength="10"
                         android:textColor="@color/black"

@@ -9,15 +9,20 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.driverapp.R;
+import com.example.driverapp.commons.Constants;
 import com.example.driverapp.databinding.FragmentAcceptOrderBinding;
 import com.example.driverapp.databinding.FragmentProfileBinding;
+import com.example.driverapp.models.User;
+import com.example.driverapp.sharedprefs.UserSession;
 import com.example.driverapp.viewmodels.LocationViewModel;
 import com.example.driverapp.viewmodels.OrderViewModel;
+import com.squareup.picasso.Picasso;
 
 public class ProfileFragment extends Fragment {
     private final String TAG = this.getClass().getSimpleName();
@@ -44,5 +49,10 @@ public class ProfileFragment extends Fragment {
 
         // Initialize NavController
         navController = Navigation.findNavController(rootView);
+
+
+        User user = UserSession.getUserData(requireActivity());
+        mBinding.setUser(user);
+        Picasso.get().load(Constants.DELIVERY_IMAGE_URL + user.getPhoto()).into(mBinding.profileImage);
     }
 }

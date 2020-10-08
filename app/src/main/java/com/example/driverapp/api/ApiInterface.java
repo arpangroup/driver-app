@@ -1,17 +1,15 @@
 package com.example.driverapp.api;
 
 import com.example.driverapp.models.ApiResponse;
+import com.example.driverapp.models.User;
 import com.example.driverapp.models.request.DeliverOrderRequest;
 import com.example.driverapp.models.request.DeliveryGuyGpsRequest;
 import com.example.driverapp.models.request.LoginRequest;
 import com.example.driverapp.models.LoginResponse;
 import com.example.driverapp.models.Order;
 import com.example.driverapp.models.request.RequestToken;
-import com.example.driverapp.models.User;
 import com.example.driverapp.models.request.ProcessOrderRequest;
 import com.example.driverapp.models.response.DeliveryOrderResponse;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

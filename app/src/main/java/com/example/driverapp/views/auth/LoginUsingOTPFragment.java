@@ -63,6 +63,9 @@ public class LoginUsingOTPFragment extends Fragment {
         authenticationViewModel.init();
         initOTPInput();
 
+        mBinding.layoutLoginUsingPassword.setVisibility(View.GONE);
+
+
         // Initialize NavController
         navController = Navigation.findNavController(rootView);
 

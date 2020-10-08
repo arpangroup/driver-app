@@ -69,7 +69,7 @@ public class Order {
 
 
     @SerializedName("delivery_details")
-    private DeliveryGuy deliveryDetails;
+    private User deliveryDetails;
 
     @SerializedName("user")
     private User user;

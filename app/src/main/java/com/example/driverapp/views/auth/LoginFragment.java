@@ -76,7 +76,6 @@ public class LoginFragment extends Fragment {
             if(phone != null) {
                 mBinding.btnSendOtp.setBackgroundColor(Color.parseColor("#E3E3E3"));
                 authenticationViewModel.setPhoneNumber(phone);
-                navController.navigate(R.id.action_otpSentFragment_to_loginUsingPasswordFragment);
 
                 authenticationViewModel.sendLoginOtp(phone).observe(getViewLifecycleOwner(), apiResponse -> {
                     if(apiResponse.isSuccess()){
@@ -95,10 +94,6 @@ public class LoginFragment extends Fragment {
 
         mBinding.signup.setOnClickListener(view -> {
             //navController.navigate(R.id.action_otpSentFragment_to_signupFragment);
-        });
-
-        mBinding.layoutHeader.setOnClickListener(view -> {
-            startActivity(new Intent(requireActivity(), MainActivity.class));
         });
 
 

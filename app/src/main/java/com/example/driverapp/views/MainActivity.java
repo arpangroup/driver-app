@@ -1,5 +1,6 @@
 package com.example.driverapp.views;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
@@ -17,7 +18,9 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.driverapp.R;
 import com.example.driverapp.commons.Actions;
@@ -34,7 +37,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import static com.example.driverapp.sharedprefs.ServiceTracker.getServiceState;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
     private final String TAG = this.getClass().getSimpleName();
     ActivityMainBinding mBinding;
     NavController mNavController;
@@ -55,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
         mNavController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             mBinding.toolbar.title.setText(destination.getLabel());
         });
+
+
+
 
 
         new GpsUtils(this).turnGPSOn(isGPSEnable -> isGpsEnabled = isGPSEnable);

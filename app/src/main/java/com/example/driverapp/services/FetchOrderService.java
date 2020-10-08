@@ -16,7 +16,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.LifecycleService;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.driverapp.R;
@@ -24,12 +23,9 @@ import com.example.driverapp.api.ApiInterface;
 import com.example.driverapp.api.ApiService;
 import com.example.driverapp.commons.Actions;
 import com.example.driverapp.models.Order;
-import com.example.driverapp.models.User;
-import com.example.driverapp.models.request.ProcessOrderRequest;
 import com.example.driverapp.models.request.RequestToken;
 import com.example.driverapp.models.response.DeliveryOrderResponse;
 import com.example.driverapp.sharedprefs.ServiceTracker;
-import com.example.driverapp.sharedprefs.UserSession;
 import com.example.driverapp.views.App;
 import com.example.driverapp.views.MainActivity;
 import com.example.driverapp.views.order.ProcessOrderActivity;
@@ -38,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
