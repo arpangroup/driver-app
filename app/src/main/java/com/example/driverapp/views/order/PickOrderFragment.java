@@ -1,6 +1,5 @@
 package com.example.driverapp.views.order;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -56,7 +55,7 @@ public class PickOrderFragment extends Fragment{
 
 
         mBinding.pickOrder.btnAccept.setOnSlideCompleteListener(slideToActView -> {
-            orderViewModel.pickedUpOrder(orderViewModel.getOrder()).observe(requireActivity(), isPickedUp -> {
+            orderViewModel.pickedUpOrder(orderViewModel.getOnGoingOrder()).observe(requireActivity(), isPickedUp -> {
                 if(isPickedUp){
                     navController.navigate(R.id.action_pickOrderFragment_to_reachDirectionFragment);
                 }else{

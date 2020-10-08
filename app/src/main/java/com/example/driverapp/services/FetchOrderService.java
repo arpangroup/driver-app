@@ -14,6 +14,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.LifecycleService;
 import androidx.lifecycle.MutableLiveData;
@@ -28,7 +29,7 @@ import com.example.driverapp.models.response.DeliveryOrderResponse;
 import com.example.driverapp.sharedprefs.ServiceTracker;
 import com.example.driverapp.views.App;
 import com.example.driverapp.views.MainActivity;
-import com.example.driverapp.views.order.ProcessOrderActivity;
+import com.example.driverapp.views.order.ProcessOrderActivityDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FetchOrderService extends LifecycleService {
-    private static final String TAG = "EndlessService";
+    private static final String TAG = "FetchOrderService";
     private static final long ORDER_FETCH_INTERVAL = 1000 * 5;
     private boolean isLoading = false;
 
@@ -203,12 +204,18 @@ public class FetchOrderService extends LifecycleService {
         ApiInterface apiInterface = ApiService.getApiService();
         //Log.d(TAG, "FETCHING NEW ORDER........");
         apiInterface.getAllDeliveryOrders(requestToken).enqueue(new Callback<DeliveryOrderResponse>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(Call<DeliveryOrderResponse> call, Response<DeliveryOrderResponse> response) {
                 DeliveryOrderResponse responseObj = response.body();
                 if(responseObj != null){
                     List<Order> newOrders = responseObj.getNewOrders();
                     List<Order> acceptedOrders = responseObj.getAcceptedOrders();
+                    if(newOrders .size() > 0){
+                        //Log.d(TAG, "##########################NEW_ORDER_ARRIVED#########################################");
+                        newOrders.forEach(System.out::println);
+                        //Log.d(TAG,"#####################################################################################");
+                    }
 
                     mutableAcceptedOrders.postValue(acceptedOrders);
                     if(mutableNewOrders != null){
@@ -231,7 +238,7 @@ public class FetchOrderService extends LifecycleService {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, App.CHANNEL_ID_PUSH_NOTIFICATION);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 
-            Intent fullScreenIntent = new Intent(this, ProcessOrderActivity.class);
+            Intent fullScreenIntent = new Intent(this, ProcessOrderActivityDialog.class);
             TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(getApplicationContext());
             taskStackBuilder.addNextIntentWithParentStack(fullScreenIntent);
             //fullScreenIntent.putExtra(Constants.NOTIFICATION_IDS, notificationId);
@@ -253,7 +260,7 @@ public class FetchOrderService extends LifecycleService {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.notify(App.NOTIFICATION_ID_PUSH_NOTIFICATION, notification);
         }else{
-            Intent intent = new Intent(this, ProcessOrderActivity.class);
+            Intent intent = new Intent(this, ProcessOrderActivityDialog.class);
             TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(getApplicationContext());
             taskStackBuilder.addNextIntentWithParentStack(intent);
             //intent.putExtra(INTENT_EXTRA_ORDER_STATUS, orderJson);

@@ -30,14 +30,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+<!--        <activity-->
+<!--            android:name="com.example.driverapp.views.order.ProcessOrderActivity"-->
+<!--            android:launchMode="singleTop"-->
+<!--            android:parentActivityName="com.example.driverapp.views.MainActivity">-->
+<!--            <meta-data-->
+<!--                android:name="android.support.PARENT_ACTIVITY"-->
+<!--                android:value="com.example.driverapp.views.MainActivity" />-->
+<!--        </activity>-->
         <activity
-            android:name="com.example.driverapp.views.order.ProcessOrderActivity"
+            android:name="com.example.driverapp.views.order.ProcessOrderActivityDialog"
             android:launchMode="singleTop"
             android:parentActivityName="com.example.driverapp.views.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.driverapp.views.MainActivity" />
         </activity>
+
         <activity android:name=".views.MainActivity"></activity>
         <activity android:name=".views.auth.AuthActivity"></activity>
         <activity android:name=".views.SplashScreenActivity">

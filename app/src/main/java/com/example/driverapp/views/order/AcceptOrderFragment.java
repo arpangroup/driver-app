@@ -16,40 +16,41 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.driverapp.R;
+import com.example.driverapp.commons.CommonUtils;
 import com.example.driverapp.commons.Constants;
+import com.example.driverapp.commons.NotificationSoundType;
 import com.example.driverapp.databinding.FragmentAcceptOrderBinding;
-import com.example.driverapp.databinding.FragmentLoginBinding;
 import com.example.driverapp.directionhelpers.ConstructDirectionUrl;
 import com.example.driverapp.directionhelpers.FetchURL;
 import com.example.driverapp.directionhelpers.TaskLoadedCallback;
 import com.example.driverapp.firebase.MessagingService;
-import com.example.driverapp.models.Direction;
 import com.example.driverapp.models.Order;
-import com.example.driverapp.models.Restaurant;
-import com.example.driverapp.viewmodels.AuthenticationViewModel;
 import com.example.driverapp.viewmodels.LocationViewModel;
 import com.example.driverapp.viewmodels.OrderViewModel;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
-import com.ncorti.slidetoact.SlideToActView;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class AcceptOrderFragment extends Fragment implements TaskLoadedCallback {
+public class AcceptOrderFragment extends Fragment{
     private final String TAG = this.getClass().getSimpleName();
 
     private int mProgress = 0;
     private static long ORDER_ACCEPT_TIME = 2*1000;
-    Timer mTimer;
+
+    private boolean isMusicEnable = true;
     private MediaPlayer mMediaPlayer;
+    Timer timer;
+
+
 
     private FragmentAcceptOrderBinding mBinding;
     OrderViewModel orderViewModel;
@@ -112,15 +113,25 @@ public class AcceptOrderFragment extends Fragment implements TaskLoadedCallback 
 
         // Initialize NavController
         navController = Navigation.findNavController(rootView);
-        mBinding.setOrder(orderViewModel.getOrder());
-        //mBinding.approxDistance.setText(restaurant.getA);
-        //LatLng place1  = new LatLng(Double.parseDouble(restaurant.getLatitude()), Double.parseDouble(restaurant.getLongitude()));
-        //LatLng place2  = new LatLng(Double.parseDouble(address.getLatitude()), Double.parseDouble(address.getLongitude()));
-        //String url = ConstructDirectionUrl.getUrl(place1, place2, "driving", Constants.GOOGLE_MAP_AUTH_KEY);
-        //new FetchURL(requireActivity(), FetchURL.DISTANCE_PARSER).execute(url, "driving");
+
+        orderViewModel.getRunningOrder().observe(requireActivity(), order -> {
+            if(order != null){
+                Log.d(TAG, "ORDER: " + order);
+                LatLng place1  = CommonUtils.getRestaurantLocation(order.getRestaurant());
+                LatLng place2  = CommonUtils.getUserLocation(order.getLocation());
+                String url = ConstructDirectionUrl.getUrl(place1, place2, "driving", Constants.GOOGLE_MAP_AUTH_KEY);
+                Log.d(TAG, "REQUEST FOR POLYLINE");
+                Log.d(TAG, "URL: "+ url);
+                new FetchURL(requireActivity(), FetchURL.DISTANCE_PARSER).execute(url, "driving");
+                new FetchURL(requireActivity(), FetchURL.POINT_PARSER).execute(url, "driving");
+
+                mBinding.setOrder(order);
+                startMediaPlayer(NotificationSoundType.ORDER_ARRIVE);
+            }
+        });
 
 
-        setupMediaPlayer();
+
         new CountDownTimer(50000,1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -142,13 +153,20 @@ public class AcceptOrderFragment extends Fragment implements TaskLoadedCallback 
         mBinding.btnClose.setOnClickListener(view -> requireActivity().finish());
 
         mBinding.btnAccept.setOnSlideCompleteListener(slideToActView -> {
-            orderViewModel.acceptOrder(orderViewModel.getOrder()).observe(requireActivity(), isAccepted -> {
-                if(isAccepted){
-                    navController.navigate(R.id.action_acceptOrderFragment_to_reachDirectionFragment);
-                }else {
-                    Toast.makeText(requireActivity(), "Something error happened", Toast.LENGTH_SHORT).show();
-                }
-            });
+            Order onGoingOrder = orderViewModel.getRunningOrder().getValue();
+            Log.d(TAG, "Inside setOnSlideCompleteListener..........");
+            Log.d(TAG, "ACCEPTED_ORDER: "+onGoingOrder);
+            if(onGoingOrder != null){
+                orderViewModel.acceptOrder(orderViewModel.getOnGoingOrder()).observe(requireActivity(), isAccepted -> {
+                    if(isAccepted){
+                        navController.navigate(R.id.action_acceptOrderFragment_to_reachDirectionFragment);
+                    }else {
+                        Toast.makeText(requireActivity(), "Something error happened", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }else{
+                Log.d(TAG, "Order is null");
+            }
         });
 
 
@@ -164,17 +182,42 @@ public class AcceptOrderFragment extends Fragment implements TaskLoadedCallback 
         mBinding.txtProgress.setText(progressVal +"%");
     }
 
-    private void setupMediaPlayer() {
+
+
+    private void startMediaPlayer(NotificationSoundType soundType) {
         mMediaPlayer = new MediaPlayer();
         Context context = requireActivity();
-        mMediaPlayer = MediaPlayer.create(context, R.raw.order_arrived_ringtone);
-        mMediaPlayer.start();
+        if(soundType == NotificationSoundType.ORDER_ARRIVE)mMediaPlayer = MediaPlayer.create(context, R.raw.order_arrived_ringtone);
+        else if(soundType == NotificationSoundType.ORDER_CANCELED)mMediaPlayer = MediaPlayer.create(context, R.raw.swiggy_order_cancel_ringtone);
+        else mMediaPlayer = MediaPlayer.create(context, R.raw.default_notification_sound);
+
+        if(soundType == NotificationSoundType.ORDER_ARRIVE){
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if(isMusicEnable){
+                        try{
+                            mMediaPlayer.start();
+                        }catch (Exception e){
+                            //e.printStackTrace();
+                        }
+                    }
+                }
+            }, 0, 3000);
+
+        }else{
+            try{
+                mMediaPlayer.start();
+            }catch (Exception e){
+                //e.printStackTrace();
+            }
+        }
 
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+    private void stopMediaPlayer(){
+        isMusicEnable  = false;
         if(mMediaPlayer != null){
             mMediaPlayer.stop();
             mMediaPlayer.release();
@@ -183,18 +226,17 @@ public class AcceptOrderFragment extends Fragment implements TaskLoadedCallback 
     }
 
     @Override
-    public void onTaskDone(Object... values) {
-//        try{
-//            Direction direction =(Direction) values[0];
-//            deliveryTime.setText(direction.getDeliveryDuration());
-//            if(SettingSession.getDeliveryType() == 1){
-//                deliveryTime.setText(direction.getDeliveryDuration());
-//            }else{
-//                deliveryTime.setText(direction.getDistance().getText());
-//                //deliveryTimeLabel.setText("Distance");
-//            }
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
+    public void onDestroy() {
+        super.onDestroy();
+        isMusicEnable = false;
+        stopMediaPlayer();
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        isMusicEnable = false;
+        stopMediaPlayer();
     }
 }

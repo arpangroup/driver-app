@@ -28,12 +28,14 @@ import com.example.driverapp.R;
 import com.example.driverapp.commons.Actions;
 import com.example.driverapp.commons.Constants;
 import com.example.driverapp.databinding.ActivityMainBinding;
+import com.example.driverapp.models.Order;
 import com.example.driverapp.models.User;
-import com.example.driverapp.services.EndlessService;
+import com.example.driverapp.services.FetchOrderService;
 import com.example.driverapp.sharedprefs.ServiceTracker;
 import com.example.driverapp.sharedprefs.UserSession;
 import com.example.driverapp.utils.GpsUtils;
 import com.example.driverapp.viewmodels.LocationViewModel;
+import com.example.driverapp.viewmodels.OrderViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity{
         mNavController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             mBinding.toolbar.title.setText(destination.getLabel());
         });
+
 
 
 
@@ -130,7 +133,7 @@ public class MainActivity extends AppCompatActivity{
 
     private void actionOnService(Actions action) {
         if (getServiceState(this) == ServiceTracker.ServiceState.STOPPED && action == Actions.STOP) return;
-        Intent intent = new Intent(this, EndlessService.class);
+        Intent intent = new Intent(this, FetchOrderService.class);
         intent.setAction(action.name());
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             Log.d(TAG, "Starting the service in >=26 Mode");
@@ -159,5 +162,7 @@ public class MainActivity extends AppCompatActivity{
             }
         });
     }
+
+
 
 }

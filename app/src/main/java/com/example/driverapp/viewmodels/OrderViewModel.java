@@ -8,6 +8,7 @@ import com.example.driverapp.models.Direction;
 import com.example.driverapp.models.Duration;
 import com.example.driverapp.models.Order;
 import com.example.driverapp.repositories.OrderRepository;
+import com.example.driverapp.sharedprefs.UserSession;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class OrderViewModel extends ViewModel {
     private OrderRepository orderRepository;
     //private MutableLiveData<ORDER_TYPE> mutableOrderType = new MutableLiveData<>(ORDER_TYPE.ALL);
     private MutableLiveData<List<Order>> mutableOrders = null;
+    private MutableLiveData<Order> mutableRunningOrder = new MutableLiveData<>();
     MutableLiveData<PolylineOptions> mutablePolyline;
     private Order order = null;
 
@@ -32,22 +34,28 @@ public class OrderViewModel extends ViewModel {
         LiveData<Boolean> isLoading=orderRepository.getIsLoading();
         return isLoading;
     }
-
-    public void setOrder(Order order){
+    public void setOnGoingOrder(Order order){
+        if(mutableRunningOrder  == null){
+            mutableRunningOrder = new MutableLiveData<>();
+        }
+        mutableRunningOrder.setValue(order);
         this.order = order;
     }
-    public Order getOrder(){
-        return order;
+    public LiveData<Order> getRunningOrder(){
+        if(mutableRunningOrder == null) mutableRunningOrder = new MutableLiveData<>();
+        return mutableRunningOrder;
     }
+    public Order getOnGoingOrder(){
+        return this.order;
+    }
+
+
 
     public LiveData<Boolean> acceptOrder(Order order){
         return orderRepository.acceptOrder(order);
     }
     public LiveData<Boolean> pickedUpOrder(Order order){
         return orderRepository.pickedUpOrder(order);
-    }
-    public LiveData<List<Order>> getAllAcceptedOrders(){
-        return orderRepository.getAllAcceptedOrders();
     }
     public LiveData<Boolean> reachedPickupLocation(Order order){
         return orderRepository.reachedPickUpLocation(order);
@@ -57,6 +65,11 @@ public class OrderViewModel extends ViewModel {
     }
     public LiveData<Boolean> deliverOrder(Order order, String deliveryPin){
         return orderRepository.deliverOrder(order, deliveryPin);
+    }
+
+
+    public LiveData<List<Order>> getAllAcceptedOrders(){
+        return orderRepository.getAllAcceptedOrders();
     }
 
 

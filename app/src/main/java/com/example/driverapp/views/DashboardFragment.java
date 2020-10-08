@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import com.example.driverapp.R;
 import com.example.driverapp.databinding.FragmentAcceptOrderBinding;
 import com.example.driverapp.databinding.FragmentDashboardBinding;
+import com.example.driverapp.services.FetchOrderService;
 import com.example.driverapp.viewmodels.LocationViewModel;
 import com.example.driverapp.viewmodels.OrderViewModel;
 
@@ -56,8 +57,18 @@ public class DashboardFragment extends Fragment {private final String TAG = this
         navController = Navigation.findNavController(rootView);
         //mBinding.setOrder(orderViewModel.getOrder());
 
-        mBinding.snackbar.btnSnackbarAction.setOnClickListener(view -> {
+        mBinding.btnSnackbarAction.setOnClickListener(view -> {
             navController.navigate(R.id.acceptedOrderListFragment);
+        });
+
+        FetchOrderService.mutableAcceptedOrders.observe(requireActivity(), orders -> {
+            if(orders.size() > 0){
+                mBinding.snackbar.setVisibility(View.VISIBLE);
+                mBinding.snackbarTitle.setText("You have" + orders.size()+ " On going Orders");
+                mBinding.snackbarDescription.setText(orders.size() + " orders yet to be deliver");
+            }else{
+                mBinding.snackbar.setVisibility(View.GONE);
+            }
         });
     }
 

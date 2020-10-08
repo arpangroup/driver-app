@@ -1,20 +1,23 @@
 package com.example.driverapp.views.order;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.driverapp.R;
 import com.example.driverapp.commons.CommonUtils;
 import com.example.driverapp.commons.Constants;
+import com.example.driverapp.commons.NotificationSoundType;
 import com.example.driverapp.databinding.ActivityProcessOrderBinding;
 import com.example.driverapp.directionhelpers.ConstructDirectionUrl;
 import com.example.driverapp.directionhelpers.FetchURL;
@@ -22,25 +25,46 @@ import com.example.driverapp.directionhelpers.TaskLoadedCallback;
 import com.example.driverapp.firebase.MessagingService;
 import com.example.driverapp.models.Direction;
 import com.example.driverapp.models.Order;
+import com.example.driverapp.services.FetchOrderService;
 import com.example.driverapp.sharedprefs.UserSession;
 import com.example.driverapp.viewmodels.LocationViewModel;
 import com.example.driverapp.viewmodels.OrderViewModel;
-import com.example.driverapp.views.order.VerifyBillDialog;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 
-import java.net.URL;
-import java.util.Calendar;
-import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class ProcessOrderActivity extends AppCompatActivity implements TaskLoadedCallback,  VerifyBillDialog.VerifyBillDialogListener {
+public class ProcessOrderActivityDialog extends AppCompatActivity implements TaskLoadedCallback,  VerifyBillDialog.VerifyBillDialogListener {
     private final String TAG = this.getClass().getSimpleName();
     ActivityProcessOrderBinding mBinding;
     private Polyline currentPolyline;
     OrderViewModel orderViewModel;
     LocationViewModel locationViewModel;
+
+
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+    }
+    private void subscribeToObserver(){
+        Log.d(TAG, "Inside subscribeToObserver....");
+        FetchOrderService.mutableNewOrders.observe(this, orders -> {
+            System.out.println("============================================================================");
+            Log.d(TAG, "NEW_ORDERS: "+orders.size());
+            Log.d(TAG, "ORDERS: "+orders);
+            if(orderViewModel.getOnGoingOrder() == null){
+                Order latestOrder = orders.get(0);
+                orderViewModel.setOnGoingOrder(latestOrder);
+                Log.d(TAG, "ORDER_FOR_ACCEPT: " + latestOrder);
+            }
+            System.out.println("============================================================================");
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,24 +81,7 @@ public class ProcessOrderActivity extends AppCompatActivity implements TaskLoade
         locationViewModel = new ViewModelProvider(this).get(LocationViewModel.class);
         orderViewModel.init();
 
-
-
-        try{
-            String orderJson = getIntent().getStringExtra(MessagingService.INTENT_EXTRA_ORDER_STATUS);
-            Order order = new Gson().fromJson(orderJson, Order.class);
-            orderViewModel.setOnGoingOrder(order);
-
-            LatLng place1  = CommonUtils.getRestaurantLocation(order.getRestaurant());
-            LatLng place2  = CommonUtils.getUserLocation(order.getLocation());
-            String url = ConstructDirectionUrl.getUrl(place1, place2, "driving", Constants.GOOGLE_MAP_AUTH_KEY);
-            Log.d(TAG, "REQUEST FOR POLYLINE");
-            Log.d(TAG, "URL: "+ url);
-            new FetchURL(this, FetchURL.DISTANCE_PARSER).execute(url, "driving");
-            new FetchURL(this, FetchURL.POINT_PARSER).execute(url, "driving");
-        }catch (Exception e){
-            e.printStackTrace();
-            Toast.makeText(this, "INTENT: EXCEPTION", Toast.LENGTH_SHORT).show();
-        }
+        subscribeToObserver();
     }
 
     @Override

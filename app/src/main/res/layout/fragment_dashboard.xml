@@ -529,6 +529,7 @@
                                     android:textStyle="normal" />
 
                                 <TextView
+                                    android:id="@+id/snackbar_title"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:hint="₹ 9,418"
@@ -537,6 +538,7 @@
                                     android:textStyle="bold" />
 
                                 <TextView
+                                    android:id="@+id/snackbar_description"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:hint="36 orders"
@@ -592,7 +594,64 @@
     </androidx.core.widget.NestedScrollView>
 
 
-    <include
+    <RelativeLayout
         android:id="@+id/snackbar"
-        layout="@layout/layout_snackbar"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+        <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/orange"
+        app:cardCornerRadius="4dp"
+        android:layout_margin="5dp"
+        app:cardElevation="1dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="10dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@mipmap/ic_launcher"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Android Rion"
+                    android:textColor="@color/white"
+                    style="@style/TextAppearance.AppCompat.Body2"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dont forget to Subscribe"
+                    android:textColor="@android:color/white"
+                    style="@style/TextAppearance.AppCompat.Body1"/>
+            </LinearLayout>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="16dp"
+                android:background="@android:color/darker_gray"/>
+            <Button
+                android:id="@+id/btn_snackbar_action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transferent"
+                style="@style/TextAppearance.AppCompat.Body2"
+                android:text="VIEW"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+    </RelativeLayout>
+
 </RelativeLayout>

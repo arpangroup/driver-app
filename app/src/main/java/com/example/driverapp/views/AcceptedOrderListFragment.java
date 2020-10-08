@@ -14,18 +14,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.driverapp.R;
+import com.example.driverapp.adapters.AcceptedOrderListAdapter;
+import com.example.driverapp.adapters.ItemClickInterface;
 import com.example.driverapp.databinding.FragmentAcceptedOrderListBinding;
 import com.example.driverapp.databinding.FragmentProfileBinding;
+import com.example.driverapp.models.Order;
 import com.example.driverapp.viewmodels.LocationViewModel;
 import com.example.driverapp.viewmodels.OrderViewModel;
 
-public class AcceptedOrderListFragment extends Fragment {
+public class AcceptedOrderListFragment extends Fragment implements ItemClickInterface {
     private final String TAG = this.getClass().getSimpleName();
 
     private FragmentAcceptedOrderListBinding mBinding;
     OrderViewModel orderViewModel;
     LocationViewModel locationViewModel;
     NavController navController;
+    AcceptedOrderListAdapter orderListAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,5 +48,18 @@ public class AcceptedOrderListFragment extends Fragment {
 
         // Initialize NavController
         navController = Navigation.findNavController(rootView);
+
+        // Initialize RecyclerView
+        orderListAdapter = new AcceptedOrderListAdapter(this);
+        mBinding.orderRecycler.setAdapter(orderListAdapter);
+
+        orderViewModel.getAllAcceptedOrders().observe(requireActivity(), orders -> {
+            orderListAdapter.submitList(orders);
+        });
+    }
+
+    @Override
+    public void onItemVClick(Order order) {
+
     }
 }
