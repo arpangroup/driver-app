@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_main"
+    app:startDestination="@id/dashboardFragment">
+
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="com.example.driverapp.views.DashboardFragment"
+        android:label="Duty Status"
+        tools:layout="@layout/fragment_dashboard" />
+    <fragment
+        android:id="@+id/offerFragment"
+        android:name="com.example.driverapp.views.OfferFragment"
+        android:label="Offers"
+        tools:layout="@layout/fragment_offer" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.driverapp.views.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/loginHistoryFragment"
+        android:name="com.example.driverapp.views.LoginHistoryFragment"
+        android:label="Login History"
+        tools:layout="@layout/fragment_login_history" />
+    <fragment
+        android:id="@+id/orderHistoryFragment"
+        android:name="com.example.driverapp.views.OrderHistoryFragment"
+        android:label="Orders"
+        tools:layout="@layout/fragment_order_history" />
+    <fragment
+        android:id="@+id/notificationListFragment"
+        android:name="com.example.driverapp.views.NotificationListFragment"
+        android:label="Notifications"
+        tools:layout="@layout/fragment_notification_list" />
+    <fragment
+        android:id="@+id/acceptedOrderListFragment"
+        android:name="com.example.driverapp.views.AcceptedOrderListFragment"
+        android:label="fAccepted Orders"
+        tools:layout="@layout/fragment_accepted_order_list" />
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.driverapp.views.ChatFragment"
+        android:label="Chat Support"
+        tools:layout="@layout/fragment_chat" />
+</navigation>

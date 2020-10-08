@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group>
         <item
-            android:id="@+id/nav_home"
+            android:id="@+id/offerFragment"
             android:icon="@drawable/ic_baseline_local_offer_24"
             android:title="PureEats Offer" />
 
         <item
-            android:id="@+id/nav_bus"
+            android:id="@+id/chatFragment"
             android:icon="@drawable/ic_baseline_message_24"
             android:title="Message Center" />
     </group>
@@ -19,12 +19,12 @@
             <group android:checkableBehavior="single">
 
                 <item
-                    android:id="@+id/nav_cycle"
+                    android:id="@+id/loginHistoryFragment"
                     android:icon="@drawable/ic_baseline_access_alarms_24"
                     android:title="Login History" />
 
                 <item
-                    android:id="@+id/nav_profile"
+                    android:id="@+id/profileFragment"
                     android:icon="@drawable/ic_baseline_account_box_24"
                     android:title="Profile" />
 

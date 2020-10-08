@@ -31,7 +31,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.example.driverapp.views.ProcessOrderActivity"
+            android:name="com.example.driverapp.views.order.ProcessOrderActivity"
             android:launchMode="singleTop"
             android:parentActivityName="com.example.driverapp.views.MainActivity">
             <meta-data
@@ -55,17 +55,23 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDHOCpobHOC5KsYSoIMV5l7i6s-iQxCIXA" />
 
-        <service android:name=".firebase.MessagingService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
+<!--        <service android:name=".firebase.MessagingService">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="com.google.firebase.MESSAGING_EVENT" />-->
+<!--            </intent-filter>-->
+<!--        </service>-->
 
-        <service
-            android:name=".services.EndlessService"
-            android:enabled="true"
-            android:exported="false">
-        </service>
+<!--        <service-->
+<!--            android:name=".services.EndlessService"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="false">-->
+<!--        </service>-->
+
+                <service
+                    android:name=".services.FetchOrderService"
+                    android:enabled="true"
+                    android:exported="false">
+                </service>
 
         <receiver
             android:name=".receivers.BootCompleteReceiver"

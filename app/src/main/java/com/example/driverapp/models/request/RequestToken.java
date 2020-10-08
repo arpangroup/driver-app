@@ -25,4 +25,15 @@ public class RequestToken {
             e.printStackTrace();
         }
     }
+    public RequestToken(Context context) {
+        try{
+            User user = UserSession.getUserData(context);
+            if(user != null){
+                this.deliveryGuyId = user.getId();
+                this.token  = user.getAuthToken();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }

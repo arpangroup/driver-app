@@ -167,7 +167,7 @@ public class AcceptOrderFragment extends Fragment implements TaskLoadedCallback 
     private void setupMediaPlayer() {
         mMediaPlayer = new MediaPlayer();
         Context context = requireActivity();
-        mMediaPlayer = MediaPlayer.create(context, R.raw.alert_5);
+        mMediaPlayer = MediaPlayer.create(context, R.raw.order_arrived_ringtone);
         mMediaPlayer.start();
 
     }

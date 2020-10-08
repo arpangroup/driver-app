@@ -14,7 +14,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.example.driverapp.R;
 import com.example.driverapp.sharedprefs.UserSession;
 import com.example.driverapp.views.App;
-import com.example.driverapp.views.ProcessOrderActivity;
+import com.example.driverapp.views.order.ProcessOrderActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 

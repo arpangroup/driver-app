@@ -9,6 +9,7 @@ import com.example.driverapp.models.Order;
 import com.example.driverapp.models.request.RequestToken;
 import com.example.driverapp.models.User;
 import com.example.driverapp.models.request.ProcessOrderRequest;
+import com.example.driverapp.models.response.DeliveryOrderResponse;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public interface ApiInterface {
 
 
     @POST("/api/delivery/get-delivery-orders")
-    Call<List<Order>> getAllDeliveryOrders(@Body RequestToken requestToken);
+    Call<DeliveryOrderResponse> getAllDeliveryOrders(@Body RequestToken requestToken);
 
     @POST("/api/delivery/get-delivery-orders")
     Call<Boolean> saveDeliveryGuyGpsLocation(@Body DeliveryGuyGpsRequest deliveryGuyGpsRequest);

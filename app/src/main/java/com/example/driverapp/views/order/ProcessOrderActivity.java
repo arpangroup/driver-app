@@ -1,4 +1,4 @@
-package com.example.driverapp.views;
+package com.example.driverapp.views.order;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

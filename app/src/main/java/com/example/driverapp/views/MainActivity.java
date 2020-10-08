@@ -1,16 +1,16 @@
 package com.example.driverapp.views;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import android.Manifest;
-import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -18,26 +18,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.example.driverapp.R;
 import com.example.driverapp.commons.Actions;
 import com.example.driverapp.databinding.ActivityMainBinding;
-import com.example.driverapp.databinding.ActivityProcessOrderBinding;
-import com.example.driverapp.firebase.MessagingService;
 import com.example.driverapp.services.EndlessService;
 import com.example.driverapp.sharedprefs.ServiceTracker;
-import com.example.driverapp.sharedprefs.UserSession;
 import com.example.driverapp.utils.GpsUtils;
 import com.example.driverapp.viewmodels.LocationViewModel;
-import com.example.driverapp.viewmodels.OrderViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import static com.example.driverapp.sharedprefs.ServiceTracker.getServiceState;
@@ -45,6 +37,7 @@ import static com.example.driverapp.sharedprefs.ServiceTracker.getServiceState;
 public class MainActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getSimpleName();
     ActivityMainBinding mBinding;
+    NavController mNavController;
 
     boolean isGpsEnabled = false;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -56,30 +49,48 @@ public class MainActivity extends AppCompatActivity {
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         View rootView = mBinding.getRoot();
         setContentView(rootView);
+
+        mNavController = Navigation.findNavController(this, R.id.navHostFragment);
+        NavigationUI.setupWithNavController(mBinding.navView, mNavController);
+        mNavController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            mBinding.toolbar.title.setText(destination.getLabel());
+        });
+
+
         new GpsUtils(this).turnGPSOn(isGPSEnable -> isGpsEnabled = isGPSEnable);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        //setContentView(R.layout.activity_main);
-//        Intent intent = new Intent(this, MessagingService.class);
-//        startService(intent);
         FirebaseMessaging.getInstance().setAutoInitEnabled(false);
         locationViewModel = new ViewModelProvider(this).get(LocationViewModel.class);
         getCurrentLocation();
+
+        initClicks();
 
         mBinding.toolbar.navMenu.setOnClickListener(view -> {
             mBinding.drawerLayout.openDrawer(GravityCompat.START);
         });
 
+//        NavigationView navigationView = (NavigationView)findViewById(R.id.navHostFragment);
+//        View headerView = navigationView.getHeaderView(0);
+//        headerView.findViewById(R.id.dutyStatusToggleSwitch).setOnClickListener(view -> {
+//            Toast.makeText(this, "CLICKED", Toast.LENGTH_SHORT).show();
+//        });
 
+
+    }
+
+    private void initClicks() {
         ServiceTracker.ServiceState currentServiceState = getServiceState(this);
+        NavigationView navigationView = (NavigationView) mBinding.navView;
+        View headerView = navigationView.getHeaderView(0);
+        SwitchCompat switchCompat = headerView.findViewById(R.id.dutyStatusToggleSwitch);
+
         if(currentServiceState == ServiceTracker.ServiceState.STARTED){
-            mBinding.toolbar.dutyStatusToggleSwitch.setChecked(true);
-            mBinding.toolbar.dutyStatusToggleSwitch.setEnabled(true);
+            switchCompat.setChecked(true);
         }else{
-            mBinding.toolbar.dutyStatusToggleSwitch.setChecked(false);
-            mBinding.toolbar.dutyStatusToggleSwitch.setEnabled(true);
+            switchCompat.setChecked(false);
         }
 
-        mBinding.toolbar.dutyStatusToggleSwitch.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+        switchCompat.setOnCheckedChangeListener((compoundButton, isChecked) -> {
             if(isChecked){
                 Log.d(TAG, "START THE FOREGROUND SERVICE ON DEMAND");
                 ServiceTracker.setServiceState(this, ServiceTracker.ServiceState.STARTED);
@@ -91,6 +102,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        headerView.setOnClickListener(view -> {
+            mNavController.navigate(R.id.dashboardFragment);
+            mBinding.drawerLayout.close();
+        });
 
     }
 
@@ -125,4 +140,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 }
