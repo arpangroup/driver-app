@@ -115,12 +115,22 @@ public class MainActivity extends AppCompatActivity{
         switchCompat.setOnCheckedChangeListener((compoundButton, isChecked) -> {
             if(isChecked){
                 Log.d(TAG, "START THE FOREGROUND SERVICE ON DEMAND");
-                ServiceTracker.setServiceState(this, ServiceTracker.ServiceState.STARTED);
-                actionOnService(Actions.START);
+                if(ServiceTracker.getServiceState(this) == ServiceTracker.ServiceState.STARTED){
+                    return;
+                }
+                else{
+                    ServiceTracker.setServiceState(this, ServiceTracker.ServiceState.STARTED);
+                    actionOnService(Actions.START);
+                }
             }else{
                 Log.d(TAG, "STOP THE FOREGROUND SERVICE ON DEMAND");
-                ServiceTracker.setServiceState(this, ServiceTracker.ServiceState.STOPPED);
-                actionOnService(Actions.STOP);
+                if(ServiceTracker.getServiceState(this) == ServiceTracker.ServiceState.STOPPED){
+                    return;
+                }
+                else{
+                    ServiceTracker.setServiceState(this, ServiceTracker.ServiceState.STOPPED);
+                    actionOnService(Actions.STOP);
+                }
             }
         });
 
@@ -132,7 +142,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void actionOnService(Actions action) {
-        if (getServiceState(this) == ServiceTracker.ServiceState.STOPPED && action == Actions.STOP) return;
+        //if (getServiceState(this) == ServiceTracker.ServiceState.STOPPED && action == Actions.STOP) return;
         Intent intent = new Intent(this, FetchOrderService.class);
         intent.setAction(action.name());
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){

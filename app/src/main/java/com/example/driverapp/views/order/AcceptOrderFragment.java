@@ -132,6 +132,8 @@ public class AcceptOrderFragment extends Fragment{
 
 
 
+
+
         new CountDownTimer(50000,1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -150,7 +152,10 @@ public class AcceptOrderFragment extends Fragment{
             mBinding.approxDistance.setText("Approx dist " + direction.getDistance().getText());
         });
 
-        mBinding.btnClose.setOnClickListener(view -> requireActivity().finish());
+        mBinding.btnClose.setOnClickListener(view -> {
+            orderViewModel.setOnGoingOrder(null);
+            requireActivity().finish();
+        });
 
         mBinding.btnAccept.setOnSlideCompleteListener(slideToActView -> {
             Order onGoingOrder = orderViewModel.getRunningOrder().getValue();

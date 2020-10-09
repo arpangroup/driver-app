@@ -133,7 +133,15 @@
                     android:textSize="22sp"
                     android:textColor="@color/black"
                     android:text="@{order.restaurant.name}"
-                    android:hint="Sourav Catering &amp; Restaurant" />
+                    android:hint="Demo Catering &amp; Restaurant" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/silver"
+                    android:text="@{order.uniqueOrderId}"
+                    android:hint="Demo Catering &amp; Restaurant" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -142,7 +150,7 @@
                     android:textStyle="bold"
                     android:textSize="16sp"
                     android:text="@{order.restaurant.address}"
-                    android:hint="Belur Math Campus, Belur Math, Howrah, West Bengal 711202, India" />
+                    android:hint="ABCD Campus, NewYork, US" />
             </LinearLayout>
 
         </LinearLayout>
