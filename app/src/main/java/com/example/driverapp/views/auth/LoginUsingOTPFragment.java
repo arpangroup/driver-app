@@ -61,6 +61,7 @@ public class LoginUsingOTPFragment extends Fragment {
         // Initialize ViewModel
         authenticationViewModel = new ViewModelProvider(requireActivity()).get(AuthenticationViewModel.class);
         authenticationViewModel.init();
+        mBinding.txtPhone.setText(authenticationViewModel.getPhoneNumber().getValue());
         initOTPInput();
 
         mBinding.layoutLoginUsingPassword.setVisibility(View.GONE);

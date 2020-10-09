@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/otpSentFragment"
         android:name="com.example.driverapp.views.auth.LoginFragment"
-        android:label="fragment_otp_sent"
+        android:label="LoginFragment"
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_otpSentFragment_to_loginUsingPasswordFragment"
@@ -24,12 +24,12 @@
     <fragment
         android:id="@+id/signupFragment"
         android:name="com.example.driverapp.views.auth.SignupFragment"
-        android:label="fragment_signup"
+        android:label="Signup Fragment"
         tools:layout="@layout/fragment_signup" />
     <fragment
         android:id="@+id/loginUsingPasswordFragment"
         android:name="com.example.driverapp.views.auth.LoginUsingPasswordFragment"
-        android:label="fragment_login_using_password"
+        android:label="Login Using Password"
         tools:layout="@layout/fragment_login_using_password" >
         <action
             android:id="@+id/action_loginUsingPasswordFragment_to_loginUsingOTPFragment"
@@ -39,7 +39,7 @@
     <fragment
         android:id="@+id/loginUsingOTPFragment"
         android:name="com.example.driverapp.views.auth.LoginUsingOTPFragment"
-        android:label="fragment_login_using_o_t_p"
+        android:label="Login Using OTP"
         tools:layout="@layout/fragment_login_using_o_t_p" >
         <action
             android:id="@+id/action_loginUsingOTPFragment_to_loginUsingPasswordFragment"

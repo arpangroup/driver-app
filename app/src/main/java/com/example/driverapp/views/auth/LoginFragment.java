@@ -47,6 +47,9 @@ public class LoginFragment extends Fragment {
         // Initialize NavController
         navController = Navigation.findNavController(rootView);
 
+        mBinding.laoutSignup.setVisibility(View.GONE);
+        mBinding.txtAgreement.setVisibility(View.GONE);
+
         mBinding.etPhone.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -75,10 +78,11 @@ public class LoginFragment extends Fragment {
             String phone = mBinding.etPhone.getText() != null ? mBinding.etPhone.getText().toString() : null;
             if(phone != null) {
                 mBinding.btnSendOtp.setBackgroundColor(Color.parseColor("#E3E3E3"));
-                authenticationViewModel.setPhoneNumber(phone);
+                //authenticationViewModel.setPhoneNumber(phone);
 
                 authenticationViewModel.sendLoginOtp(phone).observe(getViewLifecycleOwner(), apiResponse -> {
                     if(apiResponse.isSuccess()){
+                        authenticationViewModel.setPhoneNumber(phone);
                         navController.navigate(R.id.action_otpSentFragment_to_loginUsingOTPFragment);
                     }
                     else {
