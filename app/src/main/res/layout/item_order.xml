@@ -99,7 +99,7 @@
                         android:textStyle="bold"
                         android:textSize="14sp"
                         android:text="@{order.user.name}"
-                        android:hint="Mr. Mintu Jha" />
+                        android:hint="John Doe" />
 
                     <TextView
                         android:layout_width="match_parent"

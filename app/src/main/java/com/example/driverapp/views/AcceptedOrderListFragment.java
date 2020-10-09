@@ -19,6 +19,7 @@ import com.example.driverapp.adapters.ItemClickInterface;
 import com.example.driverapp.databinding.FragmentAcceptedOrderListBinding;
 import com.example.driverapp.databinding.FragmentProfileBinding;
 import com.example.driverapp.models.Order;
+import com.example.driverapp.services.FetchOrderService;
 import com.example.driverapp.viewmodels.LocationViewModel;
 import com.example.driverapp.viewmodels.OrderViewModel;
 
@@ -53,8 +54,10 @@ public class AcceptedOrderListFragment extends Fragment implements ItemClickInte
         orderListAdapter = new AcceptedOrderListAdapter(this);
         mBinding.orderRecycler.setAdapter(orderListAdapter);
 
-        orderViewModel.getAllAcceptedOrders().observe(requireActivity(), orders -> {
-            orderListAdapter.submitList(orders);
+        FetchOrderService.mutableAcceptedOrders.observe(requireActivity(), orders -> {
+            if(orders.size() != orderListAdapter.getItemCount()){
+                orderListAdapter.submitList(orders);
+            }
         });
     }
 

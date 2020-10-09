@@ -217,7 +217,10 @@ public class FetchOrderService extends LifecycleService {
                         //Log.d(TAG,"#####################################################################################");
                     }
 
-                    mutableAcceptedOrders.postValue(acceptedOrders);
+                    if(mutableAcceptedOrders.getValue().size() != acceptedOrders.size()){
+                        mutableAcceptedOrders.postValue(acceptedOrders);
+                    }
+
                     if(mutableNewOrders != null){
                         mutableNewOrders.postValue(newOrders);
                         showFullScreenOrderArriveNotification();

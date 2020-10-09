@@ -70,8 +70,6 @@ public class DashboardFragment extends Fragment {private final String TAG = this
                 mBinding.snackbar.setVisibility(View.GONE);
             }
         });
+
     }
-
-
-
 }
