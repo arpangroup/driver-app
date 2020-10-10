@@ -18,7 +18,7 @@ public class OrderViewModel extends ViewModel {
     private OrderRepository orderRepository;
     //private MutableLiveData<ORDER_TYPE> mutableOrderType = new MutableLiveData<>(ORDER_TYPE.ALL);
     private MutableLiveData<List<Order>> mutableOrders = null;
-    private MutableLiveData<Order> mutableRunningOrder = new MutableLiveData<>();
+    private MutableLiveData<Order> mutableRunningOrder = null;
     MutableLiveData<PolylineOptions> mutablePolyline;
     private Order order = null;
 

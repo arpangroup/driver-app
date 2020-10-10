@@ -32,6 +32,7 @@ import com.example.driverapp.directionhelpers.FetchURL;
 import com.example.driverapp.directionhelpers.TaskLoadedCallback;
 import com.example.driverapp.firebase.MessagingService;
 import com.example.driverapp.models.Order;
+import com.example.driverapp.services.FetchOrderService;
 import com.example.driverapp.viewmodels.LocationViewModel;
 import com.example.driverapp.viewmodels.OrderViewModel;
 import com.google.android.gms.maps.model.LatLng;

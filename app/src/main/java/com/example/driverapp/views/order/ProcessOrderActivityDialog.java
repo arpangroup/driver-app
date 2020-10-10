@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -44,6 +45,8 @@ public class ProcessOrderActivityDialog extends AppCompatActivity implements Tas
     OrderViewModel orderViewModel;
     LocationViewModel locationViewModel;
 
+    public static boolean isActivityOpen = false;
+
 
 
 
@@ -53,16 +56,36 @@ public class ProcessOrderActivityDialog extends AppCompatActivity implements Tas
     }
     private void subscribeToObserver(){
         Log.d(TAG, "Inside subscribeToObserver....");
+        /*
         FetchOrderService.mutableNewOrders.observe(this, orders -> {
-            System.out.println("============================================================================");
-            Log.d(TAG, "NEW_ORDERS: "+orders.size());
-            Log.d(TAG, "ORDERS: "+orders);
-            if(orderViewModel.getOnGoingOrder() == null){
-                Order latestOrder = orders.get(0);
-                orderViewModel.setOnGoingOrder(latestOrder);
-                Log.d(TAG, "ORDER_FOR_ACCEPT: " + latestOrder);
+            if(orders.size() > 0){
+                System.out.println("============================================================================");
+                Log.d(TAG, "NEW_ORDERS: "+orders.size());
+                Log.d(TAG, "ORDERS: "+orders);
+
+                if(orderViewModel.getRunningOrder().getValue() == null){
+                    Order latestOrder = orders.get(0);
+                    orderViewModel.setOnGoingOrder(latestOrder);
+                    Log.d(TAG, "ORDER_FOR_ACCEPT: " + latestOrder);
+                }
+                System.out.println("============================================================================");
             }
-            System.out.println("============================================================================");
+        });
+        */
+        FetchOrderService.mutableNewOrders.observe(this, orders -> {
+            if(orders.size() > 0){
+                Order order = orders.get(0);
+                FetchOrderService.processedOrders.add(order);
+                System.out.println("============================================================================");
+                Log.d(TAG, "NEW_ORDER: "+order);
+                Log.d(TAG, "ORDERS: "+order);
+
+                if(orderViewModel.getRunningOrder().getValue() == null){
+                    orderViewModel.setOnGoingOrder(order);
+                    Log.d(TAG, "ORDER_FOR_ACCEPT: " + order);
+                }
+                System.out.println("============================================================================");
+            }
         });
     }
 
@@ -77,6 +100,7 @@ public class ProcessOrderActivityDialog extends AppCompatActivity implements Tas
         setContentView(rootView);
         UserSession userSession = new UserSession(this);
 
+        isActivityOpen = true;
         orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
         locationViewModel = new ViewModelProvider(this).get(LocationViewModel.class);
         orderViewModel.init();
@@ -118,6 +142,20 @@ public class ProcessOrderActivityDialog extends AppCompatActivity implements Tas
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "Activity is destroying");
+        isActivityOpen = false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "Activity is resumed");
+        isActivityOpen = true;
+    }
+
+    @Override
     public void onClickPhotoOfBill() {
 
     }
@@ -126,4 +164,5 @@ public class ProcessOrderActivityDialog extends AppCompatActivity implements Tas
     public void onClickHaveNoBill() {
 
     }
+
 }

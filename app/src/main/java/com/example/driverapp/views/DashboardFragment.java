@@ -57,6 +57,8 @@ public class DashboardFragment extends Fragment {private final String TAG = this
         navController = Navigation.findNavController(rootView);
         //mBinding.setOrder(orderViewModel.getOrder());
 
+        orderViewModel.setOnGoingOrder(null);//important, otherwise new order popup will not show
+
         mBinding.btnSnackbarAction.setOnClickListener(view -> {
             navController.navigate(R.id.acceptedOrderListFragment);
         });

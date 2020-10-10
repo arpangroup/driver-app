@@ -29,10 +29,17 @@ import com.example.driverapp.models.response.DeliveryOrderResponse;
 import com.example.driverapp.sharedprefs.ServiceTracker;
 import com.example.driverapp.views.App;
 import com.example.driverapp.views.MainActivity;
+import com.example.driverapp.views.order.ProcessOrderActivity;
 import com.example.driverapp.views.order.ProcessOrderActivityDialog;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -48,7 +55,7 @@ public class FetchOrderService extends LifecycleService {
     public static MutableLiveData<Boolean> isFetching = new MutableLiveData<>(false);
     public static MutableLiveData<List<Order>> mutableAcceptedOrders = new MutableLiveData<>(new ArrayList<>());
     public static MutableLiveData<List<Order>> mutableNewOrders = new MutableLiveData<>(new ArrayList<>());
-
+    public static List<Order> processedOrders = new ArrayList<>();
 
 
 
@@ -192,7 +199,7 @@ public class FetchOrderService extends LifecycleService {
             @Override
             public void run() {
                 //NewOrderRequest newOrderRequest = new NewOrderRequest(userId, new ArrayList<>());
-                if(!isLoading){
+                if(!isLoading && !ProcessOrderActivityDialog.isActivityOpen){
                     getDeliveryOrders(requestToken);
                 }
             }
@@ -202,36 +209,47 @@ public class FetchOrderService extends LifecycleService {
     private void getDeliveryOrders(RequestToken requestToken){
         isLoading = true;
         ApiInterface apiInterface = ApiService.getApiService();
-        //Log.d(TAG, "FETCHING NEW ORDER........");
+        Log.d(TAG, "FETCHING NEW ORDER........");
         apiInterface.getAllDeliveryOrders(requestToken).enqueue(new Callback<DeliveryOrderResponse>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(Call<DeliveryOrderResponse> call, Response<DeliveryOrderResponse> response) {
-                DeliveryOrderResponse responseObj = response.body();
-                if(responseObj != null){
-                    List<Order> newOrders = responseObj.getNewOrders();
-                    List<Order> acceptedOrders = responseObj.getAcceptedOrders();
-                    if(newOrders .size() > 0){
-                        //Log.d(TAG, "##########################NEW_ORDER_ARRIVED#########################################");
-                        newOrders.forEach(System.out::println);
-                        //Log.d(TAG,"#####################################################################################");
-                    }
+                try{
+                    DeliveryOrderResponse responseObj = response.body();
+                    if(responseObj != null){
+                        Log.d(TAG, "RESPONSE: " + responseObj);
+                        List<Order> newOrders = responseObj.getNewOrders();
+                        List<Order> acceptedOrders = responseObj.getAcceptedOrders();
+                        if(newOrders .size() > 0){
+                            //Log.d(TAG, "##########################NEW_ORDER_ARRIVED#########################################");
+                            newOrders.forEach(order -> System.out.println("ORDER: "+ order.getId() + ", "+order.getUniqueOrderId()));
+                            //Log.d(TAG,"#####################################################################################");
+                            if(!ProcessOrderActivityDialog.isActivityOpen){
+                                // Check whether the order is already processed or not
+                                boolean isOrderAlreadyProcessed = processedOrders.stream().anyMatch(processedOrder -> newOrders.get(0).getId() == processedOrder.getId());
+                                if(!isOrderAlreadyProcessed){
+                                    List<Order> orderList = Collections.singletonList(newOrders.get(0));
+                                    mutableNewOrders.postValue(orderList);
+                                    showFullScreenOrderArriveNotification();
+                                }
+                            }
+                        }
 
-                    if(mutableAcceptedOrders.getValue().size() != acceptedOrders.size()){
-                        mutableAcceptedOrders.postValue(acceptedOrders);
+                        if(mutableAcceptedOrders.getValue().size() != acceptedOrders.size()){
+                            mutableAcceptedOrders.postValue(acceptedOrders);
+                        }
                     }
-
-                    if(mutableNewOrders != null){
-                        mutableNewOrders.postValue(newOrders);
-                        showFullScreenOrderArriveNotification();
-
-                    }
+                    isLoading = false;
+                }catch (Exception e){
+                    e.printStackTrace();
+                    isLoading = false;
                 }
             }
 
             @Override
             public void onFailure(Call<DeliveryOrderResponse> call, Throwable t) {
-
+                Log.d(TAG, "FAIL");
+                isLoading = false;
             }
         });
     }

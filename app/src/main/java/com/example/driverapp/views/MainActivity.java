@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity{
                 else{
                     ServiceTracker.setServiceState(this, ServiceTracker.ServiceState.STARTED);
                     actionOnService(Actions.START);
+                    mBinding.drawerLayout.close();
                 }
             }else{
                 Log.d(TAG, "STOP THE FOREGROUND SERVICE ON DEMAND");
@@ -130,6 +131,7 @@ public class MainActivity extends AppCompatActivity{
                 else{
                     ServiceTracker.setServiceState(this, ServiceTracker.ServiceState.STOPPED);
                     actionOnService(Actions.STOP);
+                    mBinding.drawerLayout.close();
                 }
             }
         });
