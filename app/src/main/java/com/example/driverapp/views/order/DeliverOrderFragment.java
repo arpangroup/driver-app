@@ -27,6 +27,7 @@ import com.example.driverapp.commons.CommonUtils;
 import com.example.driverapp.databinding.FragmentDeliverOrderBinding;
 import com.example.driverapp.databinding.FragmentReachPickUpLocationBinding;
 import com.example.driverapp.models.Order;
+import com.example.driverapp.utils.FormatPrice;
 import com.example.driverapp.viewmodels.AuthenticationViewModel;
 import com.example.driverapp.viewmodels.OrderViewModel;
 
@@ -59,8 +60,11 @@ public class DeliverOrderFragment extends Fragment {
         mBinding.deliverOrder.btnAccept.setLocked(true);
 
 
-        orderViewModel.getAllAcceptedOrders().observe(requireActivity(), orders -> {
-            mOrder = orders.get(0);
+        orderViewModel.getRunningOrder().observe(requireActivity(), order -> {
+            mOrder = order;
+            Log.d(TAG, "###################################################################");
+            Log.d(TAG, "ORDER: " + mOrder);
+            Log.d(TAG, "###################################################################");
             mBinding.deliverOrder.toolbar.title.setText("Deliver Order");
             mBinding.deliverOrder.setOrder(mOrder);
         });
@@ -140,9 +144,10 @@ public class DeliverOrderFragment extends Fragment {
     }
 
     private void confirmAmountToBeCollect(){
+        String totalAmount = FormatPrice.format(mOrder.getTotal());
         new AlertDialog.Builder(requireActivity())
                 .setTitle("Payment Confirmation")
-                .setMessage("Have you collected cash amount of Rs. 187.0 from customer?")
+                .setMessage("Have you collected cash amount of Rs." +  totalAmount +"from customer?")
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton("YES, CONFIRM", (dialog, whichButton) -> {
                     mBinding.deliverOrder.radioConfirm.setChecked(true);

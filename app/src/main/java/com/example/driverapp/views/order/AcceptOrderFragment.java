@@ -167,6 +167,7 @@ public class AcceptOrderFragment extends Fragment{
                     if(isAccepted){
                         navController.navigate(R.id.action_acceptOrderFragment_to_reachDirectionFragment);
                     }else {
+                        mBinding.btnAccept.resetSlider();
                         Toast.makeText(requireActivity(), "Something error happened", Toast.LENGTH_SHORT).show();
                     }
                 });

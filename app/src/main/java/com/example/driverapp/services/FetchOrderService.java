@@ -49,7 +49,7 @@ import retrofit2.Response;
 
 public class FetchOrderService extends LifecycleService {
     private static final String TAG = "FetchOrderService";
-    private static final long ORDER_FETCH_INTERVAL = 1000 * 5;
+    private static final long ORDER_FETCH_INTERVAL = 1000 * 10;
     private boolean isLoading = false;
 
     public static MutableLiveData<Boolean> isFetching = new MutableLiveData<>(false);
@@ -262,6 +262,7 @@ public class FetchOrderService extends LifecycleService {
             Intent fullScreenIntent = new Intent(this, ProcessOrderActivityDialog.class);
             TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(getApplicationContext());
             taskStackBuilder.addNextIntentWithParentStack(fullScreenIntent);
+            fullScreenIntent.setAction(Actions.ACCEPT_ORDER_FRAGMENT.name());
             //fullScreenIntent.putExtra(Constants.NOTIFICATION_IDS, notificationId);
             //fullScreenIntent.putExtra(INTENT_EXTRA_ORDER_STATUS, orderJson);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -285,6 +286,7 @@ public class FetchOrderService extends LifecycleService {
             TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(getApplicationContext());
             taskStackBuilder.addNextIntentWithParentStack(intent);
             //intent.putExtra(INTENT_EXTRA_ORDER_STATUS, orderJson);
+            intent.setAction(Actions.ACCEPT_ORDER_FRAGMENT.name());
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 
             Log.d(TAG, "Starting DialogActivity......");

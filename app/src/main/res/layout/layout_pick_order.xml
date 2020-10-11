@@ -42,7 +42,8 @@
                         android:textStyle="bold"
                         android:textSize="20sp"
                         android:textColor="@color/blue"
-                        android:text="Pick by 02:47pm" />
+                        android:text="@{`Pick by ` + order.pickUpByTime()}"
+                        android:hint="Pick by 00:00pm" />
 
                     <LinearLayout
                         android:id="@+id/toggle_restaurant_details"
@@ -137,7 +138,7 @@
                                 android:textStyle="bold"
                                 android:textSize="16sp"
                                 android:text="@{order.restaurant.address}"
-                                android:hint="Belur Math Campus, Belur Math, Howrah, West Bengal 711202, India" />
+                                android:hint="Placeholder Restaurant address" />
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -353,7 +354,7 @@
                                     android:textStyle="bold"
                                     android:textSize="14sp"
                                     android:text="@{order.user.name}"
-                                    android:hint="Mr. Mintu Jha" />
+                                    android:hint="Placeholder Customer Name" />
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -361,8 +362,8 @@
                                     android:maxLines="2"
                                     android:textStyle="bold"
                                     android:textSize="14sp"
-                                    android:text="@{order.user.address.address}"
-                                    android:hint="Belur Math Campus, Belur Math, Howrah, West Bengal 711202, India" />
+                                    android:text="@{order.address}"
+                                    android:hint="Placeholder Customer Address" />
                             </LinearLayout>
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>

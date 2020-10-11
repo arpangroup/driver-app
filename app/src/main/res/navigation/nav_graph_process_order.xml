@@ -5,6 +5,18 @@
     android:id="@+id/nav_graph_process_order"
     app:startDestination="@id/acceptOrderFragment">
 
+    <action android:id="@+id/action_pickOrderFragment"
+        app:destination="@+id/pickOrderFragment"
+        app:launchSingleTop="true"/>
+    <action android:id="@+id/action_reach_destination_fragment"
+        app:destination="@+id/reachDirectionFragment"
+        app:launchSingleTop="true"/>
+    <action android:id="@+id/action_deliver_order_fragment"
+        app:destination="@+id/deliverOrderFragment"
+        app:launchSingleTop="true"/>
+
+
+
     <fragment
         android:id="@+id/acceptOrderFragment"
         android:name="com.example.driverapp.views.order.AcceptOrderFragment"

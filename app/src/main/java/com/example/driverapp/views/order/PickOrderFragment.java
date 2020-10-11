@@ -46,9 +46,15 @@ public class PickOrderFragment extends Fragment{
         navController = Navigation.findNavController(rootView);
         initClicks();
 
-
+        /*
         orderViewModel.getAllAcceptedOrders().observe(requireActivity(), orders -> {
             mOrder = orders.get(0);
+            mBinding.pickOrder.toolbar.title.setText("PICK ORDER");
+            mBinding.pickOrder.setOrder(mOrder);
+        });
+         */
+        orderViewModel.getRunningOrder().observe(requireActivity(), order -> {
+            mOrder = order;
             mBinding.pickOrder.toolbar.title.setText("PICK ORDER");
             mBinding.pickOrder.setOrder(mOrder);
         });

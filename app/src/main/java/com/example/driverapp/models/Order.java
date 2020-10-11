@@ -7,8 +7,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.driverapp.adapters.DishListAdapter;
 import com.example.driverapp.commons.OrderStatus;
+import com.example.driverapp.utils.FormatDate;
+import com.example.driverapp.utils.TimeUtils;
 import com.google.gson.annotations.SerializedName;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import lombok.Data;
@@ -67,6 +71,8 @@ public class Order {
     @SerializedName("orderitems")
     private List<Dish> orderitems;
 
+    @SerializedName("prepare_time")
+    private int prepareTime;
 
     @SerializedName("delivery_details")
     private User deliveryDetails;
@@ -93,6 +99,26 @@ public class Order {
             dishListAdapter.submitList(dishes);
             recyclerView.setAdapter(dishListAdapter);
         }
+    }
+
+
+    public String pickUpByTime(){
+        long createdTimeInLong = FormatDate.getTimeFromDateString(this.createdAt);
+        int deliveryTime = Integer.parseInt(restaurant.getDeliveryTime());
+        long targetTime = createdTimeInLong + this.prepareTime;
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm aa");
+        Date date = new Date(targetTime);
+        System.out.println("================================");
+        System.out.println("Approx. Delivery Time: "+this.restaurant.getDeliveryTime());
+        System.out.println("PrepareTime: "+this.prepareTime);
+        System.out.println("CreatedAt: "+this.createdAt);
+        //System.out.println("DATE: "+ date);
+        String time = dateFormat.format(targetTime);
+        return time;
+
+
+
     }
 
 

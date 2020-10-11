@@ -111,7 +111,7 @@
                                 android:textSize="18sp"
                                 android:textColor="@color/black"
                                 android:text="@{order.user.name}"
-                                android:hint="Mr. Mintu Jha" />
+                                android:hint="Placeholder Customer name" />
 
                         </LinearLayout>
 
@@ -127,8 +127,8 @@
                                 android:maxLines="2"
                                 android:textStyle="bold"
                                 android:textSize="16sp"
-                                android:text="@{order.user.address.address}"
-                                android:hint="Belur Math Campus, Belur Math, Howrah, West Bengal 711202, India" />
+                                android:text="@{order.address}"
+                                android:hint="Placeholder Customer Address" />
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -177,7 +177,7 @@
                             android:textSize="18sp"
                             android:textColor="@color/black"
                             android:text="@{order.restaurant.name}"
-                            android:hint="Sourav Catering &amp; Restaurant" />
+                            android:hint="Placeholder Restaurant Name" />
                     </LinearLayout>
 
                     <LinearLayout

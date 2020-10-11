@@ -14,8 +14,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.NavGraph;
+import androidx.navigation.NavInflater;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.driverapp.R;
+import com.example.driverapp.commons.Actions;
 import com.example.driverapp.commons.CommonUtils;
 import com.example.driverapp.commons.Constants;
 import com.example.driverapp.commons.NotificationSoundType;
@@ -38,9 +44,14 @@ import com.google.gson.Gson;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.example.driverapp.commons.Actions.DELIVER_ORDER_FRAGMENT;
+import static com.example.driverapp.commons.Actions.PICK_ORDER_FRAGMENT;
+import static com.example.driverapp.commons.Actions.REACH_DIRECTION_FRAGMENT;
+
 public class ProcessOrderActivityDialog extends AppCompatActivity implements TaskLoadedCallback,  VerifyBillDialog.VerifyBillDialogListener {
     private final String TAG = this.getClass().getSimpleName();
     ActivityProcessOrderBinding mBinding;
+    NavController navController;
     private Polyline currentPolyline;
     OrderViewModel orderViewModel;
     LocationViewModel locationViewModel;
@@ -53,6 +64,8 @@ public class ProcessOrderActivityDialog extends AppCompatActivity implements Tas
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        Log.d(TAG, "Inside onNewIntent().................");
+
     }
     private void subscribeToObserver(){
         Log.d(TAG, "Inside subscribeToObserver....");
@@ -99,8 +112,37 @@ public class ProcessOrderActivityDialog extends AppCompatActivity implements Tas
         View rootView = mBinding.getRoot();
         setContentView(rootView);
         UserSession userSession = new UserSession(this);
-
         isActivityOpen = true;
+
+        NavHostFragment navHostFragment = (NavHostFragment)getSupportFragmentManager().findFragmentById(R.id.fragment);
+        navController = Navigation.findNavController(this, R.id.fragment);
+//        NavInflater inflater = navHostFragment.getNavController().getNavInflater();
+//        NavGraph graph = inflater.inflate(R.navigation.nav_graph_process_order);
+
+        Log.d(TAG, "Inside onCreate().................");
+        if(getIntent() != null){
+            if(getIntent().getAction().equalsIgnoreCase(REACH_DIRECTION_FRAGMENT.name())){
+                Log.d(TAG, "ACTION: " + REACH_DIRECTION_FRAGMENT.name());
+                //graph.setStartDestination(R.id.reachDirectionFragment);
+                navController.navigate(R.id.reachDirectionFragment);
+            }else if(getIntent().getAction().equalsIgnoreCase(PICK_ORDER_FRAGMENT.name())){
+                Log.d(TAG, "ACTION: " + PICK_ORDER_FRAGMENT.name());
+                //graph.setStartDestination(R.id.pickOrderFragment);
+                navController.navigate(R.id.pickOrderFragment);
+            }else if(getIntent().getAction().equalsIgnoreCase(DELIVER_ORDER_FRAGMENT.name())){
+                Log.d(TAG, "ACTION: " + DELIVER_ORDER_FRAGMENT.name());
+                //graph.setStartDestination(R.id.deliverOrderFragment);
+                navController.navigate(R.id.reachDirectionFragment);
+            }else{
+                Log.d(TAG, "NO_ACTION_PASSED: " + DELIVER_ORDER_FRAGMENT.name());
+                //graph.setStartDestination(R.id.acceptOrderFragment);
+            }
+        }else{
+            Log.d(TAG, "ACTION_IS_NULL: ");
+            //graph.setStartDestination(R.id.acceptOrderFragment);
+        }
+        //navController.setGraph(graph);
+
         orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
         locationViewModel = new ViewModelProvider(this).get(LocationViewModel.class);
         orderViewModel.init();
