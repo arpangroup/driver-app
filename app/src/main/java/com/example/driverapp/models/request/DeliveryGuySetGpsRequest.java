@@ -8,14 +8,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DeliveryGuyGpsRequest extends RequestToken {
+public class DeliveryGuySetGpsRequest extends RequestToken {
     @SerializedName("delivery_lat")
     private String deliveryLat;
     @SerializedName("delivery_long")
     private String deliveryLong;
     private String heading;
 
-    public DeliveryGuyGpsRequest(String deliveryLat, String deliveryLong) {
+    public DeliveryGuySetGpsRequest(String deliveryLat, String deliveryLong) {
         super();
         this.deliveryLat = deliveryLat;
         this.deliveryLong = deliveryLong;
