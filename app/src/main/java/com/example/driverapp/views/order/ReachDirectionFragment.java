@@ -36,6 +36,8 @@ import com.example.driverapp.viewmodels.OrderViewModel;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -61,68 +63,67 @@ public class ReachDirectionFragment extends Fragment implements OnMapReadyCallba
     private Polyline currentPolyline;
     private GoogleMap mMap;
 
+
+    public ReachDirectionFragment() {
+        // Required empty public constructor
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mBinding.mapView.onCreate(savedInstanceState);
+        mBinding.mapView.onResume();
+
+        mBinding.mapView.getMapAsync(this);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mBinding = FragmentReachDirectionBinding.inflate(inflater, container, false);
 
-
+        /*
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map1);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
-
+         */
 
         return mBinding.getRoot();
+    }
+
+    private void setMapView(){
+        Drawable circleDrawable = getResources().getDrawable(R.drawable.circle_shape);
+        BitmapDescriptor markerIcon = getMarkerIconFromDrawable(circleDrawable);
+
+        try{
+            DrawMarker.getInstance(requireActivity()).draw(mMap, mPlace1.getPosition(), R.drawable.ic_restaurant, "Restaurant");
+            DrawMarker.getInstance(requireActivity()).draw(mMap, mPlace2.getPosition(), R.drawable.ic_home_location, "Your Location");
+
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mPlace1.getPosition(), 14.0f);
+            mMap.moveCamera(cameraUpdate);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     @Override
     public void onViewCreated(@NonNull View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
+        Log.d(TAG, "Inside onViewCreated...................");
 
         // Initialize ViewModel
         orderViewModel = new ViewModelProvider(requireActivity()).get(OrderViewModel.class);
         locationViewModel = new ViewModelProvider(requireActivity()).get(LocationViewModel.class);
-        orderViewModel.init();
+        //orderViewModel.init();
 
         // Initialize NavController
         navController = Navigation.findNavController(rootView);
         initClicks();
 
 
-        /*
-        orderViewModel.getAllAcceptedOrders().observe(requireActivity(), orders -> {
-            mOrder = orders.get(0);
-            mBinding.setOrder(mOrder);
-            LatLng latLngRestaurant = CommonUtils.getRestaurantLocation(mOrder.getRestaurant());
-            LatLng latLngCustomer = CommonUtils.getUserLocation(mOrder.getLocation());
-            LatLng latLngDriver = locationViewModel.getCurrentLocation().getValue();
-            if(latLngDriver == null) latLngDriver = new LatLng(0.0, 0.0);
-
-            switch (mOrder.getOrderStatus()){
-                case DELIVERY_GUY_ASSIGNED:
-                    // Reach to the restaurant
-                    mBinding.toolbar.title.setText("Reach Restaurant");
-                    mPlace1 = new MarkerOptions().position(latLngDriver).title("Location 1");
-                    mPlace2 = new MarkerOptions().position(latLngRestaurant).title("Location 2");
-                    break;
-                case ON_THE_WAY:
-                    //Reach to the customers location
-                    mBinding.toolbar.title.setText("Reach Drop Location");
-                    mPlace1 = new MarkerOptions().position(latLngRestaurant).title("Location 1");
-                    mPlace2 = new MarkerOptions().position(latLngCustomer).title("Location 2");
-                    break;
-                default:
-                    Log.d(TAG, "Inside switch case default condition");
-                    Log.d(TAG, "Something error happened");
-                    break;
-            }
-            String url = ConstructDirectionUrl.getUrl(mPlace1.getPosition(), mPlace2.getPosition(), "driving", Constants.GOOGLE_MAP_AUTH_KEY);
-            new FetchURL(this.getContext(), FetchURL.POINT_PARSER).execute(url, "driving");
-        });
-        */
-
-
-        orderViewModel.getRunningOrder().observe(requireActivity(),  order -> {
+        orderViewModel.getOnGoingOrder().observe(requireActivity(),  order -> {
             mOrder = order;
             mBinding.setOrder(mOrder);
             Log.d(TAG, "##############################################");
@@ -135,65 +136,27 @@ public class ReachDirectionFragment extends Fragment implements OnMapReadyCallba
             LatLng latLngDriver = locationViewModel.getCurrentLocation().getValue();
             if(latLngDriver == null) latLngDriver = new LatLng(0.0, 0.0);
 
-            if(mOrder.getOrderStatusId() == OrderStatus.DELIVERY_GUY_ASSIGNED.ordinal()){
-                // Reach to the restaurant
-                mBinding.toolbar.title.setText("Reach Restaurant");
-                mPlace1 = new MarkerOptions().position(latLngDriver).title("Location 1");
-                mPlace2 = new MarkerOptions().position(latLngRestaurant).title("Location 2");
-            }else if(mOrder.getOrderStatusId() == OrderStatus.DELIVERY_GUY_ASSIGNED.ordinal()){
+            if(mOrder.getOrderStatusId() == OrderStatus.ON_THE_WAY.value()){
                 //Reach to the customers location
                 mBinding.toolbar.title.setText("Reach Drop Location");
-                mPlace1 = new MarkerOptions().position(latLngRestaurant).title("Location 1");
-                mPlace2 = new MarkerOptions().position(latLngCustomer).title("Location 2");
-            }else{
-                Log.d(TAG, "Inside switch case default condition");
-                Log.d(TAG, "Something error happened");
-            }
+                mPlace1 = new MarkerOptions().position(latLngRestaurant).title("Restaurant Location");
+                mPlace2 = new MarkerOptions().position(latLngCustomer).title("Customer Location");
 
-            /*
-            switch (mOrder.getOrderStatus()){
-                case DELIVERY_GUY_ASSIGNED:
-                    // Reach to the restaurant
-                    mBinding.toolbar.title.setText("Reach Restaurant");
-                    mPlace1 = new MarkerOptions().position(latLngDriver).title("Location 1");
-                    mPlace2 = new MarkerOptions().position(latLngRestaurant).title("Location 2");
-                    break;
-                case ON_THE_WAY:
-                    //Reach to the customers location
-                    mBinding.toolbar.title.setText("Reach Drop Location");
-                    mPlace1 = new MarkerOptions().position(latLngRestaurant).title("Location 1");
-                    mPlace2 = new MarkerOptions().position(latLngCustomer).title("Location 2");
-                    break;
-                default:
-                    Log.d(TAG, "Inside switch case default condition");
-                    Log.d(TAG, "Something error happened");
-                    break;
+            }else {
+                // Reach to the restaurant
+                mBinding.toolbar.title.setText("Reach Restaurant");
+                mPlace1 = new MarkerOptions().position(latLngDriver).title("Driver Location");
+                mPlace2 = new MarkerOptions().position(latLngRestaurant).title("Restaurant Location");
             }
-            */
             String url = ConstructDirectionUrl.getUrl(mPlace1.getPosition(), mPlace2.getPosition(), "driving", Constants.GOOGLE_MAP_AUTH_KEY);
             new FetchURL(this.getContext(), FetchURL.POINT_PARSER).execute(url, "driving");
         });
 
         mBinding.btnAccept.setOnSlideCompleteListener(slideToActView -> {
-            if(mOrder.getOrderStatus() == OrderStatus.DELIVERY_GUY_ASSIGNED){
-                orderViewModel.reachedPickupLocation(mOrder).observe(requireActivity(), aBoolean -> {
-                    if(aBoolean){
-                        navController.navigate(R.id.action_reachDirectionFragment_to_pickOrderFragment);
-                    }else{
-                        mBinding.btnAccept.resetSlider();
-                        Toast.makeText(requireActivity(), "Something error happened", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }else if(mOrder.getOrderStatus() == OrderStatus.ON_THE_WAY){
-                orderViewModel.reachedDeliveryLocation(mOrder).observe(requireActivity(), aBoolean -> {
-                    if(aBoolean){
-                        navController.navigate(R.id.action_reachDirectionFragment_to_deliverOrderFragment);
-                    }else{
-                        Toast.makeText(requireActivity(), "Something error happened", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }else{
-                Toast.makeText(requireActivity(), "Condition Mismatch", Toast.LENGTH_SHORT).show();
+            if(mOrder.getOrderStatusId() == 4){
+                navController.navigate(R.id.action_reachDirectionFragment_to_deliverOrderFragment);
+            }else if(mOrder.getOrderStatusId() == 3 || mOrder.getOrderStatusId() == 7 || mOrder.getOrderStatusId() == 10){
+                navController.navigate(R.id.action_reachDirectionFragment_to_pickOrderFragment);
             }
         });
 
@@ -244,7 +207,7 @@ public class ReachDirectionFragment extends Fragment implements OnMapReadyCallba
     }
 
 
-    @Override
+
     public void onMapReady(GoogleMap googleMap) {
         //BitmapDescriptor iconRestaurant = BitmapDescriptorFactory.fromResource(R.drawable.ic_restaurant);
         Drawable circleDrawable = getResources().getDrawable(R.drawable.circle_shape);
@@ -252,11 +215,11 @@ public class ReachDirectionFragment extends Fragment implements OnMapReadyCallba
 
         try{
             mMap = googleMap;
-            DrawMarker.getInstance(requireActivity()).draw(mMap, mPlace1.getPosition(), R.drawable.ic_restaurant, "Restaurant");
-            DrawMarker.getInstance(requireActivity()).draw(mMap, mPlace2.getPosition(), R.drawable.ic_home_location, "Your Location");
-
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mPlace1.getPosition(), 14.0f);
-            mMap.moveCamera(cameraUpdate);
+//            DrawMarker.getInstance(requireActivity()).draw(mMap, mPlace1.getPosition(), R.drawable.ic_restaurant, "Restaurant");
+//            DrawMarker.getInstance(requireActivity()).draw(mMap, mPlace2.getPosition(), R.drawable.ic_home_location, "Your Location");
+//
+//            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mPlace1.getPosition(), 14.0f);
+//            mMap.moveCamera(cameraUpdate);
         }catch (Exception e){
             e.printStackTrace();
         }

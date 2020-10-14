@@ -46,14 +46,7 @@ public class PickOrderFragment extends Fragment{
         navController = Navigation.findNavController(rootView);
         initClicks();
 
-        /*
-        orderViewModel.getAllAcceptedOrders().observe(requireActivity(), orders -> {
-            mOrder = orders.get(0);
-            mBinding.pickOrder.toolbar.title.setText("PICK ORDER");
-            mBinding.pickOrder.setOrder(mOrder);
-        });
-         */
-        orderViewModel.getRunningOrder().observe(requireActivity(), order -> {
+        orderViewModel.getOnGoingOrder().observe(requireActivity(), order -> {
             mOrder = order;
             mBinding.pickOrder.toolbar.title.setText("PICK ORDER");
             mBinding.pickOrder.setOrder(mOrder);
@@ -61,11 +54,12 @@ public class PickOrderFragment extends Fragment{
 
 
         mBinding.pickOrder.btnAccept.setOnSlideCompleteListener(slideToActView -> {
-            orderViewModel.pickedUpOrder(orderViewModel.getOnGoingOrder()).observe(requireActivity(), isPickedUp -> {
+            orderViewModel.pickedUpOrder(mOrder).observe(requireActivity(), isPickedUp -> {
                 if(isPickedUp){
+                    mOrder.setOrderStatusId(4);
+                    orderViewModel.setOnGoingOrder(mOrder);
                     navController.navigate(R.id.action_pickOrderFragment_to_reachDirectionFragment);
                 }else{
-                    //mBinding.pickOrder.btnAccept.setLocked(true);
                     mBinding.pickOrder.btnAccept.resetSlider();
                     Toast.makeText(requireActivity(), "Order is not ready yet", Toast.LENGTH_LONG).show();
                 }

@@ -1,4 +1,4 @@
-package com.example.driverapp.views;
+package com.example.driverapp.views.order;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,7 +31,12 @@ import com.example.driverapp.services.FetchOrderService;
 import com.example.driverapp.viewmodels.LocationViewModel;
 import com.example.driverapp.viewmodels.OrderViewModel;
 import com.example.driverapp.views.order.ProcessOrderActivityDialog;
+import com.google.android.gms.common.util.CollectionUtils;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
+
+import java.util.Collections;
+import java.util.List;
 
 public class AcceptedOrderListFragment extends Fragment implements ItemClickInterface {
     private final String TAG = this.getClass().getSimpleName();
@@ -64,10 +69,19 @@ public class AcceptedOrderListFragment extends Fragment implements ItemClickInte
         orderListAdapter = new AcceptedOrderListAdapter(this);
         mBinding.orderRecycler.setAdapter(orderListAdapter);
 
-        FetchOrderService.mutableAcceptedOrders.observe(requireActivity(), orders -> {
-            if(orders.size() != orderListAdapter.getItemCount()){
-                orderListAdapter.submitList(orders);
-            }
+        orderViewModel.getIsLoading().observe(requireActivity(), aBoolean -> {
+            if(aBoolean)mBinding.progressbar.setVisibility(View.VISIBLE);
+            else mBinding.progressbar.setVisibility(View.GONE);
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        orderViewModel.getDeliveryOrders().observe(requireActivity(), deliveryOrderResponse -> {
+            List<Order> acceptedOrders = deliveryOrderResponse.getAcceptedOrders();
+            Collections.sort(acceptedOrders);
+            orderListAdapter.submitList(acceptedOrders);
         });
     }
 
@@ -77,31 +91,20 @@ public class AcceptedOrderListFragment extends Fragment implements ItemClickInte
         Log.d(TAG, "ORDER: " + order.getId() + ", "+ order.getUniqueOrderId());
         Log.d(TAG, "ORDER_STATUS: " + order.getOrderStatusId());
 
-        // Order Accepted
-        if(orderStatus == OrderStatus.DELIVERY_GUY_ASSIGNED.ordinal() || orderStatus == OrderStatus.ON_THE_WAY.ordinal()){
+        String orderJson = new Gson().toJson(order);
+
+        Intent intent = new Intent(getActivity(), ProcessOrderActivityDialog.class);
+        intent.putExtra(ProcessOrderActivityDialog.ORDER_REQUEST, orderJson);
+
+        // Order Accepted(3); Restaurant Mark the order Ready(7); ReadyToPickUp(10)
+        if(orderStatus == OrderStatus.DELIVERY_GUY_ASSIGNED.value() || orderStatus == OrderStatus.ORDER_READY.value() || orderStatus == OrderStatus.ORDER_READY_TO_PICKUP.value()){
             // Driver want to go to PickupLocation OR Driver want to go to Deliver location
             // start ReachDirectionFragment
-            Log.d(TAG, "Start ReachDirectionFragment....................");
-
-            orderViewModel.setOnGoingOrder(order);
-            Intent intent = new Intent(getActivity(), ProcessOrderActivityDialog.class);
             intent.setAction(Actions.REACH_DIRECTION_FRAGMENT.name());
             startActivity(intent);
 
-        }else if(orderStatus == OrderStatus.ORDER_READY.ordinal() || orderStatus == OrderStatus.REACHED_PICKUP_LOCATION.ordinal()){
-            // start PickOrderFragment
-            Log.d(TAG, "Start PickOrderFragment....................");
-
-            orderViewModel.setOnGoingOrder(order);
-            Intent intent = new Intent(getActivity(), ProcessOrderActivityDialog.class);
-            intent.setAction(Actions.PICK_ORDER_FRAGMENT.name());
-            startActivity(intent);
-        }else if(orderStatus == OrderStatus.REACHED_DELIVERY_LOCATION.ordinal()){
+        }else if(orderStatus == OrderStatus.ON_THE_WAY.value()){
             // start DeliverOrderFragment
-            Log.d(TAG, "Start DeliverOrderFragment....................");
-
-            orderViewModel.setOnGoingOrder(order);
-            Intent intent = new Intent(getActivity(), ProcessOrderActivityDialog.class);
             intent.setAction(Actions.DELIVER_ORDER_FRAGMENT.name());
             startActivity(intent);
         }

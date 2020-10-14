@@ -44,6 +44,7 @@ import com.google.gson.Gson;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.example.driverapp.commons.Actions.ACCEPT_ORDER_FRAGMENT;
 import static com.example.driverapp.commons.Actions.DELIVER_ORDER_FRAGMENT;
 import static com.example.driverapp.commons.Actions.PICK_ORDER_FRAGMENT;
 import static com.example.driverapp.commons.Actions.REACH_DIRECTION_FRAGMENT;
@@ -57,6 +58,8 @@ public class ProcessOrderActivityDialog extends AppCompatActivity implements Tas
     LocationViewModel locationViewModel;
 
     public static boolean isActivityOpen = false;
+
+    public static String ORDER_REQUEST = "order_request";
 
 
 
@@ -93,8 +96,8 @@ public class ProcessOrderActivityDialog extends AppCompatActivity implements Tas
                 Log.d(TAG, "NEW_ORDER: "+order);
                 Log.d(TAG, "ORDERS: "+order);
 
-                if(orderViewModel.getRunningOrder().getValue() == null){
-                    orderViewModel.setOnGoingOrder(order);
+                if(orderViewModel.getOnGoingOrder().getValue() == null){
+                    orderViewModel.setIncomingOrder(order);
                     Log.d(TAG, "ORDER_FOR_ACCEPT: " + order);
                 }
                 System.out.println("============================================================================");
@@ -119,23 +122,38 @@ public class ProcessOrderActivityDialog extends AppCompatActivity implements Tas
 //        NavInflater inflater = navHostFragment.getNavController().getNavInflater();
 //        NavGraph graph = inflater.inflate(R.navigation.nav_graph_process_order);
 
+
+        orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
+        locationViewModel = new ViewModelProvider(this).get(LocationViewModel.class);
+        orderViewModel.init();
+
+
         Log.d(TAG, "Inside onCreate().................");
         if(getIntent() != null){
             if(getIntent().getAction().equalsIgnoreCase(REACH_DIRECTION_FRAGMENT.name())){
                 Log.d(TAG, "ACTION: " + REACH_DIRECTION_FRAGMENT.name());
                 //graph.setStartDestination(R.id.reachDirectionFragment);
+                isActivityOpen = false;
+                setOrderToViewModel();
                 navController.navigate(R.id.reachDirectionFragment);
+
             }else if(getIntent().getAction().equalsIgnoreCase(PICK_ORDER_FRAGMENT.name())){
                 Log.d(TAG, "ACTION: " + PICK_ORDER_FRAGMENT.name());
                 //graph.setStartDestination(R.id.pickOrderFragment);
+                isActivityOpen = false;
+                setOrderToViewModel();
                 navController.navigate(R.id.pickOrderFragment);
             }else if(getIntent().getAction().equalsIgnoreCase(DELIVER_ORDER_FRAGMENT.name())){
                 Log.d(TAG, "ACTION: " + DELIVER_ORDER_FRAGMENT.name());
                 //graph.setStartDestination(R.id.deliverOrderFragment);
+                isActivityOpen = false;
+                setOrderToViewModel();
                 navController.navigate(R.id.reachDirectionFragment);
-            }else{
-                Log.d(TAG, "NO_ACTION_PASSED: " + DELIVER_ORDER_FRAGMENT.name());
-                //graph.setStartDestination(R.id.acceptOrderFragment);
+            }else if (getIntent().getAction().equalsIgnoreCase(ACCEPT_ORDER_FRAGMENT.name())){
+                Log.d(TAG, "NO_ACTION_PASSED: ");
+                isActivityOpen = true;
+                navController.navigate(R.id.acceptOrderFragment);
+                subscribeToObserver();
             }
         }else{
             Log.d(TAG, "ACTION_IS_NULL: ");
@@ -143,11 +161,34 @@ public class ProcessOrderActivityDialog extends AppCompatActivity implements Tas
         }
         //navController.setGraph(graph);
 
-        orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
-        locationViewModel = new ViewModelProvider(this).get(LocationViewModel.class);
-        orderViewModel.init();
 
-        subscribeToObserver();
+
+        orderViewModel.getOnGoingOrder().observe(this, order -> {
+            if(order != null){
+                //orderViewModel.setOnGoingOrder(order);
+                /*
+                Log.d(TAG, "ON_GOING_ORDER: " + order);
+                LatLng place1  = CommonUtils.getRestaurantLocation(order.getRestaurant());
+                LatLng place2  = CommonUtils.getUserLocation(order.getLocation());
+                String url = ConstructDirectionUrl.getUrl(place1, place2, "driving", Constants.GOOGLE_MAP_AUTH_KEY);
+                Log.d(TAG, "REQUEST FOR POLYLINE");
+                Log.d(TAG, "URL: "+ url);
+                new FetchURL(requireActivity(), FetchURL.DISTANCE_PARSER).execute(url, "driving");
+                new FetchURL(requireActivity(), FetchURL.POINT_PARSER).execute(url, "driving");
+                 */
+            }
+        });
+
+    }
+
+    private void setOrderToViewModel(){
+        try{
+            String orderJson = getIntent().getStringExtra(ORDER_REQUEST);
+            Order order = new Gson().fromJson(orderJson, Order.class);
+            orderViewModel.setOnGoingOrder(order);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

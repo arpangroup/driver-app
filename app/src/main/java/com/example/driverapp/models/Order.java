@@ -24,7 +24,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class Order {
+public class Order implements Comparable{
     private int id;
     @SerializedName("unique_order_id")
     private String uniqueOrderId;
@@ -121,6 +121,17 @@ public class Order {
 
     }
 
+    @Override
+    public int compareTo(Object obj) {
+        int compareId=((Order)obj).id;
+
+        /* For Ascending order*/
+        //return this.id-compareId;
+
+        /* For Descending order do like this */
+        return compareId-this.id;
+    }
+
 
     public static DiffUtil.ItemCallback<Order> itemCallback = new DiffUtil.ItemCallback<Order>() {
         @Override
@@ -135,7 +146,6 @@ public class Order {
             return oldItem.equals(newItem);
         }
     };
-
 
 
 }

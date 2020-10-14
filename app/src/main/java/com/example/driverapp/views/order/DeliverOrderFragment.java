@@ -60,7 +60,7 @@ public class DeliverOrderFragment extends Fragment {
         mBinding.deliverOrder.btnAccept.setLocked(true);
 
 
-        orderViewModel.getRunningOrder().observe(requireActivity(), order -> {
+        orderViewModel.getOnGoingOrder().observe(requireActivity(), order -> {
             mOrder = order;
             Log.d(TAG, "###################################################################");
             Log.d(TAG, "ORDER: " + mOrder);
@@ -135,8 +135,10 @@ public class DeliverOrderFragment extends Fragment {
         mBinding.deliverOrder.btnAccept.setOnSlideCompleteListener(slideToActView -> {
             orderViewModel.deliverOrder(mOrder, mOrder.getDeliveryPin()).observe(requireActivity(), isDelivered -> {
                 if(isDelivered){
+                    mOrder.setOrderStatusId(5);
                     navController.navigate(R.id.action_deliverOrderFragment_to_tripDetailsFragment);
                 }else{
+                    mBinding.deliverOrder.btnAccept.resetSlider();
                     Toast.makeText(requireActivity(), "Something error happened", Toast.LENGTH_SHORT).show();
                 }
             });

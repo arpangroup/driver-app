@@ -161,7 +161,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="16dp"
                             android:layoutDirection="ltr"
-                            android:textColor="@color/white"
+                            android:textColor="@color/black"
                             android:textStyle="bold"
                             android:textSize="24sp"
                             android:text="@{order.total +``}"

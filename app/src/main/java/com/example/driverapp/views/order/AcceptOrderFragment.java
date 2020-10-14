@@ -51,6 +51,8 @@ public class AcceptOrderFragment extends Fragment{
     private MediaPlayer mMediaPlayer;
     Timer timer;
 
+    Order mIncoOrder = null;
+
 
 
     private FragmentAcceptOrderBinding mBinding;
@@ -59,41 +61,6 @@ public class AcceptOrderFragment extends Fragment{
     NavController navController;
 
     public int counter;
-
-
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            try{
-                String ordersJson = intent.getStringExtra(MessagingService.INTENT_EXTRA_ORDER_STATUS);
-                System.out.println("==================RECEIVED==========================");
-                System.out.println(ordersJson);
-                System.out.println("====================================================");
-                Order order = new Gson().fromJson(ordersJson, Order.class);
-                //Toast.makeText(context, "ID: "+orderObj.getId(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(context, " New order received", Toast.LENGTH_SHORT).show();
-                Toast.makeText(context, "RECEIVER TRIGGERED", Toast.LENGTH_SHORT).show();
-
-                //boolean isStatusChanged = orderViewModel.setStatusChange(order);
-                //if(isStatusChanged) orderListAdapter.notifyDataSetChanged();
-            }catch (Exception e){
-                e.printStackTrace();
-                Toast.makeText(context, "RECEIVER: EXCEPTION", Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(mReceiver, new IntentFilter(MessagingService.MESSAGE_ORDER_STATUS));
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        LocalBroadcastManager.getInstance(requireActivity()).unregisterReceiver(mReceiver);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -110,13 +77,15 @@ public class AcceptOrderFragment extends Fragment{
         // Initialize ViewModel
         orderViewModel = new ViewModelProvider(requireActivity()).get(OrderViewModel.class);
         locationViewModel = new ViewModelProvider(requireActivity()).get(LocationViewModel.class);
-        orderViewModel.init();
+        //orderViewModel.init();
 
         // Initialize NavController
         navController = Navigation.findNavController(rootView);
 
-        orderViewModel.getRunningOrder().observe(requireActivity(), order -> {
+
+        orderViewModel.getIncomingOrder().observe(requireActivity(), order -> {
             if(order != null){
+                /*
                 Log.d(TAG, "ORDER: " + order);
                 LatLng place1  = CommonUtils.getRestaurantLocation(order.getRestaurant());
                 LatLng place2  = CommonUtils.getUserLocation(order.getLocation());
@@ -125,6 +94,7 @@ public class AcceptOrderFragment extends Fragment{
                 Log.d(TAG, "URL: "+ url);
                 new FetchURL(requireActivity(), FetchURL.DISTANCE_PARSER).execute(url, "driving");
                 new FetchURL(requireActivity(), FetchURL.POINT_PARSER).execute(url, "driving");
+                 */
 
                 mBinding.setOrder(order);
                 startMediaPlayer(NotificationSoundType.ORDER_ARRIVE);
@@ -159,12 +129,14 @@ public class AcceptOrderFragment extends Fragment{
         });
 
         mBinding.btnAccept.setOnSlideCompleteListener(slideToActView -> {
-            Order onGoingOrder = orderViewModel.getRunningOrder().getValue();
+            Order incomingOrder = orderViewModel.getIncomingOrder().getValue();
             Log.d(TAG, "Inside setOnSlideCompleteListener..........");
-            Log.d(TAG, "ACCEPTED_ORDER: "+onGoingOrder);
-            if(onGoingOrder != null){
-                orderViewModel.acceptOrder(orderViewModel.getOnGoingOrder()).observe(requireActivity(), isAccepted -> {
+            Log.d(TAG, "ACCEPTED_ORDER: "+incomingOrder);
+            if(incomingOrder != null){
+                orderViewModel.acceptOrder(incomingOrder).observe(requireActivity(), isAccepted -> {
                     if(isAccepted){
+                        incomingOrder.setOrderStatusId(3);
+                        orderViewModel.setOnGoingOrder(incomingOrder);
                         navController.navigate(R.id.action_acceptOrderFragment_to_reachDirectionFragment);
                     }else {
                         mBinding.btnAccept.resetSlider();
@@ -245,5 +217,15 @@ public class AcceptOrderFragment extends Fragment{
         super.onDestroyView();
         isMusicEnable = false;
         stopMediaPlayer();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 }

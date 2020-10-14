@@ -15,11 +15,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.driverapp.R;
+import com.example.driverapp.commons.CommonUtils;
+import com.example.driverapp.commons.Constants;
 import com.example.driverapp.databinding.FragmentPickOrderBinding;
 import com.example.driverapp.databinding.FragmentTripDetailsBinding;
+import com.example.driverapp.directionhelpers.ConstructDirectionUrl;
+import com.example.driverapp.directionhelpers.FetchURL;
 import com.example.driverapp.models.Order;
 import com.example.driverapp.viewmodels.LocationViewModel;
 import com.example.driverapp.viewmodels.OrderViewModel;
+import com.google.android.gms.maps.model.LatLng;
 
 public class TripDetailsFragment extends Fragment {
     private final String TAG = this.getClass().getSimpleName();
@@ -51,9 +56,19 @@ public class TripDetailsFragment extends Fragment {
         mBinding.tripDetails.toolbar.title.setText("Trip Summary");
 
 
-        orderViewModel.getAllAcceptedOrders().observe(requireActivity(), orders -> {
-            mOrder =  orders.get(0);
+        orderViewModel.getOnGoingOrder().observe(requireActivity(), order -> {
+            mOrder =  order;
             mBinding.tripDetails.setOrder(mOrder);
+
+            Log.d(TAG, "ORDER: " + order);
+            LatLng place1  = CommonUtils.getRestaurantLocation(order.getRestaurant());
+            LatLng place2  = CommonUtils.getUserLocation(order.getLocation());
+            String url = ConstructDirectionUrl.getUrl(place1, place2, "driving", Constants.GOOGLE_MAP_AUTH_KEY);
+            Log.d(TAG, "REQUEST FOR DISTANCE CALCULATION");
+            Log.d(TAG, "URL: "+ url);
+            new FetchURL(requireActivity(), FetchURL.DISTANCE_PARSER).execute(url, "driving");
+
+
         });
         locationViewModel.getDirection().observe(requireActivity(), direction -> {
             Log.d(TAG, "DIRECTION: "+direction);

@@ -74,14 +74,28 @@
                     android:layoutDirection="ltr"
                     android:orientation="vertical">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:maxLines="2"
-                        android:textStyle="bold"
-                        android:textSize="14sp"
-                        android:text="Sourav Catering &amp; Restaurant"
-                        android:hint="Mr. Mintu Jha" />
+                        android:layoutDirection="rtl"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:text="@{`ID: ` + order.id + `, status: `+order.orderStatusId }"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layoutDirection="ltr"
+                            android:textAlignment="textStart"
+                            android:maxLines="2"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:text="Sourav Catering &amp; Restaurant"
+                            android:hint="Mr. Mintu Jha" />
+
+                    </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"

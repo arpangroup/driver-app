@@ -37,7 +37,7 @@
         tools:layout="@layout/fragment_notification_list" />
     <fragment
         android:id="@+id/acceptedOrderListFragment"
-        android:name="com.example.driverapp.views.AcceptedOrderListFragment"
+        android:name="com.example.driverapp.views.order.AcceptedOrderListFragment"
         android:label="Accepted Orders"
         tools:layout="@layout/fragment_accepted_order_list" />
     <fragment

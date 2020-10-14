@@ -39,11 +39,16 @@
                 android:orientation="vertical"
                 android:layout_weight="1.5">
 
-                <fragment
-                    android:id="@+id/map1"
-                    android:name="com.google.android.gms.maps.SupportMapFragment"
+<!--                <fragment-->
+<!--                    android:id="@+id/map1"-->
+<!--                    android:name="com.google.android.gms.maps.SupportMapFragment"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent" />-->
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/mapView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"/>
+
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="wrap_content"
@@ -278,7 +283,7 @@
             app:slider_icon="@drawable/slidetoact_ic_arrow"
             app:slider_icon_color="@color/blue"
             app:border_radius="30dp"
-            app:text="@{order.orderStatus == OrderStatus.DELIVERY_GUY_ASSIGNED ? `Reached Pickup Locaton` : `Reached Drop Location`}"
+            app:text="@{order.orderStatusId == 4  ? `Reached Drop Location` : `Reached Pickup Locaton`}"
             app:text_style="bold"
             app:text_size="16sp"
             app:slider_height="60dp"

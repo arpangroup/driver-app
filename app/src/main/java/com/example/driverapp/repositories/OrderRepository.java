@@ -14,6 +14,8 @@ import com.example.driverapp.models.ApiResponse;
 import com.example.driverapp.models.Order;
 import com.example.driverapp.models.request.DeliverOrderRequest;
 import com.example.driverapp.models.request.ProcessOrderRequest;
+import com.example.driverapp.models.request.RequestToken;
+import com.example.driverapp.models.response.DeliveryOrderResponse;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -44,11 +46,8 @@ public class OrderRepository {
         return isLoading;
     }
 
-    public LiveData<List<Order>> getAllAcceptedOrders(){
-        if(mutableAcceptedOrders == null){
-            mutableAcceptedOrders = new MutableLiveData<>(new ArrayList<>());
-        }
-        return mutableAcceptedOrders;
+    public LiveData<DeliveryOrderResponse> getAllDeliverableOrders(){
+        return getDeliveryOrdersApi();
     }
 
     public LiveData<Boolean> acceptOrder(Order order){
@@ -58,9 +57,10 @@ public class OrderRepository {
         return acceptOrderApi(order);
     }
     public LiveData<Boolean> reachedPickUpLocation(Order order){
-        order.setOrderStatus(OrderStatus.REACHED_PICKUP_LOCATION);
-        mutableAcceptedOrders.setValue(Collections.singletonList(order));
-        return reachPickupLocationApi(order);
+//        order.setOrderStatus(OrderStatus.REACHED_PICKUP_LOCATION);
+//        mutableAcceptedOrders.setValue(Collections.singletonList(order));
+//        return reachPickupLocationApi(order);
+        return new MutableLiveData<>(false);
     }
     public LiveData<Boolean> pickedUpOrder(Order order){
         order.setOrderStatus(OrderStatus.ON_THE_WAY);
@@ -68,9 +68,10 @@ public class OrderRepository {
         return pickUpOrderApi(order);
     }
     public LiveData<Boolean> reachedDeliveryLocation(Order order){
-        order.setOrderStatus(OrderStatus.REACHED_DELIVERY_LOCATION);
-        mutableAcceptedOrders.setValue(Collections.singletonList(order));
-        return reachDeliveryLocationApi(order);
+//        order.setOrderStatus(OrderStatus.REACHED_DELIVERY_LOCATION);
+//        mutableAcceptedOrders.setValue(Collections.singletonList(order));
+//        return reachDeliveryLocationApi(order);
+        return new MutableLiveData<>(false);
     }
 
     public LiveData<Boolean> deliverOrder(Order order, String deliveryPin){
@@ -229,10 +230,12 @@ public class OrderRepository {
         apiInterface.deliverOrder(request).enqueue(new Callback<Order>() {
             @Override
             public void onResponse(Call<Order> call, Response<Order> response) {
+                isLoading.setValue(false);
                 if(response.isSuccessful()){
-                    Log.d(TAG, "Setting accepted orders to the list...");
-                    isLoading.setValue(false);
+                    Log.d(TAG, "RESPONSE: "+ response.body());
                     apiResponseMutableLiveData.setValue(true);
+                    //Log.d(TAG, "Setting accepted orders to the list...");
+                    //apiResponseMutableLiveData.setValue(true);
                 }
             }
 
@@ -245,4 +248,35 @@ public class OrderRepository {
         });
         return apiResponseMutableLiveData;
     }
+
+
+    private LiveData<DeliveryOrderResponse> getDeliveryOrdersApi(){
+        RequestToken requestToken = new RequestToken();
+        MutableLiveData<DeliveryOrderResponse> mutableResponse = new MutableLiveData<>();
+        Log.d(TAG, "Inside getDeliveryOrders()....");
+        Log.d(TAG, "REQUEST: "+ new Gson().toJson(requestToken));
+        ApiInterface apiInterface = ApiService.getApiService();
+        isLoading.setValue(true);
+        apiInterface.getAllDeliveryOrders(requestToken).enqueue(new Callback<DeliveryOrderResponse>() {
+            @Override
+            public void onResponse(Call<DeliveryOrderResponse> call, Response<DeliveryOrderResponse> response) {
+                isLoading.setValue(false);
+                if(response.isSuccessful()){
+                    try{
+                        DeliveryOrderResponse  deliveryOrderResponse =  response.body();
+                        mutableResponse.setValue(deliveryOrderResponse);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DeliveryOrderResponse> call, Throwable t) {
+                isLoading.setValue(false);
+            }
+        });
+        return mutableResponse;
+    }
+
 }

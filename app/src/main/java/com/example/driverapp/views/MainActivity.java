@@ -36,6 +36,7 @@ import com.example.driverapp.sharedprefs.UserSession;
 import com.example.driverapp.utils.GpsUtils;
 import com.example.driverapp.viewmodels.LocationViewModel;
 import com.example.driverapp.viewmodels.OrderViewModel;
+import com.example.driverapp.views.auth.AuthActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity{
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         View rootView = mBinding.getRoot();
         setContentView(rootView);
+        UserSession userSession = new UserSession(this);
 
         mNavController = Navigation.findNavController(this, R.id.navHostFragment);
         NavigationUI.setupWithNavController(mBinding.navView, mNavController);
@@ -67,6 +69,12 @@ public class MainActivity extends AppCompatActivity{
             mBinding.toolbar.title.setText(destination.getLabel());
         });
 
+        if(!UserSession.isLoggedIn()){
+            Intent intent = new Intent(this, AuthActivity.class);
+            finishAffinity();
+            startActivity(intent);
+            finish();
+        }
 
 
 
