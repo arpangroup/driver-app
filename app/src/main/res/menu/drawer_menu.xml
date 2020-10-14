@@ -19,6 +19,15 @@
             <group android:checkableBehavior="single">
 
                 <item
+                    android:id="@+id/orderHistoryFragment"
+                    android:icon="@drawable/ic_baseline_history_24"
+                    android:title="Order History" />
+                <item
+                    android:id="@+id/earningHistoryFragment"
+                    android:icon="@drawable/ic_baseline_money_24"
+                    android:title="Earnings" />
+
+                <item
                     android:id="@+id/loginHistoryFragment"
                     android:icon="@drawable/ic_baseline_access_alarms_24"
                     android:title="Login History" />

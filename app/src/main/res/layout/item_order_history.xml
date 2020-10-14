@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="orderDetails"
+            type="com.example.driverapp.models.response.OrderDetailsView" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layoutDirection="rtl"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/call_to_customer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:background="@drawable/rectangle_gray_border"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/blue"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:text="@{`₹` + orderDetails.order.payable}"
+                            android:hint="₹120"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:text="@{orderDetails.order.uniqueOrderId}"
+                        android:hint="Order ID: 173T5353763563" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layoutDirection="ltr"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layoutDirection="rtl"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layoutDirection="ltr"
+                            android:textAlignment="textStart"
+                            android:maxLines="2"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:text="@{orderDetails.order.paymentMode}"
+                            android:hint="COD" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layoutDirection="ltr"
+                            android:layout_marginRight="16dp"
+                            android:textAlignment="textStart"
+                            android:maxLines="2"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:text="@{orderDetails.order.address}"
+                            android:hint="12337, Nandakurya, West Bengal, India" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layoutDirection="rtl"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:text="@{orderDetails.is_complete == 1 ? `completed` : `on-going`}"
+                            android:hint="completed" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:layoutDirection="ltr"
+                            android:textAlignment="textStart"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:text="@{orderDetails.updatedAt}"
+                            android:hint="16-Oct-2020 at 10:45 PM" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="12dp"
+            android:background="@color/lightsilver" />
+    </LinearLayout>
+</layout>

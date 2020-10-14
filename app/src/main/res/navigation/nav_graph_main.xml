@@ -50,4 +50,9 @@
         android:name="com.example.driverapp.views.auth.LogoutFragment"
         android:label="Logout"
         tools:layout="@layout/fragment_logout" />
+    <fragment
+        android:id="@+id/earningHistoryFragment"
+        android:name="com.example.driverapp.views.EarningHistoryFragment"
+        android:label="Earnings"
+        tools:layout="@layout/fragment_earning_history" />
 </navigation>

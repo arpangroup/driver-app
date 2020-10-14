@@ -9,37 +9,36 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.example.driverapp.R;
-import com.example.driverapp.adapters.AcceptedOrderListAdapter;
-import com.example.driverapp.adapters.ItemClickInterface;
+import com.example.driverapp.adapters.EarningListAdapter;
 import com.example.driverapp.adapters.OrderListAdapter;
 import com.example.driverapp.databinding.FragmentAcceptedOrderListBinding;
-import com.example.driverapp.databinding.FragmentOrderHistoryBinding;
-import com.example.driverapp.databinding.FragmentProfileBinding;
-import com.example.driverapp.models.Order;
-import com.example.driverapp.models.response.OrderDetailsView;
+import com.example.driverapp.databinding.FragmentEarningHistoryBinding;
+import com.example.driverapp.models.Earning;
 import com.example.driverapp.viewmodels.LocationViewModel;
 import com.example.driverapp.viewmodels.OrderViewModel;
 
-import java.util.Collections;
 import java.util.List;
 
-public class OrderHistoryFragment extends Fragment implements ItemClickInterface {
+public class EarningHistoryFragment extends Fragment {
     private final String TAG = this.getClass().getSimpleName();
 
-    private FragmentOrderHistoryBinding mBinding;
+    private FragmentEarningHistoryBinding mBinding;
     OrderViewModel orderViewModel;
     LocationViewModel locationViewModel;
     NavController navController;
-    OrderListAdapter orderListAdapter;
+    EarningListAdapter earningListAdapter;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mBinding = FragmentOrderHistoryBinding.inflate(inflater, container, false);
+        mBinding = FragmentEarningHistoryBinding.inflate(inflater, container, false);
         return mBinding.getRoot();
     }
 
@@ -56,9 +55,8 @@ public class OrderHistoryFragment extends Fragment implements ItemClickInterface
         navController = Navigation.findNavController(rootView);
 
         // Initialize RecyclerView
-        orderListAdapter = new OrderListAdapter(this);
-        mBinding.orderRecycler.setAdapter(orderListAdapter);
-
+        earningListAdapter = new EarningListAdapter();
+        mBinding.earningRecycler.setAdapter(earningListAdapter);
 
         orderViewModel.getIsLoading().observe(requireActivity(), aBoolean -> {
             if(aBoolean)mBinding.progressbar.setVisibility(View.VISIBLE);
@@ -66,13 +64,10 @@ public class OrderHistoryFragment extends Fragment implements ItemClickInterface
         });
 
         orderViewModel.getUsersOrderStatistics().observe(requireActivity(), updateDeliveryUserInfoResponse -> {
-            List<OrderDetailsView> orders = updateDeliveryUserInfoResponse.getOrders();
-            orderListAdapter.submitList(orders);
+            List<Earning> earnings = updateDeliveryUserInfoResponse.getEarnings();
+            Log.d(TAG, "EARNINGS: "+earnings);
+            earningListAdapter.submitList(earnings);
         });
     }
 
-    @Override
-    public void onItemVClick(Order order) {
-
-    }
 }

@@ -1,5 +1,8 @@
 package com.example.driverapp.models.response;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+
 import com.example.driverapp.models.Order;
 import com.google.gson.annotations.SerializedName;
 
@@ -23,5 +26,20 @@ public class OrderDetailsView {
     private String updatedAt;
 
     private Order order;
+
+
+    public static DiffUtil.ItemCallback<OrderDetailsView> itemCallback = new DiffUtil.ItemCallback<OrderDetailsView>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull OrderDetailsView oldItem, @NonNull OrderDetailsView newItem) {
+            //return oldItem.getId() == newItem.getId() && oldItem.getRestaurant().getDeliveryTime().equals(newItem.getRestaurant().getDeliveryTime());
+            //return oldItem.getId() == newItem.getId() ;
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull OrderDetailsView oldItem, @NonNull OrderDetailsView newItem) {
+            return oldItem.equals(newItem);
+        }
+    };
 
 }

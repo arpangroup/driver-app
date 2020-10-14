@@ -11,7 +11,7 @@ import com.example.driverapp.models.Order;
 import com.example.driverapp.models.request.RequestToken;
 import com.example.driverapp.models.request.ProcessOrderRequest;
 import com.example.driverapp.models.response.DeliveryOrderResponse;
-import com.example.driverapp.models.response.OrderDetailsView;
+import com.example.driverapp.models.response.UpdateDeliveryUserInfoResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -49,7 +49,7 @@ public interface ApiInterface {
 
 
     @POST("/api/delivery/update-user-info")
-    Call<com.example.driverapp.models.response.ApiResponse<OrderDetailsView>> updateUserInfo(@Body RequestToken requestToken);
+    Call<com.example.driverapp.models.response.ApiResponse<UpdateDeliveryUserInfoResponse>> updateUserInfo(@Body RequestToken requestToken);
 
     @POST("/api/delivery/set-delivery-guy-gps-location")
     Call<Boolean> setDeliveryGuyGpsLocation(@Body DeliveryGuySetGpsRequest deliveryGuyGpsRequest);

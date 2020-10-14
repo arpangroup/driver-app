@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.driverapp.models.Order;
 import com.example.driverapp.models.response.DeliveryOrderResponse;
+import com.example.driverapp.models.response.OrderDetailsView;
+import com.example.driverapp.models.response.UpdateDeliveryUserInfoResponse;
 import com.example.driverapp.repositories.OrderRepository;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -97,6 +99,10 @@ public class OrderViewModel extends ViewModel implements LifecycleObserver {
     public LiveData<DeliveryOrderResponse> getDeliveryOrders(){
         return orderRepository.getAllDeliverableOrders();
     }
+    public LiveData<UpdateDeliveryUserInfoResponse> getUsersOrderStatistics(){
+        return orderRepository.getUsersOrderStatistics();
+    }
+
 
 
     public void setPolyline(PolylineOptions polyline){

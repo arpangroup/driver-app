@@ -10,12 +10,14 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.driverapp.api.ApiInterface;
 import com.example.driverapp.api.ApiService;
 import com.example.driverapp.commons.OrderStatus;
-import com.example.driverapp.models.ApiResponse;
 import com.example.driverapp.models.Order;
 import com.example.driverapp.models.request.DeliverOrderRequest;
 import com.example.driverapp.models.request.ProcessOrderRequest;
 import com.example.driverapp.models.request.RequestToken;
+import com.example.driverapp.models.response.ApiResponse;
 import com.example.driverapp.models.response.DeliveryOrderResponse;
+import com.example.driverapp.models.response.OrderDetailsView;
+import com.example.driverapp.models.response.UpdateDeliveryUserInfoResponse;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -100,6 +102,10 @@ public class OrderRepository {
        });
         mutableAcceptedOrders.setValue(orderList);
         return true;
+    }
+
+    public LiveData<UpdateDeliveryUserInfoResponse> getUsersOrderStatistics(){
+        return updateUserInfoApi();
     }
 
 
@@ -274,6 +280,37 @@ public class OrderRepository {
             @Override
             public void onFailure(Call<DeliveryOrderResponse> call, Throwable t) {
                 isLoading.setValue(false);
+            }
+        });
+        return mutableResponse;
+    }
+
+
+    private LiveData<UpdateDeliveryUserInfoResponse> updateUserInfoApi(){
+        RequestToken requestToken = new RequestToken();
+        MutableLiveData<UpdateDeliveryUserInfoResponse> mutableResponse = new MutableLiveData<>();
+        Log.d(TAG, "Inside updateUserInfo()....");
+        Log.d(TAG, "REQUEST: "+ new Gson().toJson(requestToken));
+        ApiInterface apiInterface = ApiService.getApiService();
+        isLoading.setValue(true);
+        apiInterface.updateUserInfo(requestToken).enqueue(new Callback<ApiResponse<UpdateDeliveryUserInfoResponse>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<UpdateDeliveryUserInfoResponse>> call, Response<ApiResponse<UpdateDeliveryUserInfoResponse>> response) {
+                isLoading.setValue(false);
+                if(response.isSuccessful()){
+                    ApiResponse<UpdateDeliveryUserInfoResponse> apiResponse  = response.body();
+                    if(apiResponse.isSuccess()){
+                        mutableResponse.setValue(apiResponse.getData());
+                    }else{
+                        //...
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<UpdateDeliveryUserInfoResponse>> call, Throwable t) {
+                isLoading.setValue(false);
+                Log.d(TAG, "FAIL");
             }
         });
         return mutableResponse;

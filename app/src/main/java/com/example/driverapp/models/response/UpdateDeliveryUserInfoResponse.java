@@ -1,13 +1,12 @@
 package com.example.driverapp.models.response;
 
+import com.example.driverapp.models.Earning;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Data
 @NoArgsConstructor
@@ -21,7 +20,7 @@ public class UpdateDeliveryUserInfoResponse {
    private String walletBalance;
    private String onGoingCount;
    private String completedCount;
-   private List<OrderView> orders;
+   private List<OrderDetailsView> orders;
    private List<Earning> earnings;
    private double totalEarnings;
 }
