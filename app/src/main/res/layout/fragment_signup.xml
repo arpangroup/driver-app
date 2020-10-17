@@ -33,7 +33,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="55dp"
-                        android:fontFamily="@font/sfpro_text_medium"
                         android:text="Let's get started"
                         android:textColor="@color/gray"
                         android:textSize="14.3sp" />
@@ -41,7 +40,6 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/sfpro_text_heavy"
                         android:letterSpacing="0.0525"
                         android:text="PURE EATS PARTNER"
                         android:textColor="@color/black"
@@ -51,7 +49,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="42dp"
-                        android:fontFamily="@font/sfpro_display_semibold"
                         android:text="Enter your basic details here"
                         android:textColor="@color/black"
                         android:textSize="11sp" />
@@ -70,7 +67,6 @@
                             android:id="@+id/et_outlet_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/sfpro_text_medium"
                             android:hint="Outlet name"
                             android:text=""
                             android:inputType="text"/>
@@ -85,7 +81,6 @@
                             android:id="@+id/et_address"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/sfpro_text_medium"
                             android:hint="Outlet address"
                             android:text=""
                             android:inputType="text"/>
@@ -100,7 +95,6 @@
                             android:id="@+id/et_city"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/sfpro_text_medium"
                             android:hint="City"
                             android:text=""
                             android:inputType="text"/>
@@ -115,7 +109,6 @@
                             android:id="@+id/et_state"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/sfpro_text_medium"
                             android:hint="State"
                             android:editable="false"
                             android:text=""
@@ -131,7 +124,6 @@
                             android:id="@+id/et_pin"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/sfpro_text_medium"
                             android:hint="Pincode"
                             android:text=""
                             android:inputType="number"/>
@@ -146,7 +138,6 @@
                             android:id="@+id/et_contact_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/sfpro_text_medium"
                             android:hint="Contact person's name"
                             android:text=""
                             android:inputType="number"/>
@@ -160,7 +151,6 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/sfpro_display_semibold"
                             android:text="Mobile No."
                             android:textColor="@color/black"
                             android:textSize="11sp" />

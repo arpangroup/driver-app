@@ -45,6 +45,9 @@ public interface ApiInterface {
     @POST("/api/delivery/deliver-order")
     Call<Order> deliverOrder(@Body DeliverOrderRequest deliverOrderRequest);
 
+    @POST("/api/delivery/send-message")
+    Call<ApiResponse> sendMessage(@Body ProcessOrderRequest orderRequest);
+
 
 
 

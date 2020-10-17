@@ -221,9 +221,9 @@ public class FetchOrderService extends LifecycleService {
                         List<Order> newOrders = responseObj.getNewOrders();
                         List<Order> acceptedOrders = responseObj.getAcceptedOrders();
                         if(newOrders .size() > 0){
-                            //Log.d(TAG, "##########################NEW_ORDER_ARRIVED#########################################");
-                            //newOrders.forEach(order -> System.out.println("ORDER: "+ order.getId() + ", "+order.getUniqueOrderId()));
-                            //Log.d(TAG,"#####################################################################################");
+                            Log.d(TAG, "##########################NEW_ORDER_ARRIVED#########################################");
+                            newOrders.forEach(order -> System.out.println("ORDER: "+ order.getId() + ", "+order.getUniqueOrderId()));
+                            Log.d(TAG,"#####################################################################################");
                             if(!ProcessOrderActivityDialog.isActivityOpen){
                                 // Check whether the order is already processed or not
                                 boolean isOrderAlreadyProcessed = processedOrders.stream().anyMatch(processedOrder -> newOrders.get(0).getId() == processedOrder.getId());

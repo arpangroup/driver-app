@@ -1,6 +1,8 @@
 package com.example.driverapp.views.order;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -33,6 +36,8 @@ import com.example.driverapp.models.Location;
 import com.example.driverapp.models.Order;
 import com.example.driverapp.viewmodels.LocationViewModel;
 import com.example.driverapp.viewmodels.OrderViewModel;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -51,6 +56,7 @@ import java.util.Locale;
 
 public class ReachDirectionFragment extends Fragment implements OnMapReadyCallback {
     private final String TAG = this.getClass().getSimpleName();
+    private FusedLocationProviderClient mFusedLocationClient;
 
     private FragmentReachDirectionBinding mBinding;
     OrderViewModel orderViewModel;
@@ -122,7 +128,6 @@ public class ReachDirectionFragment extends Fragment implements OnMapReadyCallba
         navController = Navigation.findNavController(rootView);
         initClicks();
 
-
         orderViewModel.getOnGoingOrder().observe(requireActivity(),  order -> {
             mOrder = order;
             mBinding.setOrder(mOrder);
@@ -130,13 +135,16 @@ public class ReachDirectionFragment extends Fragment implements OnMapReadyCallba
             Log.d(TAG, "ORDER: "+order);
             Location orderLocation = new Gson().fromJson(mOrder.getLocation(), Location.class);
             mOrder.setAddress(orderLocation.getHouse() + ", "+ orderLocation.getAddress());
-            Log.d(TAG, "##############################################");
             LatLng latLngRestaurant = CommonUtils.getRestaurantLocation(mOrder.getRestaurant());
             LatLng latLngCustomer = CommonUtils.getUserLocation(mOrder.getLocation());
             LatLng latLngDriver = locationViewModel.getCurrentLocation().getValue();
             if(latLngDriver == null) latLngDriver = new LatLng(0.0, 0.0);
+            Log.d(TAG, "latLngRestaurant:  " + latLngRestaurant);
+            Log.d(TAG, "latLngCustomer:  " + latLngCustomer);
+            Log.d(TAG, "latLngDriver:  " + latLngDriver);
+            Log.d(TAG, "##############################################");
 
-            if(mOrder.getOrderStatusId() == OrderStatus.ON_THE_WAY.value()){
+            if(mOrder.getOrderStatusId() == 4){
                 //Reach to the customers location
                 mBinding.toolbar.title.setText("Reach Drop Location");
                 mPlace1 = new MarkerOptions().position(latLngRestaurant).title("Restaurant Location");
@@ -234,4 +242,6 @@ public class ReachDirectionFragment extends Fragment implements OnMapReadyCallba
         drawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
+
+
 }

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -23,7 +24,9 @@ import android.view.Window;
 import android.widget.Button;
 
 import com.example.driverapp.R;
+import com.example.driverapp.commons.Actions;
 import com.example.driverapp.databinding.FragmentOfferBinding;
+import com.example.driverapp.services.FetchOrderService;
 import com.example.driverapp.viewmodels.AuthenticationViewModel;
 import com.example.driverapp.viewmodels.LocationViewModel;
 import com.example.driverapp.viewmodels.OrderViewModel;
@@ -75,6 +78,12 @@ public class LogoutFragment extends AppCompatDialogFragment {
             Intent intent = new Intent(requireActivity(), AuthActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             ActivityCompat.finishAffinity(requireActivity());
+
+            Intent intentService = new Intent(requireActivity(), FetchOrderService.class);
+            intent.setAction(Actions.STOP.name());
+            System.out.println("Trying to run the service");
+            ContextCompat.startForegroundService(requireActivity(), intent);
+
             startActivity(intent);
         });
         btnNo.setOnClickListener(view -> {

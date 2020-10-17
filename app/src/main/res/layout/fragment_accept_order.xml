@@ -9,6 +9,10 @@
             name="order"
             type="com.example.driverapp.models.Order" />
 
+        <variable
+            name="deliveryTime"
+            type="String" />
+
 
     </data>
 
@@ -92,7 +96,7 @@
                             android:id="@+id/txt_progress"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="60%"
+                            android:text="00:00"
                             android:textAppearance="@style/TextAppearance.AppCompat.Large"
                             android:textColor="@color/white"
                             android:textStyle="bold"
@@ -104,6 +108,7 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <TextView
+                        android:visibility="@{deliveryTime == null ? View.GONE : View.VISIBLE}"
                         android:id="@+id/approx_distance"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -113,7 +118,7 @@
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="@color/white"
-                        android:text="Approx dist 0.55 kms" />
+                        android:text="@{`Approx dist ` + deliveryTime}"/>
 
 
                 </RelativeLayout>
@@ -133,7 +138,7 @@
                     android:textSize="22sp"
                     android:textColor="@color/black"
                     android:text="@{order.restaurant.name}"
-                    android:hint="Demo Catering &amp; Restaurant" />
+                    android:hint="Placeholder Restaurant Name" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -141,7 +146,7 @@
                     android:textSize="16sp"
                     android:textColor="@color/silver"
                     android:text="@{order.uniqueOrderId}"
-                    android:hint="Demo Catering &amp; Restaurant" />
+                    android:hint="Unique Order Idt" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -150,7 +155,7 @@
                     android:textStyle="bold"
                     android:textSize="16sp"
                     android:text="@{order.restaurant.address}"
-                    android:hint="ABCD Campus, NewYork, US" />
+                    android:hint="Restaurant Address" />
             </LinearLayout>
 
         </LinearLayout>

@@ -92,7 +92,14 @@ public class DeliverOrderFragment extends Fragment {
 
         mBinding.deliverOrder.radioConfirm.setOnCheckedChangeListener((compoundButton, b) -> {
             if(b){
-                confirmAmountToBeCollect();
+                if(mOrder.getPaymentMode().equalsIgnoreCase("COD")){
+                    confirmAmountToBeCollect();
+                }else{
+                    mBinding.deliverOrder.radioConfirm.setChecked(true);
+                    mBinding.deliverOrder.radioConfirm.setEnabled(false);
+                    mBinding.deliverOrder.btnItemGivenToCustomer.setVisibility(View.VISIBLE);
+                    mBinding.deliverOrder.btnItemGivenToCustomer.setEnabled(true);
+                }
                 //mBinding.deliverOrder.btnAccept.setEnabled(true);
                 //mBinding.deliverOrder.btnAccept.setOuterColor(R.color.orange);
             }else{

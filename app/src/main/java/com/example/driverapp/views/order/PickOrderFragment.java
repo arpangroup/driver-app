@@ -44,6 +44,7 @@ public class PickOrderFragment extends Fragment{
 
         // Initialize NavController
         navController = Navigation.findNavController(rootView);
+        mBinding.pickOrder.btnClickPhoto.setVisibility(View.GONE);
         initClicks();
 
         orderViewModel.getOnGoingOrder().observe(requireActivity(), order -> {

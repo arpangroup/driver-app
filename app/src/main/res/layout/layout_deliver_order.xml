@@ -164,7 +164,7 @@
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             android:textSize="24sp"
-                            android:text="@{order.total +``}"
+                            android:text="@{order.paymentMode == `COD` ? `paid` : `₹ `+order.total }"
                             android:hint="₹ 377" />
 
                         <TextView

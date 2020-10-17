@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.driverapp.models.Order;
+import com.example.driverapp.models.response.ApiResponse;
 import com.example.driverapp.models.response.DeliveryOrderResponse;
 import com.example.driverapp.models.response.OrderDetailsView;
 import com.example.driverapp.models.response.UpdateDeliveryUserInfoResponse;
@@ -31,7 +32,6 @@ public class OrderViewModel extends ViewModel implements LifecycleObserver {
     }
 
     public void init(){
-        Log.d(TAG, "init()..................");
         if(orderRepository == null){
             orderRepository = OrderRepository.getInstance();
         }
@@ -79,7 +79,7 @@ public class OrderViewModel extends ViewModel implements LifecycleObserver {
 
 
 
-    public LiveData<Boolean> acceptOrder(Order order){
+    public LiveData<ApiResponse> acceptOrder(Order order){
         return orderRepository.acceptOrder(order);
     }
     public LiveData<Boolean> pickedUpOrder(Order order){

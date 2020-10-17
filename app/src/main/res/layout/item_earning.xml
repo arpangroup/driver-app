@@ -46,7 +46,7 @@
                             android:textColor="@color/blue"
                             android:textSize="12sp"
                             android:textStyle="bold"
-                            android:text="@{`₹` + earning.amount}"
+                            android:text="@{`₹` + earning.amount / 100}"
                             android:hint="₹340"/>
 
                     </LinearLayout>

@@ -1,8 +1,10 @@
 package com.example.driverapp.views.order;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.media.MediaPlayer;
 import android.nfc.Tag;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -36,6 +39,8 @@ import com.example.driverapp.services.FetchOrderService;
 import com.example.driverapp.sharedprefs.UserSession;
 import com.example.driverapp.viewmodels.LocationViewModel;
 import com.example.driverapp.viewmodels.OrderViewModel;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -60,6 +65,7 @@ public class ProcessOrderActivityDialog extends AppCompatActivity implements Tas
     public static boolean isActivityOpen = false;
 
     public static String ORDER_REQUEST = "order_request";
+    private FusedLocationProviderClient mFusedLocationClient;
 
 
 
@@ -123,6 +129,12 @@ public class ProcessOrderActivityDialog extends AppCompatActivity implements Tas
 //        NavGraph graph = inflater.inflate(R.navigation.nav_graph_process_order);
 
 
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        getCurrentLocation();
+
+
+
+
         orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
         locationViewModel = new ViewModelProvider(this).get(LocationViewModel.class);
         orderViewModel.init();
@@ -180,6 +192,7 @@ public class ProcessOrderActivityDialog extends AppCompatActivity implements Tas
         });
 
     }
+
 
     private void setOrderToViewModel(){
         try{
@@ -246,6 +259,26 @@ public class ProcessOrderActivityDialog extends AppCompatActivity implements Tas
     @Override
     public void onClickHaveNoBill() {
 
+    }
+
+
+    private void getCurrentLocation() {
+        Log.i(TAG, "All permissions available");
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mFusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
+            android.location.Location location = task.getResult();
+            if (location != null) {
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+                LatLng latLng = new LatLng(latitude, longitude);
+                locationViewModel.setCurrentLocation(latLng);
+            } else {
+                Log.i(TAG, "Location is null");
+            }
+        });
     }
 
 }

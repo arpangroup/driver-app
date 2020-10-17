@@ -80,6 +80,9 @@ public class Order implements Comparable{
     @SerializedName("user")
     private User user;
 
+    @SerializedName("max_order")
+    private boolean maxOrder;
+
     private OrderStatus orderStatus;
 
     public Order(int id, String uniqueOrderId) {

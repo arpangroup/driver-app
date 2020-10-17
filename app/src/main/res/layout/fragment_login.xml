@@ -33,7 +33,6 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/sfpro_text_heavy"
                     android:textAlignment="center"
                     android:text="PURE EATS"
                     android:textColor="@color/black"
@@ -43,7 +42,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7.7dp"
-                    android:fontFamily="@font/sfpro_text_medium"
                     android:textAlignment="center"
                     android:text="---Delivery Partner---"
                     android:textColor="@color/gray"
@@ -61,7 +59,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="22.7dp"
-                    android:fontFamily="@font/sfpro_display_semibold"
                     android:text="Mobile No."
                     android:textColor="@color/black"
                     android:textSize="11sp" />
@@ -88,7 +85,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:background="@color/transferent"
-                        android:fontFamily="@font/sfpro_text_medium"
                         android:hint="Enter mobile number"
                         android:text=""
                         android:inputType="number"
@@ -122,7 +118,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="28.5dp"
                     android:background="#E3E3E3"
-                    android:fontFamily="@font/sfpro_text_medium"
                     android:text="CONTINUE"
                     android:textAlignment="center"
                     android:textColor="@color/white"
@@ -148,7 +143,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/sfpro_display_medium"
                     android:letterSpacing="0.0325"
                     android:text="Not registered with us?"
                     android:textColor="@color/black"
@@ -163,7 +157,6 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/sfpro_display_semibold"
                         android:letterSpacing="0.0325"
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp"
@@ -190,7 +183,6 @@
         android:layout_marginBottom="24dp"
         android:gravity="center"
         android:layout_alignParentBottom="true"
-        android:fontFamily="@font/sfpro_display_medium"
         android:letterSpacing="0.0325"
         android:text="@string/by_continuing_you_are_agree"
         android:textColor="@color/black"

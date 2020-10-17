@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.example.driverapp.R;
 import com.example.driverapp.commons.CommonUtils;
 import com.example.driverapp.commons.Constants;
+import com.example.driverapp.commons.ErrorCode;
 import com.example.driverapp.commons.NotificationSoundType;
 import com.example.driverapp.databinding.FragmentAcceptOrderBinding;
 import com.example.driverapp.directionhelpers.ConstructDirectionUrl;
@@ -38,6 +39,7 @@ import com.example.driverapp.viewmodels.OrderViewModel;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -45,7 +47,8 @@ public class AcceptOrderFragment extends Fragment{
     private final String TAG = this.getClass().getSimpleName();
 
     private int mProgress = 0;
-    private static long ORDER_ACCEPT_TIME = 2*1000;
+    private static long ORDER_ACCEPT_TIME = 3 * 60 * 1000;
+    private long mTimeLeftInMills = ORDER_ACCEPT_TIME;
 
     private boolean isMusicEnable = true;
     private MediaPlayer mMediaPlayer;
@@ -82,45 +85,32 @@ public class AcceptOrderFragment extends Fragment{
         // Initialize NavController
         navController = Navigation.findNavController(rootView);
 
+        mBinding.setDeliveryTime(null);
+        startTimer();
+
 
         orderViewModel.getIncomingOrder().observe(requireActivity(), order -> {
             if(order != null){
-                /*
                 Log.d(TAG, "ORDER: " + order);
-                LatLng place1  = CommonUtils.getRestaurantLocation(order.getRestaurant());
-                LatLng place2  = CommonUtils.getUserLocation(order.getLocation());
-                String url = ConstructDirectionUrl.getUrl(place1, place2, "driving", Constants.GOOGLE_MAP_AUTH_KEY);
-                Log.d(TAG, "REQUEST FOR POLYLINE");
-                Log.d(TAG, "URL: "+ url);
-                new FetchURL(requireActivity(), FetchURL.DISTANCE_PARSER).execute(url, "driving");
-                new FetchURL(requireActivity(), FetchURL.POINT_PARSER).execute(url, "driving");
-                 */
+                LatLng locationRestaurant  = CommonUtils.getRestaurantLocation(order.getRestaurant());
+                LatLng locationCustomer  = CommonUtils.getUserLocation(order.getLocation());
+                LatLng locationDriver  = locationViewModel.getCurrentLocation().getValue();
+                if(locationDriver != null && locationRestaurant  != null){
+                    String url = ConstructDirectionUrl.getUrl(locationDriver, locationRestaurant, "driving", Constants.GOOGLE_MAP_AUTH_KEY);
+                    Log.d(TAG, "REQUEST FOR POLYLINE");
+                    Log.d(TAG, "URL: "+ url);
+                    new FetchURL(requireActivity(), FetchURL.DISTANCE_PARSER).execute(url, "driving");
+                    new FetchURL(requireActivity(), FetchURL.POINT_PARSER).execute(url, "driving");
+                }
+
 
                 mBinding.setOrder(order);
                 startMediaPlayer(NotificationSoundType.ORDER_ARRIVE);
             }
         });
 
-
-
-
-
-        new CountDownTimer(50000,1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                mBinding.txtProgress.setText(String.valueOf(counter) + "%");
-                mBinding.progressBar.setProgress(counter);
-                counter++;
-            }
-            @Override
-            public void onFinish() {
-                //counttime.setText("Finished");
-                //requireActivity().finish();
-            }
-        }.start();
-
         locationViewModel.getDirection().observe(requireActivity(), direction -> {
-            mBinding.approxDistance.setText("Approx dist " + direction.getDistance().getText());
+            mBinding.setDeliveryTime(direction.getDistance().getText());
         });
 
         mBinding.btnClose.setOnClickListener(view -> {
@@ -133,14 +123,18 @@ public class AcceptOrderFragment extends Fragment{
             Log.d(TAG, "Inside setOnSlideCompleteListener..........");
             Log.d(TAG, "ACCEPTED_ORDER: "+incomingOrder);
             if(incomingOrder != null){
-                orderViewModel.acceptOrder(incomingOrder).observe(requireActivity(), isAccepted -> {
-                    if(isAccepted){
+                orderViewModel.acceptOrder(incomingOrder).observe(requireActivity(), apiResponse -> {
+                    if(apiResponse.isSuccess()){
                         incomingOrder.setOrderStatusId(3);
                         orderViewModel.setOnGoingOrder(incomingOrder);
                         navController.navigate(R.id.action_acceptOrderFragment_to_reachDirectionFragment);
                     }else {
                         mBinding.btnAccept.resetSlider();
-                        Toast.makeText(requireActivity(), "Something error happened", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireActivity(), apiResponse.getMesssage(), Toast.LENGTH_SHORT).show();
+                        if(apiResponse.getMesssage().equalsIgnoreCase(ErrorCode.MAX_ORDER_REACHED.name())){
+                            requireActivity().finish();
+                        }
+
                     }
                 });
             }else{
@@ -227,5 +221,42 @@ public class AcceptOrderFragment extends Fragment{
     @Override
     public void onPause() {
         super.onPause();
+    }
+
+    private void startTimer(){
+        new CountDownTimer(mTimeLeftInMills, 1000){
+            @Override
+            public void onTick(long millisUntilFinished) {
+                mTimeLeftInMills = millisUntilFinished;
+                updateCancelTimer();
+            }
+
+            @Override
+            public void onFinish() {
+                //mBinding.txtCounter.setVisibility(View.GONE);
+                //mBinding.txtResend.setEnabled(true);
+
+                mBinding.progressBar.setProgress(100);
+                mBinding.txtProgress.setText("00:00");
+            }
+        }.start();
+    }
+    private void updateCancelTimer(){
+        int minutes = (int) (mTimeLeftInMills / 1000) /60;// divided by 60 seconds
+        int seconds = (int) (mTimeLeftInMills / 1000) % 60;
+
+
+
+        counter++;
+        try{
+            int val = (int) (counter * 100 / (mTimeLeftInMills/1000));
+            mBinding.progressBar.setProgress(val);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        String timeLeftFormatted = String.format(Locale.getDefault(), "%01d:%02d", minutes, seconds);
+        mBinding.txtProgress.setText(timeLeftFormatted);
+
     }
 }

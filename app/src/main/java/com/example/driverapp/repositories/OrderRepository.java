@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.driverapp.api.ApiInterface;
 import com.example.driverapp.api.ApiService;
+import com.example.driverapp.commons.ErrorCode;
 import com.example.driverapp.commons.OrderStatus;
 import com.example.driverapp.models.Order;
 import com.example.driverapp.models.request.DeliverOrderRequest;
@@ -52,7 +53,7 @@ public class OrderRepository {
         return getDeliveryOrdersApi();
     }
 
-    public LiveData<Boolean> acceptOrder(Order order){
+    public LiveData<ApiResponse> acceptOrder(Order order){
         //mutableAcceptedOrders.setValue(Collections.singletonList(order));
         order.setOrderStatus(OrderStatus.DELIVERY_GUY_ASSIGNED);
         mutableAcceptedOrders.setValue(Collections.singletonList(order));
@@ -113,9 +114,9 @@ public class OrderRepository {
 
 
     /*========================================================API_CALLS==============================================*/
-    private LiveData<Boolean> acceptOrderApi(Order order){
+    private LiveData<ApiResponse> acceptOrderApi(Order order){
         ProcessOrderRequest request = new ProcessOrderRequest(order.getId());
-        MutableLiveData<Boolean> apiResponseMutableLiveData = new MutableLiveData<>();
+        MutableLiveData<ApiResponse> apiResponseMutableLiveData = new MutableLiveData<>();
         Log.d(TAG, "Inside acceptOrderApi()....");
         Log.d(TAG, "REQUEST: "+ new Gson().toJson(request));
         ApiInterface apiInterface = ApiService.getApiService();
@@ -126,7 +127,13 @@ public class OrderRepository {
                 if(response.isSuccessful()){
                     Log.d(TAG, "Setting accepted orders to the list...");
                     isLoading.setValue(false);
-                    apiResponseMutableLiveData.setValue(true);
+                    Order orderResp = response.body();
+                    ApiResponse apiResponse = new ApiResponse(true, "order accepted");
+                    if(orderResp.isMaxOrder()){
+                        apiResponse.setSuccess(false);
+                        apiResponse.setMesssage(ErrorCode.MAX_ORDER_REACHED.name());
+                    }
+                    apiResponseMutableLiveData.setValue(apiResponse);
                 }
             }
 
@@ -134,7 +141,7 @@ public class OrderRepository {
             public void onFailure(Call<Order> call, Throwable t) {
                 isLoading.setValue(false);
                 Log.d(TAG, "FAIL");
-                apiResponseMutableLiveData.setValue(false);
+                apiResponseMutableLiveData.setValue(new ApiResponse(false, "FAIL"));
             }
         });
         return apiResponseMutableLiveData;
@@ -311,6 +318,28 @@ public class OrderRepository {
             public void onFailure(Call<ApiResponse<UpdateDeliveryUserInfoResponse>> call, Throwable t) {
                 isLoading.setValue(false);
                 Log.d(TAG, "FAIL");
+            }
+        });
+        return mutableResponse;
+    }
+
+
+    private LiveData<ApiResponse> sendMessageApi(ProcessOrderRequest processOrderRequest){
+        MutableLiveData<ApiResponse> mutableResponse = new MutableLiveData<>();
+        Log.d(TAG, "Inside sendMessageApi()....");
+        Log.d(TAG, "REQUEST: "+ new Gson().toJson(processOrderRequest));
+        ApiInterface apiInterface = ApiService.getApiService();
+        isLoading.setValue(true);
+        apiInterface.sendMessage(processOrderRequest).enqueue(new Callback<com.example.driverapp.models.ApiResponse>() {
+            @Override
+            public void onResponse(Call<com.example.driverapp.models.ApiResponse> call, Response<com.example.driverapp.models.ApiResponse> response) {
+                mutableResponse.setValue(new ApiResponse(true, "Message has been send"));
+                isLoading.setValue(false);
+            }
+
+            @Override
+            public void onFailure(Call<com.example.driverapp.models.ApiResponse> call, Throwable t) {
+                isLoading.setValue(false);
             }
         });
         return mutableResponse;

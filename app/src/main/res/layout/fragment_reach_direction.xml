@@ -101,7 +101,7 @@
                     android:orientation="vertical">
 
                     <androidx.cardview.widget.CardView
-                        android:visibility="@{order.orderStatus == OrderStatus.DELIVERY_GUY_ASSIGNED ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{order.orderStatusId !=  4 ? View.VISIBLE : View.GONE}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:elevation="0dp"
@@ -180,6 +180,7 @@
                     </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
+                        android:visibility="@{order.orderStatusId == 4 ? View.VISIBLE : View.GONE}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:elevation="0dp"

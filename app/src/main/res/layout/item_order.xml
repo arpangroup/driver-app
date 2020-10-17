@@ -92,8 +92,8 @@
                             android:maxLines="2"
                             android:textStyle="bold"
                             android:textSize="14sp"
-                            android:text="Sourav Catering &amp; Restaurant"
-                            android:hint="Mr. Mintu Jha" />
+                            android:text="@{order.restaurant.name}"
+                            android:hint="Placeholder Restaurant name" />
 
                     </LinearLayout>
 
@@ -113,7 +113,7 @@
                         android:textStyle="bold"
                         android:textSize="14sp"
                         android:text="@{order.user.name}"
-                        android:hint="John Doe" />
+                        android:hint="Placeholder name" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -121,8 +121,8 @@
                         android:maxLines="2"
                         android:textStyle="bold"
                         android:textSize="14sp"
-                        android:text="@{order.user.address.address}"
-                        android:hint="Belur Math Campus, Belur Math, Howrah, West Bengal 711202, India" />
+                        android:text="@{order.address}"
+                        android:hint="Placeholder address" />
                 </LinearLayout>
             </LinearLayout>
 

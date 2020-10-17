@@ -12,6 +12,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import android.Manifest;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -87,6 +89,24 @@ public class MainActivity extends AppCompatActivity{
         getCurrentLocation();
 
         initClicks();
+
+        // Check if service is running or not
+        System.out.println("#################### FETCH_ORDER_SERVICE ######################");
+        if(isFetchOrderServiceRunning(FetchOrderService.class)){
+            System.out.println("Service is running in background");
+            if(ServiceTracker.getServiceState(this) == ServiceTracker.ServiceState.STARTED){
+                System.out.println("As service is already running so no action need to handle");
+            }
+        }else{
+            System.out.println("Service is not running in background");
+            if(ServiceTracker.getServiceState(this) == ServiceTracker.ServiceState.STARTED){
+                Intent intent = new Intent(this, FetchOrderService.class);
+                intent.setAction(Actions.START.name());
+                System.out.println("Trying to run the service");
+                ContextCompat.startForegroundService(this, intent);
+            }
+        }
+        System.out.println("#############################################################");
 
         mBinding.toolbar.navMenu.setOnClickListener(view -> {
             mBinding.drawerLayout.openDrawer(GravityCompat.START);
@@ -181,6 +201,16 @@ public class MainActivity extends AppCompatActivity{
                 Log.i(TAG, "Location is null");
             }
         });
+    }
+
+    public boolean isFetchOrderServiceRunning(Class<?> serviceClass){
+        ActivityManager manager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+        for(ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
+            if(serviceClass.getName().equals(service.service.getClassName())){
+                return true;
+            }
+        }
+        return false;
     }
 
 

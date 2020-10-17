@@ -121,7 +121,7 @@
                                 android:textSize="18sp"
                                 android:textColor="@color/black"
                                 android:text="@{order.restaurant.name}"
-                                android:hint="Sourav Catering &amp; Restaurant" />
+                                android:hint="Placeholder Restaurant Name" />
 
                         </LinearLayout>
 

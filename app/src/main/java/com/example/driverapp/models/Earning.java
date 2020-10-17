@@ -32,6 +32,7 @@ public class Earning {
     private String updatedAt;
 
 
+
     public static DiffUtil.ItemCallback<Earning> itemCallback = new DiffUtil.ItemCallback<Earning>() {
         @Override
         public boolean areItemsTheSame(@NonNull Earning oldItem, @NonNull Earning newItem) {
