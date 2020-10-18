@@ -23,7 +23,7 @@ public class OrderViewModel extends ViewModel implements LifecycleObserver {
     //private MutableLiveData<ORDER_TYPE> mutableOrderType = new MutableLiveData<>(ORDER_TYPE.ALL);
     private MutableLiveData<List<Order>> mutableOrders = null;
     private MutableLiveData<Order> mutableOnGoingOrder = null;
-    MutableLiveData<PolylineOptions> mutablePolyline;
+    MutableLiveData<PolylineOptions> mutablePolyline = new MutableLiveData<>();
 
     // This is a temporary order, when a AcceptOrderDialog is shown, but not accepted
     private MutableLiveData<Order> mutableIncomingOrder = null;
@@ -106,9 +106,6 @@ public class OrderViewModel extends ViewModel implements LifecycleObserver {
 
 
     public void setPolyline(PolylineOptions polyline){
-        if(mutablePolyline == null){
-            mutablePolyline = new MutableLiveData<>();
-        }
         mutablePolyline.setValue(polyline);
     }
     public LiveData<PolylineOptions> getPolyline(){

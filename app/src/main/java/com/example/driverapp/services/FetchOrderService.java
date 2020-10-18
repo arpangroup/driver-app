@@ -1,5 +1,6 @@
 package com.example.driverapp.services;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -7,7 +8,10 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Build;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.Log;
@@ -15,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.LifecycleService;
 import androidx.lifecycle.MutableLiveData;
@@ -24,6 +29,7 @@ import com.example.driverapp.api.ApiInterface;
 import com.example.driverapp.api.ApiService;
 import com.example.driverapp.commons.Actions;
 import com.example.driverapp.models.Order;
+import com.example.driverapp.models.Polyline;
 import com.example.driverapp.models.request.RequestToken;
 import com.example.driverapp.models.response.DeliveryOrderResponse;
 import com.example.driverapp.sharedprefs.ServiceTracker;
@@ -31,6 +37,12 @@ import com.example.driverapp.views.App;
 import com.example.driverapp.views.MainActivity;
 import com.example.driverapp.views.order.ProcessOrderActivity;
 import com.example.driverapp.views.order.ProcessOrderActivityDialog;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,6 +70,11 @@ public class FetchOrderService extends LifecycleService {
     public static List<Order> processedOrders = new ArrayList<>();
 
 
+    private FusedLocationProviderClient mFusedLocationClient;
+    LocationCallback mLocationCallback;
+    private List<Location> locationList = new ArrayList<>();
+    public static MutableLiveData<List<Location>> mutableLocations  = new MutableLiveData<>(new ArrayList<>());
+
 
     RequestToken requestToken = null;
     Timer timer = null;
@@ -66,7 +83,15 @@ public class FetchOrderService extends LifecycleService {
     private PowerManager.WakeLock wakeLock;
     private boolean isServiceStarted = false;
 
+    private void setLocation(Location location){
+        if(mutableLocations == null){
+            mutableLocations = new MutableLiveData<>(new ArrayList<>());
+        }
+        locationList.add(location);
 
+        mutableLocations.postValue(locationList);
+
+    }
 
 
     @Override
@@ -94,6 +119,7 @@ public class FetchOrderService extends LifecycleService {
         Toast.makeText(this, "Service starting its task", Toast.LENGTH_SHORT).show();
         isServiceStarted = true;
         ServiceTracker.setServiceState(this, ServiceTracker.ServiceState.STARTED);
+        getLocationUpdates();
 
         // we need this lock so our service gets not affected by Doze Mode
         PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
@@ -105,6 +131,7 @@ public class FetchOrderService extends LifecycleService {
         doInBackground();
         Log.d(TAG, "End of the loop for the service");
     }
+
     private void stopService() {
         Log.d(TAG, "Stopping the foreground service");
         Toast.makeText(this, "Service stopping", Toast.LENGTH_SHORT).show();
@@ -115,6 +142,7 @@ public class FetchOrderService extends LifecycleService {
                     wakeLock.release();
                 }
             }
+            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
             stopForeground(true);
             stopSelf();
         }catch (Exception e){
@@ -132,6 +160,23 @@ public class FetchOrderService extends LifecycleService {
         requestToken = new RequestToken(this);
         timer = new Timer();
         Notification notification = createNotification();
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                //Log.d(TAG, "onLocationResult:  " + locationResult.getLastLocation());
+                setLocation(locationResult.getLastLocation());
+                if(locationResult == null){
+                    //Log.d(TAG, "onLocationResult: location error");
+                    return;
+                }
+                List<Location> locations = locationResult.getLocations();
+                for(Location location : locationResult.getLocations()){
+                    //Log.d(TAG, "onLocationResult: " + location.toString());
+                }
+            }
+        };
 
         startForeground(App.NOTIFICATION_ID_NEW_ORDER, notification);
     }
@@ -139,6 +184,8 @@ public class FetchOrderService extends LifecycleService {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        stopForeground(true);
+        mFusedLocationClient.removeLocationUpdates(mLocationCallback);
         Log.d(TAG, "onDestroy()");
         Toast.makeText(this, "Service destroyed", Toast.LENGTH_SHORT).show();
     }
@@ -209,7 +256,7 @@ public class FetchOrderService extends LifecycleService {
     private void getDeliveryOrders(RequestToken requestToken){
         isLoading = true;
         ApiInterface apiInterface = ApiService.getApiService();
-        //Log.d(TAG, "FETCHING NEW ORDER........");
+        Log.d(TAG, "FETCHING NEW ORDER........");
         apiInterface.getAllDeliveryOrders(requestToken).enqueue(new Callback<DeliveryOrderResponse>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -293,4 +340,24 @@ public class FetchOrderService extends LifecycleService {
             startActivity(intent);
         }
     }
+
+
+    private void getLocationUpdates() {
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setInterval(4000);
+        locationRequest.setFastestInterval(2000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setMaxWaitTime(15 * 1000);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            stopService();
+            return;
+        }
+        mFusedLocationClient.requestLocationUpdates(locationRequest, mLocationCallback, Looper.getMainLooper());
+    }
+
+
+
+
 }
