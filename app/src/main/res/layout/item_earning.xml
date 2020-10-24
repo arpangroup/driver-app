@@ -43,6 +43,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layoutDirection="ltr"
                             android:textColor="@color/blue"
                             android:textSize="12sp"
                             android:textStyle="bold"

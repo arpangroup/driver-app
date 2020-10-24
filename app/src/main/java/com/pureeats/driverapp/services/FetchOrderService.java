@@ -71,7 +71,6 @@ public class FetchOrderService extends LifecycleService {
     private List<Location> locationList = new ArrayList<>();
     public static MutableLiveData<List<Location>> mutableLocations  = new MutableLiveData<>(new ArrayList<>());
 
-
     RequestToken requestToken = null;
     Timer timer = null;
 

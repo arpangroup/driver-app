@@ -1,6 +1,7 @@
 package com.pureeats.driverapp.views.order;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -23,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.commons.CommonUtils;
 import com.pureeats.driverapp.commons.Constants;
@@ -56,15 +59,15 @@ import com.google.gson.Gson;
 
 import java.util.Locale;
 
-public class ReachDirectionFragment extends Fragment implements OnMapReadyCallback, TaskLoadedCallback {
+public class ReachDirectionFragment extends Fragment implements OnMapReadyCallback {
     private final String TAG = this.getClass().getSimpleName();
     private FusedLocationProviderClient mFusedLocationClient;
 
     private FragmentReachDirectionBinding mBinding;
     OrderViewModel orderViewModel;
-    LocationViewModel locationViewModel;
+    //LocationViewModel locationViewModel;
     NavController navController;
-    Order mOrder;
+    Order mOrder  =  null;
     MarkerOptions mPlace1, mPlace2;
 
 
@@ -74,8 +77,6 @@ public class ReachDirectionFragment extends Fragment implements OnMapReadyCallba
     private boolean  isPolyLineShowed = false;
     LatLng currentLatLng = null;
     private PolylineOptions mPolylineOptions;
-
-
 
     public ReachDirectionFragment() {
         // Required empty public constructor
@@ -116,45 +117,63 @@ public class ReachDirectionFragment extends Fragment implements OnMapReadyCallba
 
         // Initialize ViewModel
         orderViewModel = new ViewModelProvider(requireActivity()).get(OrderViewModel.class);
-        locationViewModel = new ViewModelProvider(requireActivity()).get(LocationViewModel.class);
+        //locationViewModel = new ViewModelProvider(requireActivity()).get(LocationViewModel.class);
         //orderViewModel.init();
 
         // Initialize NavController
         navController = Navigation.findNavController(rootView);
         initClicks();
-        isPolyLineShowed = false;
 
-        orderViewModel.getOnGoingOrder().observe(requireActivity(), order -> {
-            mOrder = order;
-            mBinding.setOrder(mOrder);
-            Log.d(TAG, "##############################################");
-            Log.d(TAG, "ORDER: " + order);
-            Location orderLocation = new Gson().fromJson(mOrder.getLocation(), Location.class);
-            mOrder.setAddress(orderLocation.getHouse() + ", " + orderLocation.getAddress());
-//            LatLng latLngRestaurant = CommonUtils.getRestaurantLocation(mOrder.getRestaurant());
-//            LatLng latLngCustomer = CommonUtils.getUserLocation(mOrder.getLocation());
-//            LatLng latLngDriver = locationViewModel.getCurrentLocation().getValue();
-//            if (latLngDriver == null) latLngDriver = new LatLng(0.0, 0.0);
-//            Log.d(TAG, "latLngRestaurant:  " + latLngRestaurant);
-//            Log.d(TAG, "latLngCustomer:  " + latLngCustomer);
-//            Log.d(TAG, "latLngDriver:  " + latLngDriver);
-            Log.d(TAG, "##############################################");
+        FetchOrderService.mutableLocations.observe(requireActivity(), locations -> {
+            if(locations != null && locations.size()  > 0){
+                int lastLocation = locations.size() - 1;
+                android.location.Location driverLocation = locations.get(lastLocation);
+                currentLatLng = new LatLng(driverLocation.getLatitude(), driverLocation.getLongitude());
+                Log.d(TAG, "................LOCATION...............................");
+                Log.d(TAG, driverLocation.getLatitude() + ", " + driverLocation.getLongitude());
+                if(mMap != null){
+                    setRiderLocationMarker(driverLocation);
+                }
 
-            if (mOrder.getOrderStatusId() == 4) {
-                //Reach to the customers location
-                mBinding.toolbar.title.setText("Reach Drop Location");
-//                mPlace1 = new MarkerOptions().position(latLngRestaurant).title("Restaurant Location");
-//                mPlace2 = new MarkerOptions().position(latLngCustomer).title("Customer Location");
+                if(mOrder == null && mMap != null){
+                    mOrder = orderViewModel.getOnGoingOrder().getValue();
+                    mBinding.setOrder(mOrder);
+                    Log.d(TAG, "##############################################");
+                    Log.d(TAG, "ORDER: " + mOrder);
+                    Location orderLocation = new Gson().fromJson(mOrder.getLocation(), Location.class);
+                    mOrder.setAddress(orderLocation.getHouse() + ", " + orderLocation.getAddress());
 
-            } else {
-                // Reach to the restaurant
-                mBinding.toolbar.title.setText("Reach Restaurant");
-//                mPlace1 = new MarkerOptions().position(latLngDriver).title("Driver Location");
-//                mPlace2 = new MarkerOptions().position(latLngRestaurant).title("Restaurant Location");
+                    LatLng latLngRestaurant = CommonUtils.getRestaurantLocation(mOrder.getRestaurant());
+                    LatLng latLngCustomer = CommonUtils.getUserLocation(mOrder.getLocation());
+                    LatLng latLngDriver = currentLatLng;
+                    Log.d(TAG, "latLngRestaurant:  " + latLngRestaurant);
+                    Log.d(TAG, "latLngCustomer:  " + latLngCustomer);
+                    Log.d(TAG, "latLngDriver:  " + latLngDriver);
+
+                    if (mOrder.getOrderStatusId() == 4) {
+                        //Reach to the customers location
+                        mBinding.toolbar.title.setText("Reach Drop Location");
+                        mPlace1 = new MarkerOptions().position(latLngRestaurant).title("Restaurant Location");
+                        mPlace2 = new MarkerOptions().position(latLngCustomer).title("Customer Location");
+                        DrawMarker.getInstance(requireActivity()).draw(mMap, latLngRestaurant, R.drawable.ic_home_location, "Customer Location");
+
+
+                    } else {
+                        // Reach to the restaurant
+                        mBinding.toolbar.title.setText("Reach Restaurant");
+                        mPlace1 = new MarkerOptions().position(latLngDriver).title("Driver Location");
+                        mPlace2 = new MarkerOptions().position(latLngRestaurant).title("Restaurant Location");
+                        DrawMarker.getInstance(requireActivity()).draw(mMap, latLngRestaurant, R.drawable.ic_restaurant, "Restaurant Location");
+
+
+                    }
+                    String url = ConstructDirectionUrl.getUrl(mPlace1.getPosition(), mPlace2.getPosition(), "driving", Constants.GOOGLE_MAP_AUTH_KEY);
+                    new FetchURL(this.getContext(), FetchURL.POINT_PARSER).execute(url, "driving");
+                }
             }
-//            String url = ConstructDirectionUrl.getUrl(mPlace1.getPosition(), mPlace2.getPosition(), "driving", Constants.GOOGLE_MAP_AUTH_KEY);
-//            new FetchURL(this.getContext(), FetchURL.POINT_PARSER).execute(url, "driving");
         });
+
+
 
         mBinding.btnAccept.setOnSlideCompleteListener(slideToActView -> {
             if (mOrder.getOrderStatusId() == 4) {
@@ -180,15 +199,15 @@ public class ReachDirectionFragment extends Fragment implements OnMapReadyCallba
 
         });
 
-        FetchOrderService.mutableLocations.observe(requireActivity(), locations -> {
-            int lastLocation = locations.size() - 1;
-            if(mMap != null){
-                Log.d(TAG, "................LOCATION...............................");
-                android.location.Location location = locations.get(lastLocation);
-                Log.d(TAG, location.getLatitude() + ", " + location.getLongitude());
-                setRiderLocationMarker(location);
-            }
-        });
+//        FetchOrderService.mutableLocations.observe(requireActivity(), locations -> {
+//            int lastLocation = locations.size() - 1;
+//            if(mMap != null){
+//                Log.d(TAG, "................LOCATION...............................");
+//                android.location.Location location = locations.get(lastLocation);
+//                Log.d(TAG, location.getLatitude() + ", " + location.getLongitude());
+//                setRiderLocationMarker(location);
+//            }
+//        });
 
     }
 
@@ -202,23 +221,42 @@ public class ReachDirectionFragment extends Fragment implements OnMapReadyCallba
         mBinding.layoutDirection.setOnClickListener(view -> {
             double destinationLatitude = 0.0;
             double destinationLongitude = 0.0;
-            if (mOrder.getOrderStatus() == OrderStatus.DELIVERY_GUY_ASSIGNED) {
-                // Need to travel to restaurant location
-                destinationLatitude = Double.parseDouble(mOrder.getRestaurant().getLatitude());
-                destinationLongitude = Double.parseDouble(mOrder.getRestaurant().getLongitude());
-            } else if (mOrder.getOrderStatus() == OrderStatus.ON_THE_WAY) {
+            if (mOrder.getOrderStatusId() == 4) {
                 // Need to travel to customers location
                 LatLng latLngCustomer = CommonUtils.getUserLocation(mOrder.getLocation());
                 destinationLatitude = latLngCustomer.latitude;
                 destinationLongitude = latLngCustomer.longitude;
-            } else {
-                //....
+            }  else {
+                // Need to travel to restaurant location
+                destinationLatitude = Double.parseDouble(mOrder.getRestaurant().getLatitude());
+                destinationLongitude = Double.parseDouble(mOrder.getRestaurant().getLongitude());
             }
-            String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%f,%f (%s)", destinationLatitude, destinationLongitude, "Where the party is at");
-            Intent intentDirection = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri));
-            intentDirection.setPackage("com.google.android.apps.maps");
-            startActivity(intentDirection);
+            //String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%f,%f (%s)", destinationLatitude, destinationLongitude, "Where the party is at");
+            //String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%f,%f (%s)", destinationLatitude, destinationLongitude, "Where the party is at");
+            //Intent intentDirection = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri));
+            //intentDirection.setPackage("com.google.android.apps.maps");
+            //startActivity(intentDirection);
+            displayRouteOnMap(new LatLng(destinationLatitude, destinationLongitude));
+
+
         });
+    }
+
+    private void displayRouteOnMap(LatLng destination){
+
+        try{
+            Uri uri = Uri.parse("google.navigation:q="+destination.latitude + ","  + destination.longitude +  "&mode=1");
+            //Uri uri = Uri.parse("https://www.google.co.in/maps/dir/" + sSource + "/" + sDestination);
+            Intent intent  = new Intent(Intent.ACTION_VIEW, uri);
+            intent.setPackage("com.google.android.apps.maps");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }catch (ActivityNotFoundException e){
+            // when google map is not installed
+            Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.google.ndroid.apps.maps");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        }
     }
 
 
@@ -254,14 +292,10 @@ public class ReachDirectionFragment extends Fragment implements OnMapReadyCallba
             markerOptions.rotation(location.getBearing());
             markerOptions.anchor((float) 0.5, (float)0.5);
 
-
-            LatLng  latLngRestaurant = new LatLng(Double.parseDouble(mOrder.getRestaurant().getLatitude()), Double.parseDouble(mOrder.getRestaurant().getLongitude()));
-            DrawMarker.getInstance(requireActivity()).draw(mMap, latLngRestaurant, R.drawable.ic_restaurant, "Restaurant");
-
             userLocationMarker = mMap.addMarker(markerOptions);
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14.0f));
 
-
+            /*
             LatLng latLngDestination = null;
             if(mOrder != null && latLng != null){
                 if(mOrder.getOrderStatusId() == 4){
@@ -276,6 +310,8 @@ public class ReachDirectionFragment extends Fragment implements OnMapReadyCallba
             String url = ConstructDirectionUrl.getUrl(latLng, latLngDestination, "driving", Constants.GOOGLE_MAP_AUTH_KEY);
             new FetchURL(this.getContext(), FetchURL.POINT_PARSER).execute(url, "driving");
             Log.d(TAG, "URL: " + url);
+
+             */
 
 
         }else{
@@ -334,16 +370,16 @@ public class ReachDirectionFragment extends Fragment implements OnMapReadyCallba
         }
     }
 
-    @Override
-    public void onTaskDone(Object... values) {
-        Log.d(TAG, "Inside onTaskDone()......");
-        PolylineOptions polylineOptions = (PolylineOptions) values[0];
-
-        Log.d(TAG, "#########################PolyLine Observer###################################");
-        if (currentPolyline != null) currentPolyline.remove();
-        currentPolyline = mMap.addPolyline(polylineOptions);
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentLatLng, 14.0f);
-        mMap.moveCamera(cameraUpdate);
-        Log.d(TAG, "POLYLINE_UPDATED.......................");
-    }
+//    @Override
+//    public void onTaskDone(Object... values) {
+//        Log.d(TAG, "Inside onTaskDone()......");
+//        PolylineOptions polylineOptions = (PolylineOptions) values[0];
+//
+//        Log.d(TAG, "#########################PolyLine Observer###################################");
+//        if (currentPolyline != null) currentPolyline.remove();
+//        currentPolyline = mMap.addPolyline(polylineOptions);
+//        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentLatLng, 14.0f);
+//        mMap.moveCamera(cameraUpdate);
+//        Log.d(TAG, "POLYLINE_UPDATED.......................");
+//    }
 }

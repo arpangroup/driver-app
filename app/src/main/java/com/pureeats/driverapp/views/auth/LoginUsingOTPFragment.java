@@ -83,7 +83,7 @@ public class LoginUsingOTPFragment extends Fragment {
 
 
     private void initOTPInput() {
-        mBinding.et1.requestFocus();
+        //mBinding.et1.requestFocus();
         //requireActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         mBinding.et1.addTextChangedListener(new TextWatcher() {
             @Override

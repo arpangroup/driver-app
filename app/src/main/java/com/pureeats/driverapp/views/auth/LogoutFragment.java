@@ -23,6 +23,7 @@ import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.commons.Actions;
 import com.pureeats.driverapp.databinding.FragmentOfferBinding;
 import com.pureeats.driverapp.services.FetchOrderService;
+import com.pureeats.driverapp.sharedprefs.ServiceTracker;
 import com.pureeats.driverapp.viewmodels.AuthenticationViewModel;
 import com.pureeats.driverapp.viewmodels.LocationViewModel;
 
@@ -70,14 +71,20 @@ public class LogoutFragment extends AppCompatDialogFragment {
 
         btnYes.setOnClickListener(view -> {
             authViewModel.logout();
+            try {
+                Intent intentService = new Intent(requireActivity(), FetchOrderService.class);
+                intentService.setAction(Actions.STOP.name());
+                System.out.println("Trying to run the service");
+                ContextCompat.startForegroundService(requireActivity(), intentService);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            ServiceTracker.setServiceState(requireActivity(), ServiceTracker.ServiceState.STOPPED);
             Intent intent = new Intent(requireActivity(), AuthActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             ActivityCompat.finishAffinity(requireActivity());
 
-            Intent intentService = new Intent(requireActivity(), FetchOrderService.class);
-            intent.setAction(Actions.STOP.name());
-            System.out.println("Trying to run the service");
-            ContextCompat.startForegroundService(requireActivity(), intent);
 
             startActivity(intent);
         });

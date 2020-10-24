@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements UpdateHelper.OnUp
         View rootView = mBinding.getRoot();
         setContentView(rootView);
         UserSession userSession = new UserSession(this);
+        mBinding.toolbar.menuRightLayout.setVisibility(View.GONE);
 
         mNavController = Navigation.findNavController(this, R.id.navHostFragment);
         NavigationUI.setupWithNavController(mBinding.navView, mNavController);
