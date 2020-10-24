@@ -10,6 +10,7 @@ import com.pureeats.driverapp.models.LoginResponse;
 import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.models.request.RequestToken;
 import com.pureeats.driverapp.models.request.ProcessOrderRequest;
+import com.pureeats.driverapp.models.response.Dashboard;
 import com.pureeats.driverapp.models.response.DeliveryOrderResponse;
 import com.pureeats.driverapp.models.response.UpdateDeliveryUserInfoResponse;
 
@@ -62,6 +63,10 @@ public interface ApiInterface {
 
     @POST("/api/delivery/get-single-delivery-order")
     Call<Order> getSingleDeliveryOrder(@Body ProcessOrderRequest processOrderRequest);
+
+
+    @POST("/api/delivery/dashboard")
+    Call<com.pureeats.driverapp.models.response.ApiResponse<Dashboard>> getDashboard(@Body RequestToken requestToken);
 
 
 

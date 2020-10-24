@@ -1,5 +1,6 @@
 package com.pureeats.driverapp.views;
 
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
@@ -14,13 +15,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.databinding.FragmentAcceptOrderBinding;
 import com.pureeats.driverapp.databinding.FragmentDashboardBinding;
+import com.pureeats.driverapp.models.request.RequestToken;
+import com.pureeats.driverapp.models.response.Dashboard;
 import com.pureeats.driverapp.services.FetchOrderService;
 import com.pureeats.driverapp.viewmodels.LocationViewModel;
 import com.pureeats.driverapp.viewmodels.OrderViewModel;
 
+import java.util.ArrayList;
 import java.util.Timer;
 
 
@@ -73,5 +81,36 @@ public class DashboardFragment extends Fragment {private final String TAG = this
             }
         });
 
+        RequestToken requestToken = new RequestToken(requireActivity());
+        orderViewModel.getDashboard(requestToken).observe(requireActivity(), apiResponse -> {
+            Dashboard dashboard = (Dashboard) apiResponse.getData();
+            mBinding.setDashboard(dashboard);
+        });
+
+        setUpBarChart();
+
+    }
+
+    private void setUpBarChart(){
+        ArrayList<BarEntry> visitors = new ArrayList<>();
+        visitors.add(new BarEntry(2014, 420));
+        visitors.add(new BarEntry(2015, 475));
+        visitors.add(new BarEntry(2016, 300));
+        visitors.add(new BarEntry(2017, 500));
+        visitors.add(new BarEntry(2018, 200));
+        visitors.add(new BarEntry(2019, 300));
+        visitors.add(new BarEntry(2020, 470));
+
+        BarDataSet barDataSet =  new BarDataSet(visitors, "Visitors");
+        barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+        barDataSet.setValueTextColor(Color.BLACK);
+        barDataSet.setValueTextSize(16f);
+
+        BarData barData  = new BarData(barDataSet);
+
+        mBinding.barChart.setFitBars(true);
+        mBinding.barChart.setData(barData);
+        mBinding.barChart.getDescription().setText("Earnings");
+        mBinding.barChart.animateY(2000);
     }
 }

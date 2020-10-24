@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.pureeats.driverapp.models.Order;
+import com.pureeats.driverapp.models.request.RequestToken;
 import com.pureeats.driverapp.models.response.ApiResponse;
 import com.pureeats.driverapp.models.response.DeliveryOrderResponse;
 import com.pureeats.driverapp.models.response.UpdateDeliveryUserInfoResponse;
@@ -117,6 +118,10 @@ public class OrderViewModel extends ViewModel implements LifecycleObserver {
             mutablePolyline = new MutableLiveData<>();
         }
         return mutablePolyline;
+    }
+
+    public LiveData<ApiResponse> getDashboard(RequestToken requestToken){
+        return orderRepository.getDashboard(requestToken);
     }
 
 }

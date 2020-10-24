@@ -16,6 +16,7 @@ import com.pureeats.driverapp.models.request.DeliverOrderRequest;
 import com.pureeats.driverapp.models.request.ProcessOrderRequest;
 import com.pureeats.driverapp.models.request.RequestToken;
 import com.pureeats.driverapp.models.response.ApiResponse;
+import com.pureeats.driverapp.models.response.Dashboard;
 import com.pureeats.driverapp.models.response.DeliveryOrderResponse;
 import com.pureeats.driverapp.models.response.UpdateDeliveryUserInfoResponse;
 import com.google.gson.Gson;
@@ -109,6 +110,10 @@ public class OrderRepository {
 
     public LiveData<Order> getSingleDeliveryOrder(String uniqueOrderId){
         return getSingleDeliveryOrderApi(uniqueOrderId);
+    }
+
+    public LiveData<ApiResponse> getDashboard(RequestToken requestToken){
+        return getDashboardApi(requestToken);
     }
 
     public LiveData<ApiResponse> sendMessage(int orderId){
@@ -374,6 +379,30 @@ public class OrderRepository {
 
             @Override
             public void onFailure(Call<com.pureeats.driverapp.models.ApiResponse> call, Throwable t) {
+                isLoading.setValue(false);
+            }
+        });
+        return mutableResponse;
+    }
+
+
+
+    private LiveData<ApiResponse> getDashboardApi(RequestToken requestToken){
+        MutableLiveData<ApiResponse> mutableResponse = new MutableLiveData<>();
+        Log.d(TAG, "Inside getDashboardApi()....");
+        Log.d(TAG, "REQUEST: "+ new Gson().toJson(requestToken));
+        ApiInterface apiInterface = ApiService.getApiService();
+        isLoading.setValue(true);
+        apiInterface.getDashboard(requestToken).enqueue(new Callback<ApiResponse<Dashboard>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<Dashboard>> call, Response<ApiResponse<Dashboard>> response) {
+                isLoading.setValue(false);
+                ApiResponse<Dashboard> apiResponse = response.body();
+                mutableResponse.postValue(apiResponse);
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<Dashboard>> call, Throwable t) {
                 isLoading.setValue(false);
             }
         });
