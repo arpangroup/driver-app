@@ -6,7 +6,7 @@
         <import type="android.view.View"/>
         <variable
             name="orderDetails"
-            type="com.example.driverapp.models.response.OrderDetailsView" />
+            type="com.pureeats.driverapp.models.response.OrderDetailsView" />
     </data>
     <LinearLayout
         android:layout_width="match_parent"

@@ -6,10 +6,10 @@
 
     <data>
         <import type="android.view.View"/>
-        <import type="com.example.driverapp.commons.OrderStatus"/>
+        <import type="com.pureeats.driverapp.commons.OrderStatus"/>
         <variable
             name="order"
-            type="com.example.driverapp.models.Order" />
+            type="com.pureeats.driverapp.models.Order" />
 
     </data>
 
@@ -216,13 +216,13 @@
                                         android:textColor="@color/blue"
                                         android:textSize="12sp"
                                         android:textStyle="bold"
-                                        android:text="Foof" />
+                                        android:text="Call" />
 
                                     <ImageView
                                         android:layout_width="wrap_content"
                                         android:layout_height="match_parent"
                                         android:textAlignment="center"
-                                        android:src="@drawable/ic_baseline_bookmark_24"
+                                        android:src="@drawable/ic_baseline_add_ic_call_24"
                                         app:tint="@color/blue" />
                                 </LinearLayout>
 

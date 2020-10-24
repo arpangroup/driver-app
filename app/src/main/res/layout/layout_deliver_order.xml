@@ -7,7 +7,7 @@
         <import type="android.view.View"/>
         <variable
             name="order"
-            type="com.example.driverapp.models.Order" />
+            type="com.pureeats.driverapp.models.Order" />
     </data>
 
     <RelativeLayout
@@ -272,34 +272,49 @@
                             android:layoutDirection="rtl"
                             android:orientation="horizontal">
 
-                            <LinearLayout
-                                android:id="@+id/send_message"
+                            <FrameLayout
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:paddingLeft="12dp"
-                                android:paddingRight="12dp"
-                                android:paddingTop="8dp"
-                                android:paddingBottom="8dp"
-                                android:background="@drawable/background_green"
-                                android:orientation="horizontal">
-
-                                <TextView
+                                android:layout_height="wrap_content">
+                                <LinearLayout
+                                    android:id="@+id/send_message"
+                                    android:visibility="visible"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textColor="@color/white"
-                                    android:textSize="24sp"
-                                    android:textStyle="bold"
-                                    android:text="Send" />
+                                    android:layout_alignParentRight="true"
+                                    android:paddingLeft="12dp"
+                                    android:paddingRight="12dp"
+                                    android:paddingTop="8dp"
+                                    android:paddingBottom="8dp"
+                                    android:background="@drawable/background_green"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/white"
+                                        android:textSize="24sp"
+                                        android:textStyle="bold"
+                                        android:text="Send" />
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginRight="16dp"
+                                        android:textAlignment="center"
+                                        android:src="@drawable/ic_baseline_message_24"
+                                        app:tint="@color/white" />
+                                </LinearLayout>
 
                                 <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
+                                    android:id="@+id/message_send_success"
+                                    android:visibility="gone"
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
                                     android:layout_marginRight="16dp"
-                                    android:textAlignment="center"
-                                    android:src="@drawable/ic_baseline_message_24"
-                                    app:tint="@color/white" />
-                            </LinearLayout>
+                                    android:layout_gravity="center_vertical"
+                                    android:src="@drawable/ic_verified_green"
+                                    app:tint="@color/green" />
+                            </FrameLayout>
 
                             <TextView
                                 android:layout_width="match_parent"

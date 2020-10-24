@@ -5,7 +5,7 @@
         <import type="android.view.View"/>
         <variable
             name="dish"
-            type="com.example.driverapp.models.Dish" />
+            type="com.pureeats.driverapp.models.Dish" />
     </data>
 
     <LinearLayout

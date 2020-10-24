@@ -6,7 +6,7 @@
         <import type="android.view.View"/>
         <variable
             name="earning"
-            type="com.example.driverapp.models.Earning" />
+            type="com.pureeats.driverapp.models.Earning" />
     </data>
     <LinearLayout
         android:layout_width="match_parent"

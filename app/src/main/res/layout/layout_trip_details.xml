@@ -4,13 +4,13 @@
 
     <data>
         <import type="android.view.View"/>
-        <import type="com.example.driverapp.commons.OrderStatus"/>
+        <import type="com.pureeats.driverapp.commons.OrderStatus"/>
         <variable
             name="order"
-            type="com.example.driverapp.models.Order" />
+            type="com.pureeats.driverapp.models.Order" />
         <variable
             name="direction"
-            type="com.example.driverapp.models.Direction" />
+            type="com.pureeats.driverapp.models.Direction" />
     </data>
 
     <RelativeLayout
