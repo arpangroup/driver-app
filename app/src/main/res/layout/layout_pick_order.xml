@@ -205,6 +205,7 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
+                        android:id="@+id/track"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
@@ -238,10 +239,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:layout_alignParentTop="true"
-                            android:textSize="20sp"
+                            android:textSize="18sp"
                             android:textStyle="bold"
                             android:textColor="@color/black"
-                            android:text="Click photo of Bill" />
+                            android:text="Restaurant hanovered the food?" />
 
                         <androidx.cardview.widget.CardView
                             android:layout_width="match_parent"

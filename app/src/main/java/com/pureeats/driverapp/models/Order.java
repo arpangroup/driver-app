@@ -57,6 +57,8 @@ public class Order implements Comparable{
     private String deliveryPin;
     @SerializedName("payable")
     private String payable;
+    @SerializedName("delivery_distance")
+    private double deliveryDistance;
 
     @SerializedName("restaurant")
     private Restaurant restaurant;

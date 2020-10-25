@@ -138,6 +138,7 @@ public class DeliverOrderFragment extends Fragment {
                     if(otp.equals(mOrder.getDeliveryPin())){
                         mBinding.deliverOrder.btnAccept.setEnabled(true);
                         mBinding.deliverOrder.btnAccept.setLocked(false);
+                        mBinding.deliverOrder.btnItemGivenToCustomer.setEnabled(false);
                         mBinding.deliverOrder.btnAccept.setOuterColor(R.color.orange);
                     }else{
                         Log.d(TAG, "ORIGINAL_OTP: " + mOrder.getDeliveryPin());

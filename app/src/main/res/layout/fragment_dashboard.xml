@@ -266,9 +266,12 @@
                                         android:textStyle="normal" />
                                 </LinearLayout>
                             </LinearLayout>
+
+
                         </LinearLayout>
 
                     </androidx.cardview.widget.CardView>
+
                 </LinearLayout>
 
 
@@ -278,7 +281,9 @@
                     android:layout_marginTop="25dp"
                     android:background="@color/viewline" />
 
+                <!-- Chart -->
                 <LinearLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
@@ -289,6 +294,152 @@
                         android:layout_width="match_parent"
                         android:layout_height="320dp"></com.github.mikephil.charting.charts.BarChart>
                 </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp"
+                    android:layout_marginTop="25dp"
+                    android:background="@color/viewline" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="8dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Today"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="₹ 377"
+                            text="@{`₹` + dashboard.todaysEarningAmount}"
+                            android:textColor="@color/white"
+                            android:textSize="24sp"
+
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="2 orders"
+                            text="@{dashboard.todaysOrderCount + ` orders`}"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:textStyle="normal" />
+
+                    </LinearLayout>
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginRight="8dp"
+                        android:elevation="0dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#0B8EF6"
+                            android:weightSum="2"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:paddingLeft="16dp"
+                                android:paddingTop="8dp">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Outstanding Amount"
+                                    android:textColor="@color/white"
+                                    android:textSize="16sp"
+                                    android:textStyle="normal" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="₹ 1255"
+                                    text="@{`₹` + dashboard.yesterdayEarningAmount}"
+                                    android:textColor="@color/white"
+                                    android:textSize="24sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    text="Pay by 25-Oct-2020"
+                                    android:textColor="@color/white"
+                                    android:textSize="14sp"
+                                    android:textStyle="normal" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:paddingLeft="16dp"
+                                android:paddingTop="8dp">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Last Payment"
+                                    android:textColor="@color/white"
+                                    android:textSize="16sp"
+                                    android:textStyle="normal" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="₹ 1255"
+                                    text="@{`₹` + dashboard.yesterdayEarningAmount}"
+                                    android:textColor="@color/white"
+                                    android:textSize="24sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="9 orders"
+                                    text="14-Oct-2020"
+                                    android:textColor="@color/white"
+                                    android:textSize="14sp"
+                                    android:textStyle="normal" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+
+
+                </LinearLayout>
+
+
 
 
             </LinearLayout>

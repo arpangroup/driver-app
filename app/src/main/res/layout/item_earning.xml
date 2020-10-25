@@ -89,17 +89,36 @@
                             android:text="@{earning.type}"
                             android:hint="Deposit" />
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layoutDirection="ltr"
-                            android:textAlignment="textStart"
-                            android:layout_marginTop="4dp"
-                            android:maxLines="2"
-                            android:textStyle="bold"
-                            android:textSize="14sp"
-                            android:text="@{earning.createdAt}"
-                            android:hint="16-Oct-2020" />
+                       <LinearLayout
+                           android:layout_width="match_parent"
+                           android:layout_height="wrap_content"
+                           android:layoutDirection="ltr"
+                           android:orientation="horizontal">
+                           <TextView
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:layout_marginRight="16dp"
+                               android:layoutDirection="ltr"
+                               android:textAlignment="textStart"
+                               android:layout_marginTop="4dp"
+                               android:maxLines="2"
+                               android:textStyle="bold"
+                               android:textSize="14sp"
+                               android:text="@{earning.createdAt}"
+                               android:hint="16-Oct-2020" />
+                           <TextView
+                               android:id="@+id/distance"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:layoutDirection="ltr"
+                               android:textAlignment="textStart"
+                               android:layout_marginTop="4dp"
+                               android:maxLines="2"
+                               android:textStyle="bold"
+                               android:textSize="14sp"
+                               android:text="@{earning.deliveryDistance + ` Km`}"
+                               android:hint="5.3 Km"/>
+                       </LinearLayout>
 
                     </LinearLayout>
                 </LinearLayout>

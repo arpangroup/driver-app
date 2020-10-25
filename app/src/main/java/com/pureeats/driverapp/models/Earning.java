@@ -28,6 +28,7 @@ public class Earning {
     private String createdAt;
     @SerializedName("updated_at")
     private String updatedAt;
+    private double deliveryDistance;
 
 
 

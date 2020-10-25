@@ -1,6 +1,7 @@
 package com.pureeats.driverapp.adapters;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -35,7 +36,7 @@ public class AcceptedOrderListAdapter extends ListAdapter<Order, AcceptedOrderLi
         holder.itemBinding.setOrder(order);
 
         holder.itemBinding.executePendingBindings();
-
+        holder.itemBinding.callToCustomer.setVisibility(View.GONE);
 
 
 

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="earning"
+            type="com.pureeats.driverapp.models.Earning" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layoutDirection="rtl"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/call_to_customer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layoutDirection="rtl"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layoutDirection="ltr"
+                            android:textColor="@color/blue"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:text="3.59 Km"
+                            android:hint="₹340"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="textStart"
+                            android:layout_marginTop="4dp"
+                            android:maxLines="2"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:text="@{earning.createdAt}"
+                            android:hint="16-Oct-2020" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="16dp"
+                        android:textColor="@color/black"
+                        android:text="South Indian Super Hot Wow Momo" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layoutDirection="ltr"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="8dp"
+                        android:layoutDirection="ltr"
+                        android:textAlignment="textStart"
+                        android:layout_marginTop="4dp"
+                        android:maxLines="2"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:text="Cash collected"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="16dp"
+                        android:layoutDirection="ltr"
+                        android:textAlignment="textStart"
+                        android:layout_marginTop="4dp"
+                        android:maxLines="2"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:text="₹100"/>
+                </LinearLayout>
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="12dp"
+            android:background="@color/lightsilver" />
+    </LinearLayout>
+</layout>

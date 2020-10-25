@@ -1,6 +1,7 @@
 package com.pureeats.driverapp.adapters;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,7 @@ public class EarningListAdapter extends ListAdapter<Earning, EarningListAdapter.
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         Earning earning = getItem(position);
         holder.itemBinding.setEarning(earning);
+        holder.itemBinding.distance.setVisibility(View.GONE);
 
         holder.itemBinding.executePendingBindings();
 

@@ -199,6 +199,9 @@ public class OrderRepository {
                     if(response.isSuccessful()){
                         ApiResponse apiResponse = new ApiResponse(true, "order pickedup");
                         apiResponseMutableLiveData.setValue(apiResponse);
+                    }else{
+                        ApiResponse apiResponse = new ApiResponse(false, "Order is not ready yet");
+                        apiResponseMutableLiveData.setValue(apiResponse);
                     }
                 }catch (Exception e){
                     e.printStackTrace();
