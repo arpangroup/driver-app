@@ -129,7 +129,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:hint="₹ 377"
-                                        text="@{`₹` + dashboard.todaysEarningAmount}"
+                                        text="@{`₹` + String.format(`%.2f`, dashboard.todaysEarningAmount)}"
                                         android:textColor="@color/white"
                                         android:textSize="24sp"
 
@@ -168,7 +168,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:hint="₹ 1255"
-                                        text="@{`₹` + dashboard.yesterdayEarningAmount}"
+                                        text="@{`₹` + String.format(`%.2f`, dashboard.yesterdayEarningAmount)}"
                                         android:textColor="@color/white"
                                         android:textSize="24sp"
                                         android:textStyle="bold" />
@@ -213,7 +213,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:hint="₹ 9,418"
-                                        text="@{`₹` + dashboard.thisWeekEarningAmount}"
+                                        text="@{`₹` + String.format(`%.2f`, dashboard.thisWeekEarningAmount)}"
                                         android:textColor="@color/white"
                                         android:textSize="24sp"
                                         android:textStyle="bold" />
@@ -250,7 +250,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:hint="₹ 1,69849"
-                                        text="@{`₹` + dashboard.thisMonthEarningAmount}"
+                                        text="@{`₹` + String.format(`%.2f`, dashboard.thisMonthEarningAmount)}"
                                         android:textColor="@color/white"
                                         android:textSize="24sp"
                                         android:textStyle="bold" />
@@ -383,7 +383,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:hint="₹ 1255"
-                                    text="@{`₹` + dashboard.yesterdayEarningAmount}"
+                                    text="@{`₹` + String.format(`%.2f`, dashboard.cashInHold)}"
                                     android:textColor="@color/white"
                                     android:textSize="24sp"
                                     android:textStyle="bold" />
@@ -418,19 +418,11 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:hint="₹ 1255"
-                                    text="@{`₹` + dashboard.yesterdayEarningAmount}"
+                                    android:text="@{`₹` + String.format(`%.2f`, dashboard.last_payment)}"
                                     android:textColor="@color/white"
                                     android:textSize="24sp"
                                     android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:hint="9 orders"
-                                    text="14-Oct-2020"
-                                    android:textColor="@color/white"
-                                    android:textSize="14sp"
-                                    android:textStyle="normal" />
                             </LinearLayout>
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>

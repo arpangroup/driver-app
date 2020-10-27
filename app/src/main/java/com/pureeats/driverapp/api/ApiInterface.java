@@ -12,9 +12,11 @@ import com.pureeats.driverapp.models.request.RequestToken;
 import com.pureeats.driverapp.models.request.ProcessOrderRequest;
 import com.pureeats.driverapp.models.response.Dashboard;
 import com.pureeats.driverapp.models.response.DeliveryOrderResponse;
+import com.pureeats.driverapp.models.response.TripDetails;
 import com.pureeats.driverapp.models.response.UpdateDeliveryUserInfoResponse;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -70,6 +72,13 @@ public interface ApiInterface {
 
     @POST("/api/delivery/dashboard")
     Call<com.pureeats.driverapp.models.response.ApiResponse<Dashboard>> getDashboard(@Body RequestToken requestToken);
+
+
+    @POST("/api/delivery/get-trip-details/{order_id}")
+    Call<com.pureeats.driverapp.models.response.ApiResponse<TripDetails>> getTripDetails(@Path("order_id") String orderId);
+
+    @POST("/api/delivery/get-trip-summary/{rider_id}")
+    Call<com.pureeats.driverapp.models.response.ApiResponse<List<TripDetails>>> getTripSummary(@Path("rider_id") String riderId);
 
 
 

@@ -19,12 +19,17 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.commons.CommonUtils;
+import com.pureeats.driverapp.commons.Constants;
 import com.pureeats.driverapp.databinding.FragmentDeliverOrderBinding;
 import com.pureeats.driverapp.databinding.FragmentReachPickUpLocationBinding;
+import com.pureeats.driverapp.directionhelpers.ConstructDirectionUrl;
+import com.pureeats.driverapp.directionhelpers.FetchURL;
 import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.utils.FormatPrice;
+import com.pureeats.driverapp.viewmodels.LocationViewModel;
 import com.pureeats.driverapp.viewmodels.OrderViewModel;
 
 public class DeliverOrderFragment extends Fragment {
@@ -32,6 +37,7 @@ public class DeliverOrderFragment extends Fragment {
 
     private FragmentDeliverOrderBinding mBinding;
     OrderViewModel orderViewModel;
+    LocationViewModel locationViewModel;
     NavController navController;
     Order mOrder = null;
 
@@ -47,6 +53,7 @@ public class DeliverOrderFragment extends Fragment {
 
         // Initialize ViewModel
         orderViewModel = new ViewModelProvider(requireActivity()).get(OrderViewModel.class);
+        locationViewModel = new ViewModelProvider(requireActivity()).get(LocationViewModel.class);
         orderViewModel.init();
 
         // Initialize NavController
@@ -65,14 +72,33 @@ public class DeliverOrderFragment extends Fragment {
 //            mBinding.deliverOrder.setOrder(mOrder);
 //        });
 
+        orderViewModel.getIsLoading().observe(requireActivity(), aBoolean -> {
+            if(aBoolean){
+                mBinding.deliverOrder.progress.setVisibility(View.GONE);
+            }else {
+                mBinding.deliverOrder.progress.setVisibility(View.GONE);
+            }
+        });
+
         orderViewModel.getSingleDeliveryOrder(orderViewModel.getOnGoingOrder().getValue().getUniqueOrderId()).observe(requireActivity(), order -> {
             mOrder = order;
             Log.d(TAG, "###################################################################");
             Log.d(TAG, "ORDER: " + mOrder);
             Log.d(TAG, "###################################################################");
+            LatLng  latLngRestaurant = CommonUtils.getRestaurantLocation(mOrder.getRestaurant());
+            LatLng  latLngCustomer = CommonUtils.getUserLocation(mOrder.getLocation());
+            String url = ConstructDirectionUrl.getUrl(latLngRestaurant, latLngCustomer, "driving", Constants.GOOGLE_MAP_AUTH_KEY);
+            new FetchURL(this.getContext(), FetchURL.DISTANCE_PARSER).execute(url, "driving");
+
             mBinding.deliverOrder.toolbar.title.setText("Deliver Order");
             mOrder.setDeliveryPin(order.getDeliveryPin());
             mBinding.deliverOrder.setOrder(mOrder);
+        });
+
+        locationViewModel.getDirection().observe(requireActivity(), direction -> {
+            Log.d(TAG, "#########################");
+            Log.d(TAG, "DIRECTION: "+ direction);
+            mOrder.setDirection(direction);
         });
 
 
@@ -152,15 +178,21 @@ public class DeliverOrderFragment extends Fragment {
         });
 
         mBinding.deliverOrder.btnAccept.setOnSlideCompleteListener(slideToActView -> {
-            orderViewModel.deliverOrder(mOrder, mOrder.getDeliveryPin()).observe(requireActivity(), isDelivered -> {
-                if(isDelivered){
-                    mOrder.setOrderStatusId(5);
-                    navController.navigate(R.id.action_deliverOrderFragment_to_tripDetailsFragment);
-                }else{
-                    mBinding.deliverOrder.btnAccept.resetSlider();
-                    Toast.makeText(requireActivity(), "Something error happened", Toast.LENGTH_SHORT).show();
-                }
-            });
+            if(mOrder.getDirection() != null){
+                orderViewModel.deliverOrder(mOrder, mOrder.getDeliveryPin()).observe(requireActivity(), isDelivered -> {
+                    if(isDelivered){
+                        mOrder.setOrderStatusId(5);
+                        orderViewModel.setOnGoingOrder(mOrder);
+                        navController.navigate(R.id.action_deliverOrderFragment_to_tripDetailsFragment);
+                    }else{
+                        mBinding.deliverOrder.btnAccept.resetSlider();
+                        Toast.makeText(requireActivity(), "Something error happened", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }else{
+                Toast.makeText(requireActivity(), "Distance not calculated", Toast.LENGTH_SHORT).show();
+                mBinding.deliverOrder.btnAccept.resetSlider();
+            }
         });
     }
 

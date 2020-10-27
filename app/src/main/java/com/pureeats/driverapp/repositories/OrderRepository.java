@@ -11,6 +11,7 @@ import com.pureeats.driverapp.api.ApiInterface;
 import com.pureeats.driverapp.api.ApiService;
 import com.pureeats.driverapp.commons.ErrorCode;
 import com.pureeats.driverapp.commons.OrderStatus;
+import com.pureeats.driverapp.models.Direction;
 import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.models.request.DeliverOrderRequest;
 import com.pureeats.driverapp.models.request.ProcessOrderRequest;
@@ -18,6 +19,7 @@ import com.pureeats.driverapp.models.request.RequestToken;
 import com.pureeats.driverapp.models.response.ApiResponse;
 import com.pureeats.driverapp.models.response.Dashboard;
 import com.pureeats.driverapp.models.response.DeliveryOrderResponse;
+import com.pureeats.driverapp.models.response.TripDetails;
 import com.pureeats.driverapp.models.response.UpdateDeliveryUserInfoResponse;
 import com.google.gson.Gson;
 
@@ -118,6 +120,13 @@ public class OrderRepository {
 
     public LiveData<ApiResponse> sendMessage(int orderId){
         return sendMessageApi(orderId);
+    }
+
+    public LiveData<ApiResponse<TripDetails>> getTripDetails(int orderId){
+        return getTripDetailsApi(orderId+"");
+    }
+    public LiveData<ApiResponse<List<TripDetails>>> getTripSummary(RequestToken requestToken){
+        return getTripSummaryApi(requestToken);
     }
 
 
@@ -250,7 +259,12 @@ public class OrderRepository {
     }
 
     private LiveData<Boolean> deliverOrderApi(Order order, String deliveryPin){
+        Direction direction  = order.getDirection();
         DeliverOrderRequest request = new DeliverOrderRequest(order.getId(), deliveryPin);
+        request.setDistanceTravelled(direction.getDistance().getValue());
+        request.setDistanceTravelledText(direction.getDistance().getText());
+        request.setDurationVal(direction.getDuration().getValue());
+        request.setDurationText(direction.getDuration().getText());
         MutableLiveData<Boolean> apiResponseMutableLiveData = new MutableLiveData<>();
         Log.d(TAG, "Inside deliverOrderApi()....");
         Log.d(TAG, "REQUEST: "+ new Gson().toJson(request));
@@ -407,6 +421,52 @@ public class OrderRepository {
             @Override
             public void onFailure(Call<ApiResponse<Dashboard>> call, Throwable t) {
                 isLoading.setValue(false);
+            }
+        });
+        return mutableResponse;
+    }
+
+
+    private LiveData<ApiResponse<TripDetails>> getTripDetailsApi(String orderId){
+        MutableLiveData<ApiResponse<TripDetails>> mutableResponse = new MutableLiveData<>();
+        Log.d(TAG, "Inside getTripDetails()....");
+        Log.d(TAG, "REQUEST: orderId :"+ orderId);
+        ApiInterface apiInterface = ApiService.getApiService();
+        isLoading.setValue(true);
+        apiInterface.getTripDetails(orderId).enqueue(new Callback<ApiResponse<TripDetails>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<TripDetails>> call, Response<ApiResponse<TripDetails>> response) {
+                isLoading.setValue(false);
+                mutableResponse.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<TripDetails>> call, Throwable t) {
+                isLoading.setValue(false);
+                ApiResponse<TripDetails> apiResponse = new ApiResponse<>(false, "FAIL", null);
+                mutableResponse.setValue(apiResponse);
+            }
+        });
+        return mutableResponse;
+    }
+    private LiveData<ApiResponse<List<TripDetails>>> getTripSummaryApi(RequestToken requestToken){
+        MutableLiveData<ApiResponse<List<TripDetails>>> mutableResponse = new MutableLiveData<>();
+        String riderId  = requestToken.getDeliveryGuyId()+"";
+        Log.d(TAG, "Inside getTripSummary()....");
+        Log.d(TAG, "REQUEST: RiderId :"+ riderId);
+        ApiInterface apiInterface = ApiService.getApiService();
+        isLoading.setValue(true);
+        apiInterface.getTripSummary(riderId).enqueue(new Callback<ApiResponse<List<TripDetails>>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<List<TripDetails>>> call, Response<ApiResponse<List<TripDetails>>> response) {
+                isLoading.setValue(false);
+                mutableResponse.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<List<TripDetails>>> call, Throwable t) {
+                isLoading.setValue(false);
+                mutableResponse.setValue(new ApiResponse<>(false, "FAIL", new ArrayList<>()));
             }
         });
         return mutableResponse;

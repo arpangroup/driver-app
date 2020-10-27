@@ -86,6 +86,8 @@ public class Order implements Comparable{
 
     private OrderStatus orderStatus;
 
+    private Direction direction;
+
     public Order(int id, String uniqueOrderId) {
         this.id = id;
         this.uniqueOrderId = uniqueOrderId;

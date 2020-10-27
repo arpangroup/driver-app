@@ -31,4 +31,10 @@ public class Dashboard {
     private int thisMonthOrderCount;
     @SerializedName("this_month_earning_amount")
     private double thisMonthEarningAmount;
+
+
+    @SerializedName("cash_in_hold")
+    private double cashInHold;
+    @SerializedName("last_payment")
+    private double last_payment;
 }

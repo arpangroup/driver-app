@@ -11,6 +11,7 @@ import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.models.request.RequestToken;
 import com.pureeats.driverapp.models.response.ApiResponse;
 import com.pureeats.driverapp.models.response.DeliveryOrderResponse;
+import com.pureeats.driverapp.models.response.TripDetails;
 import com.pureeats.driverapp.models.response.UpdateDeliveryUserInfoResponse;
 import com.pureeats.driverapp.repositories.OrderRepository;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -106,6 +107,14 @@ public class OrderViewModel extends ViewModel implements LifecycleObserver {
     }
     public LiveData<Order> getSingleDeliveryOrder(String uniqueOrderId){
         return orderRepository.getSingleDeliveryOrder(uniqueOrderId);
+    }
+
+    public LiveData<ApiResponse<TripDetails>> getSingleDeliveryOrder(int orderId){
+        return orderRepository.getTripDetails(orderId);
+    }
+
+    public LiveData<ApiResponse<List<TripDetails>>> getTripSummary(RequestToken requestToken){
+        return orderRepository.getTripSummary(requestToken);
     }
 
 

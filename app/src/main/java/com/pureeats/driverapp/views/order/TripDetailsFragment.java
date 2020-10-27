@@ -66,9 +66,8 @@ public class TripDetailsFragment extends Fragment {
             Log.d(TAG, "REQUEST FOR DISTANCE CALCULATION");
             Log.d(TAG, "URL: "+ url);
             new FetchURL(requireActivity(), FetchURL.DISTANCE_PARSER).execute(url, "driving");
-
-
         });
+
         locationViewModel.getDirection().observe(requireActivity(), direction -> {
             Log.d(TAG, "DIRECTION: "+direction);
             Log.d(TAG, "DISTANCE: "+direction.getDistance());

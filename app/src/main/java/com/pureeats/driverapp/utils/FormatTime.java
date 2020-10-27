@@ -13,7 +13,7 @@ import java.util.TimeZone;
 public class FormatTime {
 
     public static Long getTimeFromDateString(String dateStr){
-        TimeZone.setDefault(TimeZone.getTimeZone("GMT+05:30"));
+        //TimeZone.setDefault(TimeZone.getTimeZone("GMT+05:30"));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         //SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 

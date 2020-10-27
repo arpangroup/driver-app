@@ -20,6 +20,7 @@ import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.commons.CommonUtils;
 import com.pureeats.driverapp.databinding.FragmentPickOrderBinding;
 import com.pureeats.driverapp.models.Order;
+import com.pureeats.driverapp.utils.FormatDate;
 import com.pureeats.driverapp.utils.FormatTime;
 import com.pureeats.driverapp.viewmodels.OrderViewModel;
 
@@ -65,15 +66,15 @@ public class PickOrderFragment extends Fragment{
             orderViewModel.getSingleDeliveryOrder(mOrder.getUniqueOrderId()).observe(requireActivity(), orderObj -> {
                 Log.d(TAG, "===========================SINGLE_ORDER==========================");
                 Log.d(TAG, "ORDER: "+ orderObj);
-                Log.d(TAG, "CREATED_TIME: "+ order.getCreatedAt());
-                Log.d(TAG, "PREPARE_TIME: "+ order.getPrepareTime());
+                Log.d(TAG, "CREATED_TIME: "+ orderObj.getCreatedAt());
+                Log.d(TAG, "PREPARE_TIME: "+ orderObj.getPrepareTime());
 
                 if(order.getOrderStatusId() == 10){
                     mBinding.pickOrder.txtDeliveryCountdown.setText("READY");
                 }else{
-                    long currentTime = new Date().getTime();
-                    long orderTime =  FormatTime.getTimeFromDateString(orderObj.getCreatedAt());
-                    long targetTime =  orderTime + orderObj.getPrepareTime();
+                    long currentTime = FormatTime.getCurrentTimeInLong();
+                    long orderTime =  FormatDate.getTimeFromDateString(orderObj.getCreatedAt());
+                    long targetTime =  orderTime + (orderObj.getPrepareTime() * 60 *1000); // convert minute to millisecond
                     long remainingTime = targetTime - currentTime;
 
 
