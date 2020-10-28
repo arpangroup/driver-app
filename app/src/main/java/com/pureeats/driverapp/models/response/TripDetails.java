@@ -1,5 +1,10 @@
 package com.pureeats.driverapp.models.response;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+
+import com.pureeats.driverapp.models.Earning;
+
 import lombok.Data;
 
 @Data
@@ -17,4 +22,20 @@ public class TripDetails {
     private String cash_on_hold;
     private String route;
     private String meta;
+
+
+
+    public static DiffUtil.ItemCallback<TripDetails> itemCallback = new DiffUtil.ItemCallback<TripDetails>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull TripDetails oldItem, @NonNull TripDetails newItem) {
+            //return oldItem.getId() == newItem.getId() && oldItem.getRestaurant().getDeliveryTime().equals(newItem.getRestaurant().getDeliveryTime());
+            //return oldItem.getId() == newItem.getId() ;
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull TripDetails oldItem, @NonNull TripDetails newItem) {
+            return oldItem.equals(newItem);
+        }
+    };
 }
