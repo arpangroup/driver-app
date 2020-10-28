@@ -26,6 +26,10 @@
                     android:id="@+id/earningHistoryFragment"
                     android:icon="@drawable/ic_baseline_money_24"
                     android:title="Earnings" />
+                <item
+                    android:id="@+id/tripSummaryFragment"
+                    android:icon="@drawable/ic_baseline_directions_bike_24"
+                    android:title="Trip Summary" />
 
                 <item
                     android:id="@+id/loginHistoryFragment"

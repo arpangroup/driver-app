@@ -74,10 +74,10 @@ public interface ApiInterface {
     Call<com.pureeats.driverapp.models.response.ApiResponse<Dashboard>> getDashboard(@Body RequestToken requestToken);
 
 
-    @POST("/api/delivery/get-trip-details/{order_id}")
+    @GET("/api/delivery/get-trip-details/{order_id}")
     Call<com.pureeats.driverapp.models.response.ApiResponse<TripDetails>> getTripDetails(@Path("order_id") String orderId);
 
-    @POST("/api/delivery/get-trip-summary/{rider_id}")
+    @GET("/api/delivery/get-trip-summary/{rider_id}")
     Call<com.pureeats.driverapp.models.response.ApiResponse<List<TripDetails>>> getTripSummary(@Path("rider_id") String riderId);
 
 

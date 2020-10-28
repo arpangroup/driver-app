@@ -55,4 +55,9 @@
         android:name="com.pureeats.driverapp.views.EarningHistoryFragment"
         android:label="Earnings"
         tools:layout="@layout/fragment_earning_history" />
+    <fragment
+        android:id="@+id/tripSummaryFragment"
+        android:name="com.pureeats.driverapp.views.order.TripSummaryFragment"
+        android:label="Trip Summary"
+        tools:layout="@layout/fragment_trip_summary" />
 </navigation>

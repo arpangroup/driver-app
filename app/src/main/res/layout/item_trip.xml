@@ -5,8 +5,8 @@
     <data>
         <import type="android.view.View"/>
         <variable
-            name="earning"
-            type="com.pureeats.driverapp.models.Earning" />
+            name="tripDetails"
+            type="com.pureeats.driverapp.models.response.TripDetails" />
     </data>
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,21 +43,20 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layoutDirection="ltr"
                             android:textColor="@color/blue"
                             android:textSize="14sp"
                             android:textStyle="bold"
-                            android:text="3.59 Km"
-                            android:hint="₹340"/>
+                            android:text="@{tripDetails.route.distance_text}"
+                            android:hint="3.59 km"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAlignment="textStart"
                             android:layout_marginTop="4dp"
-                            android:maxLines="2"
-                            android:textStyle="bold"
-                            android:textSize="14sp"
-                            android:text="@{earning.createdAt}"
+                            android:maxLines="1"
+                            android:textStyle="normal"
+                            android:textSize="12sp"
+                            android:text="@{tripDetails.created_at}"
                             android:hint="16-Oct-2020" />
 
                     </LinearLayout>
@@ -70,7 +69,8 @@
                         android:layout_gravity="center"
                         android:layout_marginRight="16dp"
                         android:textColor="@color/black"
-                        android:text="South Indian Super Hot Wow Momo" />
+                        android:text="@{tripDetails.meta.get(`restaurant_name`)}"
+                        android:hint="South Indian Super Hot Wow Momo" />
 
                 </LinearLayout>
 
@@ -90,7 +90,7 @@
                         android:maxLines="2"
                         android:textStyle="bold"
                         android:textSize="14sp"
-                        android:text="Cash collected"/>
+                        android:text="Cash collected:"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -101,7 +101,31 @@
                         android:maxLines="2"
                         android:textStyle="bold"
                         android:textSize="14sp"
-                        android:text="₹100"/>
+                        android:text="@{`₹` + tripDetails.cash_collected_from_customer}"
+                        android:hint="₹100"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="8dp"
+                        android:layoutDirection="ltr"
+                        android:textAlignment="textStart"
+                        android:layout_marginTop="4dp"
+                        android:maxLines="2"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:text="Cash Hold:"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="16dp"
+                        android:layoutDirection="ltr"
+                        android:textAlignment="textStart"
+                        android:layout_marginTop="4dp"
+                        android:maxLines="2"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:text="@{`₹` + tripDetails.cash_on_hold}"
+                        android:hint="₹100"/>
                 </LinearLayout>
             </LinearLayout>
 

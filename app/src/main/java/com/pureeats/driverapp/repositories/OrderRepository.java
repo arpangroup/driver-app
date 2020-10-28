@@ -460,12 +460,14 @@ public class OrderRepository {
             @Override
             public void onResponse(Call<ApiResponse<List<TripDetails>>> call, Response<ApiResponse<List<TripDetails>>> response) {
                 isLoading.setValue(false);
+                Log.d(TAG, "RESPONSE: " + response.body().getData());
                 mutableResponse.setValue(response.body());
             }
 
             @Override
             public void onFailure(Call<ApiResponse<List<TripDetails>>> call, Throwable t) {
                 isLoading.setValue(false);
+                Log.d(TAG, "FAIL");
                 mutableResponse.setValue(new ApiResponse<>(false, "FAIL", new ArrayList<>()));
             }
         });
