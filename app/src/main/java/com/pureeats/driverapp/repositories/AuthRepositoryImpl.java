@@ -13,6 +13,7 @@ import com.pureeats.driverapp.models.ApiResponse;
 import com.pureeats.driverapp.models.LoginResponse;
 import com.pureeats.driverapp.models.User;
 import com.pureeats.driverapp.models.request.LoginRequest;
+import com.pureeats.driverapp.models.request.RequestToken;
 import com.pureeats.driverapp.sharedprefs.UserSession;
 import com.google.gson.Gson;
 
@@ -114,6 +115,11 @@ public class AuthRepositoryImpl implements AuthRepository {
         return isPushNotificationAvailable;
     }
 
+    @Override
+    public LiveData<ApiResponse> logoutSession(RequestToken requestToken) {
+        return logoutSessionApi(requestToken);
+    }
+
 
     private LiveData<ApiResponse> sendOtp(String phone){
         isLoading.setValue(true);
@@ -172,5 +178,29 @@ public class AuthRepositoryImpl implements AuthRepository {
             }
         });
         return loginResponse;
+    }
+
+    private LiveData<ApiResponse> logoutSessionApi(RequestToken requestToken){
+        isLoading.setValue(true);
+        MutableLiveData<ApiResponse> mutableResponse  = new MutableLiveData<>();
+        Log.d(TAG, "Inside logoutSessionApi()......................");
+        Log.d(TAG, "REQUEST: "+ new Gson().toJson(requestToken));
+        ApiInterface apiInterface = ApiService.getApiService();
+        apiInterface.logoutSession(requestToken).enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                ApiResponse apiResponse = response.body();
+                Log.d(TAG, "RESPONSE: " + apiResponse.getMessage());
+                mutableResponse.setValue(apiResponse);
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Log.d(TAG, "FAIL");
+                ApiResponse apiResponse = new ApiResponse(false, "FAIL");
+                mutableResponse.setValue(apiResponse);
+            }
+        });
+        return mutableResponse;
     }
 }

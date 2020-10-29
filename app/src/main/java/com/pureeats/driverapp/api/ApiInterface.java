@@ -33,6 +33,9 @@ public interface ApiInterface {
     @POST("/api/delivery/login")
     Call<LoginResponse<User>> login(@Body LoginRequest loginRequest);
 
+    @POST("/api/delivery/logout")
+    Call<ApiResponse> logoutSession(@Body RequestToken requestToken);
+
     @POST("/api/delivery/get-delivery-orders")
     Call<DeliveryOrderResponse> getAllDeliveryOrders(@Body RequestToken requestToken);
 

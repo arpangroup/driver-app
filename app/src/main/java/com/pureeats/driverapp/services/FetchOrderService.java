@@ -255,7 +255,7 @@ public class FetchOrderService extends LifecycleService {
     private void getDeliveryOrders(RequestToken requestToken){
         isLoading = true;
         ApiInterface apiInterface = ApiService.getApiService();
-        Log.d(TAG, "FETCHING NEW ORDER........");
+        //Log.d(TAG, "FETCHING NEW ORDER........");
         apiInterface.getAllDeliveryOrders(requestToken).enqueue(new Callback<DeliveryOrderResponse>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -267,9 +267,9 @@ public class FetchOrderService extends LifecycleService {
                         List<Order> newOrders = responseObj.getNewOrders();
                         List<Order> acceptedOrders = responseObj.getAcceptedOrders();
                         if(newOrders .size() > 0){
-                            Log.d(TAG, "##########################NEW_ORDER_ARRIVED#########################################");
+                            //Log.d(TAG, "##########################NEW_ORDER_ARRIVED#########################################");
                             newOrders.forEach(order -> System.out.println("ORDER: "+ order.getId() + ", "+order.getUniqueOrderId()));
-                            Log.d(TAG,"#####################################################################################");
+                            //Log.d(TAG,"#####################################################################################");
                             if(!ProcessOrderActivityDialog.isActivityOpen){
                                 // Check whether the order is already processed or not
                                 boolean isOrderAlreadyProcessed = processedOrders.stream().anyMatch(processedOrder -> newOrders.get(0).getId() == processedOrder.getId());
@@ -361,14 +361,14 @@ public class FetchOrderService extends LifecycleService {
     private void saveUserGpsLocation(DeliveryGuySetGpsRequest gpsRequest){
         isLoading = true;
         ApiInterface apiInterface = ApiService.getApiService();
-        Log.d(TAG, "Saving user location.........");
-        Log.d(TAG, "REQUEST: "+ new Gson().toJson(gpsRequest));
+        //Log.d(TAG, "Saving user location.........");
+        //Log.d(TAG, "REQUEST: "+ new Gson().toJson(gpsRequest));
         apiInterface.setDeliveryGuyGpsLocation(gpsRequest).enqueue(new Callback<Boolean>() {
             @Override
             public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                 isLoading = false;
                 if(response.isSuccessful()){
-                    Log.d(TAG, "RESPONSE: Success");
+                    //Log.d(TAG, "RESPONSE: Success");
                 }
             }
 

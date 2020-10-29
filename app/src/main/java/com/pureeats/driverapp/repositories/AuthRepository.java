@@ -7,6 +7,7 @@ import com.pureeats.driverapp.models.Address;
 import com.pureeats.driverapp.models.ApiResponse;
 import com.pureeats.driverapp.models.LoginResponse;
 import com.pureeats.driverapp.models.User;
+import com.pureeats.driverapp.models.request.RequestToken;
 
 public interface AuthRepository {
     public LiveData<Boolean> getIsLoading();
@@ -19,4 +20,6 @@ public interface AuthRepository {
     public void setPushNotificationToken(@NonNull String token);
     public String getPushNotificationToken();
     public LiveData<Boolean> isPushNotificationTokenAvailable();
+
+    public  LiveData<ApiResponse> logoutSession(RequestToken requestToken);
 }

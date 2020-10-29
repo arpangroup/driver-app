@@ -31,10 +31,12 @@ import com.pureeats.driverapp.commons.Constants;
 import com.pureeats.driverapp.commons.UpdateHelper;
 import com.pureeats.driverapp.databinding.ActivityMainBinding;
 import com.pureeats.driverapp.models.User;
+import com.pureeats.driverapp.models.request.RequestToken;
 import com.pureeats.driverapp.services.FetchOrderService;
 import com.pureeats.driverapp.sharedprefs.ServiceTracker;
 import com.pureeats.driverapp.sharedprefs.UserSession;
 import com.pureeats.driverapp.utils.GpsUtils;
+import com.pureeats.driverapp.viewmodels.AuthenticationViewModel;
 import com.pureeats.driverapp.viewmodels.LocationViewModel;
 import com.pureeats.driverapp.views.auth.AuthActivity;
 import com.google.android.material.navigation.NavigationView;
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements UpdateHelper.OnUp
 
     boolean isGpsEnabled = false;
     LocationViewModel locationViewModel;
+    AuthenticationViewModel authViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements UpdateHelper.OnUp
         FirebaseMessaging.getInstance().setAutoInitEnabled(false);
 
         locationViewModel = new ViewModelProvider(this).get(LocationViewModel.class);
+        authViewModel = new ViewModelProvider(this).get(AuthenticationViewModel.class);
+        authViewModel.init();
         //getCurrentLocation();
 
         initClicks();
@@ -151,6 +156,8 @@ public class MainActivity extends AppCompatActivity implements UpdateHelper.OnUp
                     actionOnService(Actions.STOP);
                     mBinding.drawerLayout.close();
                 }
+                RequestToken requestToken = new RequestToken(this);
+                authViewModel.logoutSession(requestToken);
             }
         });
 

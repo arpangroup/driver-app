@@ -9,6 +9,7 @@ import com.pureeats.driverapp.models.Address;
 import com.pureeats.driverapp.models.ApiResponse;
 import com.pureeats.driverapp.models.LoginResponse;
 import com.pureeats.driverapp.models.User;
+import com.pureeats.driverapp.models.request.RequestToken;
 import com.pureeats.driverapp.repositories.AuthRepository;
 import com.pureeats.driverapp.repositories.AuthRepositoryImpl;
 
@@ -81,5 +82,9 @@ public class AuthenticationViewModel extends ViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
+    }
+
+    public LiveData<ApiResponse> logoutSession(RequestToken requestToken){
+        return authRepository.logoutSession(requestToken);
     }
 }
