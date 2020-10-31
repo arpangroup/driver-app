@@ -2,6 +2,7 @@ package com.pureeats.driverapp.commons;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.net.Uri;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.pureeats.driverapp.BuildConfig;
 import com.pureeats.driverapp.models.Location;
 import com.pureeats.driverapp.models.Restaurant;
 import com.google.android.gms.maps.model.LatLng;
@@ -56,5 +58,28 @@ public class CommonUtils {
             e.printStackTrace();
         }
         return latLng;
+    }
+
+    public static void shareApp(Context context){
+        try{
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "My application name");
+            String shareMessage= "\nLet me recommend you this application\n\n";
+            shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID +"\n\n";
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+            context.startActivity(Intent.createChooser(shareIntent, "choose one"));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public static void rateApp(Context context){
+        try{
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse("market://details?id=" + context.getPackageName()));
+            context.startActivity(i);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
