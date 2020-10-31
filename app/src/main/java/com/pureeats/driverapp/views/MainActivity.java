@@ -21,12 +21,16 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.commons.Actions;
+import com.pureeats.driverapp.commons.CommonUtils;
 import com.pureeats.driverapp.commons.Constants;
 import com.pureeats.driverapp.commons.UpdateHelper;
 import com.pureeats.driverapp.databinding.ActivityMainBinding;
@@ -123,6 +127,20 @@ public class MainActivity extends AppCompatActivity implements UpdateHelper.OnUp
         NavigationView navigationView = (NavigationView) mBinding.navView;
         View headerView = navigationView.getHeaderView(0);
 
+        /*====================================================================================*/
+        Menu menuNav = navigationView.getMenu();
+        MenuItem shareMenu = menuNav.findItem(R.id.nav_share);
+        MenuItem rateMenu = menuNav.findItem(R.id.nav_rate);
+        shareMenu.setOnMenuItemClickListener(menuItem -> {
+            CommonUtils.shareApp(this);
+            return false;
+        });
+        rateMenu.setOnMenuItemClickListener(menuItem -> {
+            CommonUtils.rateApp(this);
+            return false;
+        });
+        /*====================================================================================*/
+
         ImageView profileImage = headerView.findViewById(R.id.imgProfile);
         TextView profileName = headerView.findViewById(R.id.profile_name);
         SwitchCompat switchCompat = headerView.findViewById(R.id.dutyStatusToggleSwitch);
@@ -165,6 +183,8 @@ public class MainActivity extends AppCompatActivity implements UpdateHelper.OnUp
             mNavController.navigate(R.id.dashboardFragment);
             mBinding.drawerLayout.close();
         });
+
+
 
     }
 
