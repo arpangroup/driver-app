@@ -216,11 +216,37 @@ public class AcceptOrderFragment extends Fragment{
     }
 
     private void startTimer(){
+        //https://stackoverflow.com/questions/52569581/countdown-timer-with-a-progressbar
+        /**
+         * You need to calculate the percentage factor based on total number of seconds to be countdown.
+         * For example in your case 100/START_TIME_IN_MILLIS/1000 = 5; after all need to multiply this for
+         * each tick count.
+         *
+         *         tick_count_in_second            percentage_value (5 * second)
+         *               1                              5
+         *               2                              10
+         *               3                              15
+         *             .....                            ....
+         *             .....                            ....
+         *             20                               100
+         *
+         */
+
+        int numberOfSeconds = (int) ORDER_ACCEPT_TIME / 1000; // Ex : 20000/1000 = 20
+        float factor = (float) (100.0f / numberOfSeconds); // 100/20 = 5, for each second multiply this, for sec 1 progressPercentage = 1x5 =5, for sec 5 progressPercentage = 5x5 = 25, for sec 20 progressPercentage = 20x5 =100
+
+        Log.d("PROGRESS_PERCENTAGE: ", "NUMBER_OF_SECONDS: " + numberOfSeconds);
+        Log.d("PROGRESS_PERCENTAGE: ", "FACTOR: " + factor);
         new CountDownTimer(mTimeLeftInMills, 1000){
             @Override
             public void onTick(long millisUntilFinished) {
                 mTimeLeftInMills = millisUntilFinished;
-                updateCancelTimer();
+                updateCountDownText();
+
+                int secondsRemaining = (int) (millisUntilFinished / 1000);
+                int progressPercentage = (int) ((numberOfSeconds-secondsRemaining) * factor) ;
+                Log.d("PROGRESS_PERCENTAGE: ", progressPercentage +"");
+                mBinding.progressBar.setProgress(progressPercentage);
             }
 
             @Override
@@ -230,15 +256,21 @@ public class AcceptOrderFragment extends Fragment{
 
                 mBinding.progressBar.setProgress(100);
                 mBinding.txtProgress.setText("00:00");
+                try{
+                    requireActivity().finish();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         }.start();
     }
-    private void updateCancelTimer(){
+    private void updateCountDownText(){// this function is calling on each 1 second
         int minutes = (int) (mTimeLeftInMills / 1000) /60;// divided by 60 seconds
         int seconds = (int) (mTimeLeftInMills / 1000) % 60;
 
         // 100% =====progress complete
 
+        /*
         counter++;
         try{
             int val = (int) (counter * 100 / (mTimeLeftInMills/1000));
@@ -246,6 +278,7 @@ public class AcceptOrderFragment extends Fragment{
         }catch (Exception e){
             e.printStackTrace();
         }
+         */
 
         String timeLeftFormatted = String.format(Locale.getDefault(), "%01d:%02d", minutes, seconds);
         mBinding.txtProgress.setText(timeLeftFormatted);

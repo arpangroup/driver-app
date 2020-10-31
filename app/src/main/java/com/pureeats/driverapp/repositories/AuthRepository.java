@@ -8,6 +8,9 @@ import com.pureeats.driverapp.models.ApiResponse;
 import com.pureeats.driverapp.models.LoginResponse;
 import com.pureeats.driverapp.models.User;
 import com.pureeats.driverapp.models.request.RequestToken;
+import com.pureeats.driverapp.models.response.LoginHistory;
+
+import java.util.List;
 
 public interface AuthRepository {
     public LiveData<Boolean> getIsLoading();
@@ -22,4 +25,5 @@ public interface AuthRepository {
     public LiveData<Boolean> isPushNotificationTokenAvailable();
 
     public  LiveData<ApiResponse> logoutSession(RequestToken requestToken);
+    public  LiveData<List<LoginHistory>> getLoginHistory(RequestToken requestToken);
 }

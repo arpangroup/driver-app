@@ -14,8 +14,12 @@ import com.pureeats.driverapp.models.LoginResponse;
 import com.pureeats.driverapp.models.User;
 import com.pureeats.driverapp.models.request.LoginRequest;
 import com.pureeats.driverapp.models.request.RequestToken;
+import com.pureeats.driverapp.models.response.LoginHistory;
 import com.pureeats.driverapp.sharedprefs.UserSession;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -120,6 +124,11 @@ public class AuthRepositoryImpl implements AuthRepository {
         return logoutSessionApi(requestToken);
     }
 
+    @Override
+    public LiveData<List<LoginHistory>> getLoginHistory(RequestToken requestToken) {
+        return getLoginHistoryApi(requestToken);
+    }
+
 
     private LiveData<ApiResponse> sendOtp(String phone){
         isLoading.setValue(true);
@@ -203,4 +212,31 @@ public class AuthRepositoryImpl implements AuthRepository {
         });
         return mutableResponse;
     }
+
+
+    private LiveData<List<LoginHistory>> getLoginHistoryApi(RequestToken requestToken){
+        isLoading.setValue(true);
+        MutableLiveData<List<LoginHistory>> mutableResponse  = new MutableLiveData<>(new ArrayList<>());
+        Log.d(TAG, "Inside getLoginHistoryApi()......................");
+        String riderId = requestToken.getUserId()+"";
+        Log.d(TAG, "REQUEST: rider_id: "+ riderId);
+        ApiInterface apiInterface = ApiService.getApiService();
+        apiInterface.loginHistory(riderId).enqueue(new Callback<com.pureeats.driverapp.models.response.ApiResponse<List<LoginHistory>>>() {
+            @Override
+            public void onResponse(Call<com.pureeats.driverapp.models.response.ApiResponse<List<LoginHistory>>> call, Response<com.pureeats.driverapp.models.response.ApiResponse<List<LoginHistory>>> response) {
+                isLoading.setValue(false);
+                if(response.isSuccessful()){
+                    mutableResponse.setValue(response.body().getData());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<com.pureeats.driverapp.models.response.ApiResponse<List<LoginHistory>>> call, Throwable t) {
+                isLoading.setValue(false);
+                Log.d(TAG, "FAIL");
+            }
+        });
+        return mutableResponse;
+    }
+
 }

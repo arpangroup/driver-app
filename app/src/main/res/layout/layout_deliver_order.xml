@@ -168,7 +168,7 @@
                                 android:textColor="@color/black"
                                 android:textStyle="bold"
                                 android:textSize="24sp"
-                                android:text="@{order.paymentMode == `COD` ? `₹ `+order.total : `prepaid` }"
+                                android:text="@{order.paymentMode.equals(`COD`) ? `₹ `+order.total : `prepaid` }"
                                 android:hint="₹ 377" />
 
                             <TextView

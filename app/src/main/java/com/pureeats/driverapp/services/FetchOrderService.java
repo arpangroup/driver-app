@@ -87,8 +87,9 @@ public class FetchOrderService extends LifecycleService {
         mutableLocations.postValue(locationList);
 
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        DeliveryGuySetGpsRequest deliveryGuySetGpsRequest = new DeliveryGuySetGpsRequest(requestToken, latLng);
-        new Handler().postDelayed(() -> saveUserGpsLocation(deliveryGuySetGpsRequest), 15 * 1000);
+        DeliveryGuySetGpsRequest deliveryGuySetGpsRequest = new DeliveryGuySetGpsRequest(requestToken, location);
+        //new Handler().postDelayed(() -> saveUserGpsLocation(deliveryGuySetGpsRequest), 15 * 1000);
+        saveUserGpsLocation(deliveryGuySetGpsRequest);
 
     }
 
@@ -165,14 +166,19 @@ public class FetchOrderService extends LifecycleService {
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
                 //Log.d(TAG, "onLocationResult:  " + locationResult.getLastLocation());
-                setLocation(locationResult.getLastLocation());
                 if(locationResult == null){
                     //Log.d(TAG, "onLocationResult: location error");
                     return;
-                }
-                List<Location> locations = locationResult.getLocations();
-                for(Location location : locationResult.getLocations()){
-                    //Log.d(TAG, "onLocationResult: " + location.toString());
+                }else{
+                    try {
+                        setLocation(locationResult.getLastLocation());
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+//                List<Location> locations = locationResult.getLocations();
+//                for(Location location : locationResult.getLocations()){
+//                    Log.d(TAG, "onLocationResult: " + location.toString());
+//                }
                 }
             }
         };
@@ -343,8 +349,8 @@ public class FetchOrderService extends LifecycleService {
 
     private void getLocationUpdates() {
         LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setInterval(4000);
-        locationRequest.setFastestInterval(2000);
+        locationRequest.setInterval(1000 * 60); // 60  second
+        locationRequest.setFastestInterval(1000 * 30); // 30 second
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setMaxWaitTime(15 * 1000);
 

@@ -12,6 +12,7 @@ import com.pureeats.driverapp.models.request.RequestToken;
 import com.pureeats.driverapp.models.request.ProcessOrderRequest;
 import com.pureeats.driverapp.models.response.Dashboard;
 import com.pureeats.driverapp.models.response.DeliveryOrderResponse;
+import com.pureeats.driverapp.models.response.LoginHistory;
 import com.pureeats.driverapp.models.response.TripDetails;
 import com.pureeats.driverapp.models.response.UpdateDeliveryUserInfoResponse;
 
@@ -82,6 +83,10 @@ public interface ApiInterface {
 
     @GET("/api/delivery/get-trip-summary/{rider_id}")
     Call<com.pureeats.driverapp.models.response.ApiResponse<List<TripDetails>>> getTripSummary(@Path("rider_id") String riderId);
+
+
+    @GET("/api/delivery/get-login-history/{user_id}")
+    Call<com.pureeats.driverapp.models.response.ApiResponse<List<LoginHistory>>> loginHistory(@Path("user_id") String riderId);
 
 
 

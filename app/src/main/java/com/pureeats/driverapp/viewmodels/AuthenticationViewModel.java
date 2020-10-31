@@ -10,8 +10,11 @@ import com.pureeats.driverapp.models.ApiResponse;
 import com.pureeats.driverapp.models.LoginResponse;
 import com.pureeats.driverapp.models.User;
 import com.pureeats.driverapp.models.request.RequestToken;
+import com.pureeats.driverapp.models.response.LoginHistory;
 import com.pureeats.driverapp.repositories.AuthRepository;
 import com.pureeats.driverapp.repositories.AuthRepositoryImpl;
+
+import java.util.List;
 
 public class AuthenticationViewModel extends ViewModel {
     private final String TAG = this.getClass().getSimpleName();
@@ -86,5 +89,9 @@ public class AuthenticationViewModel extends ViewModel {
 
     public LiveData<ApiResponse> logoutSession(RequestToken requestToken){
         return authRepository.logoutSession(requestToken);
+    }
+
+    public LiveData<List<LoginHistory>> getLoginHistory(RequestToken requestToken){
+        return authRepository.getLoginHistory(requestToken);
     }
 }

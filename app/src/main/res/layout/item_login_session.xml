@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="loginHistory"
+            type="com.pureeats.driverapp.models.response.LoginHistory" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/logout_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textAlignment="textEnd"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@{loginHistory.logout_at == null ? @color/green : @color/silver}"
+                    android:text="@{loginHistory.logout_at == null ? `ACTIVE` : loginHistory.logout_at}"
+                    android:hint="17-aug, 12:00pm" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="16dp"
+                    android:textColor="@color/silver"
+                    android:text="@{loginHistory.login_at}"
+                    android:hint="17-aug, 12:00pm" />
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:alpha="0.5"
+            android:background="#4DC5C5C5" />
+
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="12dp"-->
+<!--            android:background="@color/lightsilver" />-->
+    </LinearLayout>
+</layout>
