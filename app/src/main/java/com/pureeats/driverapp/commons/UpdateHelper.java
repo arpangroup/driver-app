@@ -41,7 +41,7 @@ public class UpdateHelper {
         // Default value:
         Map<String, Object> defaultValue = new HashMap<>();
         defaultValue.put(UpdateHelper.KEY_UPDATE_ENABLE, false);
-        defaultValue.put(UpdateHelper.KEY_UPDATE_VERSION, "1.1");
+        defaultValue.put(UpdateHelper.KEY_UPDATE_VERSION, "1.3");
         defaultValue.put(UpdateHelper.KEY_UPDATE_URL, "https://play.google.com/store/apps/details?id=com.arpangroup.pureeats");
 
         remoteConfig.setDefaultsAsync(defaultValue);

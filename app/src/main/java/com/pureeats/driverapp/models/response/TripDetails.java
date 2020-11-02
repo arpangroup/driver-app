@@ -22,8 +22,8 @@ public class TripDetails {
     private String restaurant_earning;
     private String cash_collected_from_customer;
     private String cash_on_hold;
-    private Route route;
-    private Map<String, String> meta;
+    private String route;
+    private String meta;
     private String created_at;
     private String update_at;
 

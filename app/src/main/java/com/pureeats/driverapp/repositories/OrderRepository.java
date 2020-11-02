@@ -467,7 +467,7 @@ public class OrderRepository {
             @Override
             public void onFailure(Call<ApiResponse<List<TripDetails>>> call, Throwable t) {
                 isLoading.setValue(false);
-                Log.d(TAG, "FAIL");
+                Log.d(TAG, "TRIP_SUMMARY_RESPONSE: FAIL");
                 mutableResponse.setValue(new ApiResponse<>(false, "FAIL", new ArrayList<>()));
             }
         });

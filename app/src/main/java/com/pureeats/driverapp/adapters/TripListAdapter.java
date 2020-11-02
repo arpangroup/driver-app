@@ -8,10 +8,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.pureeats.driverapp.databinding.ItemTripBinding;
 import com.pureeats.driverapp.models.Earning;
 import com.pureeats.driverapp.models.Order;
+import com.pureeats.driverapp.models.response.Route;
 import com.pureeats.driverapp.models.response.TripDetails;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class TripListAdapter extends ListAdapter<TripDetails, TripListAdapter.OrderViewHolder> {
@@ -33,7 +38,14 @@ public class TripListAdapter extends ListAdapter<TripDetails, TripListAdapter.Or
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         TripDetails tripDetails = getItem(position);
+        Route route = new Gson().fromJson(tripDetails.getRoute(), Route.class);
+        Map<String, String> meta = new Gson().fromJson(tripDetails.getMeta(), Map.class);
+
         holder.itemBinding.setTripDetails(tripDetails);
+        holder.itemBinding.setTripDetails(tripDetails);
+        holder.itemBinding.setRoute(route);
+        holder.itemBinding.setOrderId(meta.get("unique_order_id"));
+        holder.itemBinding.setRestaurantName(meta.get("restaurant_name"));
         holder.itemBinding.executePendingBindings();
 
 

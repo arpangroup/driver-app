@@ -7,6 +7,15 @@
         <variable
             name="tripDetails"
             type="com.pureeats.driverapp.models.response.TripDetails" />
+        <variable
+            name="route"
+            type="com.pureeats.driverapp.models.response.Route" />
+        <variable
+            name="restaurantName"
+            type="String" />
+        <variable
+            name="orderId"
+            type="String" />
     </data>
     <LinearLayout
         android:layout_width="match_parent"
@@ -46,7 +55,7 @@
                             android:textColor="@color/blue"
                             android:textSize="14sp"
                             android:textStyle="bold"
-                            android:text="@{tripDetails.route.distance_text}"
+                            android:text="@{route.distance_text}"
                             android:hint="3.59 km"/>
                         <TextView
                             android:layout_width="wrap_content"
@@ -69,12 +78,23 @@
                         android:layout_gravity="center"
                         android:layout_marginRight="16dp"
                         android:textColor="@color/black"
-                        android:text="@{tripDetails.meta.get(`restaurant_name`)}"
+                        android:text="@{restaurantName}"
                         android:hint="South Indian Super Hot Wow Momo" />
 
                 </LinearLayout>
 
-
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:layoutDirection="ltr"
+                    android:textAlignment="textStart"
+                    android:layout_marginTop="4dp"
+                    android:maxLines="2"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:text="@{`OrderId: ` + orderId}"
+                    android:hint="OrderId: 1234567"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
