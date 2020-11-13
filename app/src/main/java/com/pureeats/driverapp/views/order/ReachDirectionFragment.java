@@ -123,6 +123,7 @@ public class ReachDirectionFragment extends Fragment implements OnMapReadyCallba
         // Initialize NavController
         navController = Navigation.findNavController(rootView);
         initClicks();
+        mBinding.progressBar.setVisibility(View.VISIBLE);
 
         FetchOrderService.mutableLocations.observe(requireActivity(), locations -> {
             if(locations != null && locations.size()  > 0){
@@ -135,7 +136,8 @@ public class ReachDirectionFragment extends Fragment implements OnMapReadyCallba
                     setRiderLocationMarker(driverLocation);
                 }
 
-                if(mOrder == null && mMap != null){
+                if(mOrder == null && mMap != null){// Only for first time
+                    mBinding.progressBar.setVisibility(View.GONE);
                     mOrder = orderViewModel.getOnGoingOrder().getValue();
                     mBinding.setOrder(mOrder);
                     Log.d(TAG, "##############################################");

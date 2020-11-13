@@ -349,8 +349,8 @@ public class FetchOrderService extends LifecycleService {
 
     private void getLocationUpdates() {
         LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setInterval(1000 * 60); // 60  second
-        locationRequest.setFastestInterval(1000 * 30); // 30 second
+        locationRequest.setInterval(1000 * 4); // 60  second
+        locationRequest.setFastestInterval(1000 * 2); // 30 second
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setMaxWaitTime(15 * 1000);
 
