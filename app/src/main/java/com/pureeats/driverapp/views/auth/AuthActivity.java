@@ -9,12 +9,12 @@ import androidx.navigation.Navigation;
 
 import com.pureeats.driverapp.databinding.ActivityAuthBinding;
 import com.pureeats.driverapp.R;
-import com.pureeats.driverapp.viewmodels.AuthenticationViewModel;
+import com.pureeats.driverapp.viewmodels.AuthenticationViewModelOld;
 
 public class AuthActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getSimpleName();
     ActivityAuthBinding mBinding;
-    AuthenticationViewModel authenticationViewModel;
+    AuthenticationViewModelOld authenticationViewModel;
     NavController navController;
 
     @Override
@@ -22,7 +22,7 @@ public class AuthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = ActivityAuthBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
-        authenticationViewModel = new ViewModelProvider(this).get(AuthenticationViewModel.class);
+        authenticationViewModel = new ViewModelProvider(this).get(AuthenticationViewModelOld.class);
         authenticationViewModel.init();
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_container);

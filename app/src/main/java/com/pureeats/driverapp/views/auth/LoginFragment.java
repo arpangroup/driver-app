@@ -18,13 +18,13 @@ import androidx.navigation.Navigation;
 
 import com.pureeats.driverapp.databinding.FragmentLoginBinding;
 import com.pureeats.driverapp.R;
-import com.pureeats.driverapp.viewmodels.AuthenticationViewModel;
+import com.pureeats.driverapp.viewmodels.AuthenticationViewModelOld;
 
 public class LoginFragment extends Fragment {
     private final String TAG = this.getClass().getSimpleName();
 
     private FragmentLoginBinding mBinding;
-    AuthenticationViewModel authenticationViewModel;
+    AuthenticationViewModelOld authenticationViewModel;
     NavController navController;
 
 
@@ -39,7 +39,7 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(rootView, savedInstanceState);
 
         // Initialize ViewModel
-        authenticationViewModel = new ViewModelProvider(requireActivity()).get(AuthenticationViewModel.class);
+        authenticationViewModel = new ViewModelProvider(requireActivity()).get(AuthenticationViewModelOld.class);
         authenticationViewModel.init();
 
         // Initialize NavController

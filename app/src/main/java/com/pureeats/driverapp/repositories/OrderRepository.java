@@ -7,8 +7,8 @@ import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.pureeats.driverapp.api.ApiInterface;
-import com.pureeats.driverapp.api.ApiService;
+import com.pureeats.driverapp.network.Api;
+import com.pureeats.driverapp.network.ApiService;
 import com.pureeats.driverapp.commons.ErrorCode;
 import com.pureeats.driverapp.commons.OrderStatus;
 import com.pureeats.driverapp.models.Direction;
@@ -139,7 +139,7 @@ public class OrderRepository {
         MutableLiveData<ApiResponse> apiResponseMutableLiveData = new MutableLiveData<>();
         Log.d(TAG, "Inside acceptOrderApi()....");
         Log.d(TAG, "REQUEST: "+ new Gson().toJson(request));
-        ApiInterface apiInterface = ApiService.getApiService();
+        Api apiInterface = ApiService.getApiService();
         isLoading.setValue(true);
         apiInterface.acceptOrder(request).enqueue(new Callback<Order>() {
             @Override
@@ -171,7 +171,7 @@ public class OrderRepository {
         MutableLiveData<Boolean> apiResponseMutableLiveData = new MutableLiveData<>();
         Log.d(TAG, "Inside reachPickupLocationApi()....");
         Log.d(TAG, "REQUEST: "+ new Gson().toJson(request));
-        ApiInterface apiInterface = ApiService.getApiService();
+        Api apiInterface = ApiService.getApiService();
         isLoading.setValue(true);
         apiInterface.reachToPickUpLocation(request).enqueue(new Callback<Order>() {
             @Override
@@ -197,7 +197,7 @@ public class OrderRepository {
         MutableLiveData<ApiResponse> apiResponseMutableLiveData = new MutableLiveData<>();
         Log.d(TAG, "Inside pickUpOrderApi()....");
         Log.d(TAG, "REQUEST: "+ new Gson().toJson(request));
-        ApiInterface apiInterface = ApiService.getApiService();
+        Api apiInterface = ApiService.getApiService();
         isLoading.setValue(true);
         apiInterface.pickedUpOrder(request).enqueue(new Callback<Order>() {
             @Override
@@ -234,7 +234,7 @@ public class OrderRepository {
         MutableLiveData<Boolean> apiResponseMutableLiveData = new MutableLiveData<>();
         Log.d(TAG, "Inside reachDeliveryLocationApi()....");
         Log.d(TAG, "REQUEST: "+ new Gson().toJson(request));
-        ApiInterface apiInterface = ApiService.getApiService();
+        Api apiInterface = ApiService.getApiService();
         isLoading.setValue(true);
         apiInterface.reachToDeliverLocation(request).enqueue(new Callback<Order>() {
             @Override
@@ -268,7 +268,7 @@ public class OrderRepository {
         MutableLiveData<Boolean> apiResponseMutableLiveData = new MutableLiveData<>();
         Log.d(TAG, "Inside deliverOrderApi()....");
         Log.d(TAG, "REQUEST: "+ new Gson().toJson(request));
-        ApiInterface apiInterface = ApiService.getApiService();
+        Api apiInterface = ApiService.getApiService();
         isLoading.setValue(true);
         apiInterface.deliverOrder(request).enqueue(new Callback<Order>() {
             @Override
@@ -298,7 +298,7 @@ public class OrderRepository {
         MutableLiveData<DeliveryOrderResponse> mutableResponse = new MutableLiveData<>();
         Log.d(TAG, "Inside getDeliveryOrders()....");
         Log.d(TAG, "REQUEST: "+ new Gson().toJson(requestToken));
-        ApiInterface apiInterface = ApiService.getApiService();
+        Api apiInterface = ApiService.getApiService();
         isLoading.setValue(true);
         apiInterface.getAllDeliveryOrders(requestToken).enqueue(new Callback<DeliveryOrderResponse>() {
             @Override
@@ -328,7 +328,7 @@ public class OrderRepository {
         MutableLiveData<UpdateDeliveryUserInfoResponse> mutableResponse = new MutableLiveData<>();
         Log.d(TAG, "Inside updateUserInfo()....");
         Log.d(TAG, "REQUEST: "+ new Gson().toJson(requestToken));
-        ApiInterface apiInterface = ApiService.getApiService();
+        Api apiInterface = ApiService.getApiService();
         isLoading.setValue(true);
         apiInterface.updateUserInfo(requestToken).enqueue(new Callback<ApiResponse<UpdateDeliveryUserInfoResponse>>() {
             @Override
@@ -358,7 +358,7 @@ public class OrderRepository {
         MutableLiveData<Order> mutableResponse = new MutableLiveData<>();
         Log.d(TAG, "Inside getSingleDeliveryOrder()....");
         Log.d(TAG, "REQUEST: "+ new Gson().toJson(processOrderRequest));
-        ApiInterface apiInterface = ApiService.getApiService();
+        Api apiInterface = ApiService.getApiService();
         isLoading.setValue(true);
         apiInterface.getSingleDeliveryOrder(processOrderRequest).enqueue(new Callback<Order>() {
             @Override
@@ -385,7 +385,7 @@ public class OrderRepository {
         MutableLiveData<ApiResponse> mutableResponse = new MutableLiveData<>();
         Log.d(TAG, "Inside sendMessageApi()....");
         Log.d(TAG, "REQUEST: "+ new Gson().toJson(processOrderRequest));
-        ApiInterface apiInterface = ApiService.getApiService();
+        Api apiInterface = ApiService.getApiService();
         isLoading.setValue(true);
         apiInterface.sendMessage(processOrderRequest).enqueue(new Callback<com.pureeats.driverapp.models.ApiResponse>() {
             @Override
@@ -408,7 +408,7 @@ public class OrderRepository {
         MutableLiveData<ApiResponse> mutableResponse = new MutableLiveData<>();
         Log.d(TAG, "Inside getDashboardApi()....");
         Log.d(TAG, "REQUEST: "+ new Gson().toJson(requestToken));
-        ApiInterface apiInterface = ApiService.getApiService();
+        Api apiInterface = ApiService.getApiService();
         isLoading.setValue(true);
         apiInterface.getDashboard(requestToken).enqueue(new Callback<ApiResponse<Dashboard>>() {
             @Override
@@ -431,7 +431,7 @@ public class OrderRepository {
         MutableLiveData<ApiResponse<TripDetails>> mutableResponse = new MutableLiveData<>();
         Log.d(TAG, "Inside getTripDetails()....");
         Log.d(TAG, "REQUEST: orderId :"+ orderId);
-        ApiInterface apiInterface = ApiService.getApiService();
+        Api apiInterface = ApiService.getApiService();
         isLoading.setValue(true);
         apiInterface.getTripDetails(orderId).enqueue(new Callback<ApiResponse<TripDetails>>() {
             @Override
@@ -454,7 +454,7 @@ public class OrderRepository {
         String riderId  = requestToken.getDeliveryGuyId()+"";
         Log.d(TAG, "Inside getTripSummary()....");
         Log.d(TAG, "REQUEST: RiderId :"+ riderId);
-        ApiInterface apiInterface = ApiService.getApiService();
+        Api apiInterface = ApiService.getApiService();
         isLoading.setValue(true);
         apiInterface.getTripSummary(riderId).enqueue(new Callback<ApiResponse<List<TripDetails>>>() {
             @Override

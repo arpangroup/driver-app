@@ -1,4 +1,4 @@
-package com.pureeats.driverapp.api;
+package com.pureeats.driverapp.network;
 
 import com.pureeats.driverapp.models.ApiResponse;
 import com.pureeats.driverapp.models.User;
@@ -16,9 +16,8 @@ import com.pureeats.driverapp.models.response.LoginHistory;
 import com.pureeats.driverapp.models.response.TripDetails;
 import com.pureeats.driverapp.models.response.UpdateDeliveryUserInfoResponse;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -26,7 +25,14 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
-public interface ApiInterface {
+public interface Api {
+
+    @POST("/api/verify-phone")
+    Call<ApiResponse<Object>> verifyPhone(@Body HashMap<String, String> map);
+
+    @POST("/api/delivery/login")
+    Call<ApiResponse<User>> loginUsingOtp(@Body LoginRequest loginRequest);
+
 
     @GET("/api/send-login-otp/{phone}")
     Call<ApiResponse> sendLoginOtp(@Path("phone") String phone);

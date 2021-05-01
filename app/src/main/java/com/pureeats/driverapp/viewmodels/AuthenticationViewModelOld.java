@@ -11,15 +11,15 @@ import com.pureeats.driverapp.models.LoginResponse;
 import com.pureeats.driverapp.models.User;
 import com.pureeats.driverapp.models.request.RequestToken;
 import com.pureeats.driverapp.models.response.LoginHistory;
-import com.pureeats.driverapp.repositories.AuthRepository;
-import com.pureeats.driverapp.repositories.AuthRepositoryImpl;
+import com.pureeats.driverapp.repositories.AuthRepositoryOld;
+import com.pureeats.driverapp.repositories.AuthRepositoryImplOld;
 
 import java.util.List;
 
-public class AuthenticationViewModel extends ViewModel {
+public class AuthenticationViewModelOld extends ViewModel {
     private final String TAG = this.getClass().getSimpleName();
     public static int MAX_LOGIN_ATTEMPT_COUNT = 3;
-    private AuthRepository authRepository;
+    private AuthRepositoryOld authRepositoryOld;
     private MutableLiveData<Address> mCurrentAddress = new MutableLiveData<>();
     private MutableLiveData<Boolean> isLoggedIn = new MutableLiveData<>();
     private MutableLiveData<String> mutablePhoneNumber = new MutableLiveData<>();
@@ -33,29 +33,29 @@ public class AuthenticationViewModel extends ViewModel {
         //if(loggedIn) isLoggedIn.setValue(true);
         //else isLoggedIn.setValue(false);
 
-        authRepository = AuthRepositoryImpl.getInstance();
+        authRepositoryOld = AuthRepositoryImplOld.getInstance();
     }
 
 
     public LiveData<Boolean> getIsLoading(){
-        LiveData<Boolean> isLoading=authRepository.getIsLoading();
+        LiveData<Boolean> isLoading= authRepositoryOld.getIsLoading();
         return isLoading;
     }
     public LiveData<ApiResponse> sendLoginOtp(String phone){
-        return authRepository.sendLoginOtp(phone);
+        return authRepositoryOld.sendLoginOtp(phone);
     }
     public LiveData<LoginResponse<User>> loginByOtp(@NonNull String phone, @NonNull String otp){
         mutableLoginAttempt.setValue(++LOGIN_ATTEMPT);
-        String pushToken = authRepository.getPushNotificationToken();
-        return authRepository.loginByOtp(phone, otp, pushToken);
+        String pushToken = authRepositoryOld.getPushNotificationToken();
+        return authRepositoryOld.loginByOtp(phone, otp, pushToken);
     }
     public LiveData<LoginResponse<User>> loginByMobileAndPassword(@NonNull String phone, @NonNull String password, Address defaultAddress){
         mutableLoginAttempt.setValue(++LOGIN_ATTEMPT);
-        String pushToken = authRepository.getPushNotificationToken();
-        return authRepository.loginByMobileAndPassword(phone, password, defaultAddress, pushToken);
+        String pushToken = authRepositoryOld.getPushNotificationToken();
+        return authRepositoryOld.loginByMobileAndPassword(phone, password, defaultAddress, pushToken);
     }
     public LiveData<LoginResponse<User>> getLoginResponse(){
-        return authRepository.getLoginResponse();
+        return authRepositoryOld.getLoginResponse();
     }
     public void setPhoneNumber(String phoneNumber){
         if(mutablePhoneNumber == null) mutablePhoneNumber = new MutableLiveData<>();
@@ -65,17 +65,17 @@ public class AuthenticationViewModel extends ViewModel {
         return mutablePhoneNumber;
     }
     public LiveData<Boolean> isLoggedIn(){
-        return authRepository.isLoggedIn();
+        return authRepositoryOld.isLoggedIn();
     }
     public void logout(){
-        authRepository.logout();
+        authRepositoryOld.logout();
         onCleared();
     }
     public LiveData<Boolean> isFirebaseTokenAvailable(){
-        return authRepository.isPushNotificationTokenAvailable();
+        return authRepositoryOld.isPushNotificationTokenAvailable();
     }
     public void setFirebaseToken(String firebaseToken){
-        authRepository.setPushNotificationToken(firebaseToken);
+        authRepositoryOld.setPushNotificationToken(firebaseToken);
     }
     public LiveData<Integer> getLoginAttempt() {
         return mutableLoginAttempt;
@@ -88,10 +88,10 @@ public class AuthenticationViewModel extends ViewModel {
     }
 
     public LiveData<ApiResponse> logoutSession(RequestToken requestToken){
-        return authRepository.logoutSession(requestToken);
+        return authRepositoryOld.logoutSession(requestToken);
     }
 
     public LiveData<List<LoginHistory>> getLoginHistory(RequestToken requestToken){
-        return authRepository.getLoginHistory(requestToken);
+        return authRepositoryOld.getLoginHistory(requestToken);
     }
 }

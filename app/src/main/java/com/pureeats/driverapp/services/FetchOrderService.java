@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
-import android.os.Handler;
 import android.os.Looper;
 import android.os.PowerManager;
 import android.os.SystemClock;
@@ -26,8 +25,8 @@ import androidx.lifecycle.LifecycleService;
 import androidx.lifecycle.MutableLiveData;
 
 import com.pureeats.driverapp.R;
-import com.pureeats.driverapp.api.ApiInterface;
-import com.pureeats.driverapp.api.ApiService;
+import com.pureeats.driverapp.network.Api;
+import com.pureeats.driverapp.network.ApiService;
 import com.pureeats.driverapp.commons.Actions;
 import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.models.request.DeliveryGuySetGpsRequest;
@@ -43,7 +42,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -260,7 +258,7 @@ public class FetchOrderService extends LifecycleService {
 
     private void getDeliveryOrders(RequestToken requestToken){
         isLoading = true;
-        ApiInterface apiInterface = ApiService.getApiService();
+        Api apiInterface = ApiService.getApiService();
         //Log.d(TAG, "FETCHING NEW ORDER........");
         apiInterface.getAllDeliveryOrders(requestToken).enqueue(new Callback<DeliveryOrderResponse>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -366,7 +364,7 @@ public class FetchOrderService extends LifecycleService {
 
     private void saveUserGpsLocation(DeliveryGuySetGpsRequest gpsRequest){
         isLoading = true;
-        ApiInterface apiInterface = ApiService.getApiService();
+        Api apiInterface = ApiService.getApiService();
         //Log.d(TAG, "Saving user location.........");
         //Log.d(TAG, "REQUEST: "+ new Gson().toJson(gpsRequest));
         apiInterface.setDeliveryGuyGpsLocation(gpsRequest).enqueue(new Callback<Boolean>() {

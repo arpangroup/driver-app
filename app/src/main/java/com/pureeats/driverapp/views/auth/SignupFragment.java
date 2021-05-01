@@ -14,14 +14,14 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.pureeats.driverapp.databinding.FragmentSignupBinding;
-import com.pureeats.driverapp.viewmodels.AuthenticationViewModel;
+import com.pureeats.driverapp.viewmodels.AuthenticationViewModelOld;
 
 
 public class SignupFragment extends Fragment {
     private final String TAG = this.getClass().getSimpleName();
 
     private FragmentSignupBinding mBinding;
-    AuthenticationViewModel authenticationViewModel;
+    AuthenticationViewModelOld authenticationViewModel;
     NavController navController;
 
     @Override
@@ -50,7 +50,7 @@ public class SignupFragment extends Fragment {
         super.onViewCreated(rootView, savedInstanceState);
 
         // Initialize ViewModel
-        authenticationViewModel = new ViewModelProvider(requireActivity()).get(AuthenticationViewModel.class);
+        authenticationViewModel = new ViewModelProvider(requireActivity()).get(AuthenticationViewModelOld.class);
         authenticationViewModel.init();
 
         // Initialize NavController

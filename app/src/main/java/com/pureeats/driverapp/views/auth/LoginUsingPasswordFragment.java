@@ -22,14 +22,14 @@ import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.databinding.FragmentLoginUsingPasswordBinding;
 import com.pureeats.driverapp.models.Address;
 import com.pureeats.driverapp.models.request.RequestToken;
-import com.pureeats.driverapp.viewmodels.AuthenticationViewModel;
+import com.pureeats.driverapp.viewmodels.AuthenticationViewModelOld;
 import com.pureeats.driverapp.views.MainActivity;
 
 public class LoginUsingPasswordFragment extends Fragment {
     private final String TAG = this.getClass().getSimpleName();
 
     private FragmentLoginUsingPasswordBinding mBinding;
-    AuthenticationViewModel authenticationViewModel;
+    AuthenticationViewModelOld authenticationViewModel;
     NavController navController;
 
     @Override
@@ -56,7 +56,7 @@ public class LoginUsingPasswordFragment extends Fragment {
         super.onViewCreated(rootView, savedInstanceState);
 
         // Initialize ViewModel
-        authenticationViewModel = new ViewModelProvider(requireActivity()).get(AuthenticationViewModel.class);
+        authenticationViewModel = new ViewModelProvider(requireActivity()).get(AuthenticationViewModelOld.class);
         authenticationViewModel.init();
         initOTPInput();
         mBinding.layoutAlert.setVisibility(View.GONE);
@@ -81,7 +81,7 @@ public class LoginUsingPasswordFragment extends Fragment {
 
         authenticationViewModel.getLoginAttempt().observe(requireActivity(), attemptCount -> {
             Log.d(TAG, "ATTEMPT: "+attemptCount);
-            if(attemptCount > AuthenticationViewModel.MAX_LOGIN_ATTEMPT_COUNT){
+            if(attemptCount > AuthenticationViewModelOld.MAX_LOGIN_ATTEMPT_COUNT){
                 mBinding.txtAlertText.setText("Maximum attempt reached");
                 mBinding.layoutAlert.setVisibility(View.VISIBLE);
                 mBinding.et1.setEnabled(false);

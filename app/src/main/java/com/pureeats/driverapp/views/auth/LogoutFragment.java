@@ -24,14 +24,14 @@ import com.pureeats.driverapp.commons.Actions;
 import com.pureeats.driverapp.databinding.FragmentOfferBinding;
 import com.pureeats.driverapp.services.FetchOrderService;
 import com.pureeats.driverapp.sharedprefs.ServiceTracker;
-import com.pureeats.driverapp.viewmodels.AuthenticationViewModel;
+import com.pureeats.driverapp.viewmodels.AuthenticationViewModelOld;
 import com.pureeats.driverapp.viewmodels.LocationViewModel;
 
 public class LogoutFragment extends AppCompatDialogFragment {
     private final String TAG = this.getClass().getSimpleName();
 
     private FragmentOfferBinding mBinding;
-    AuthenticationViewModel authViewModel;
+    AuthenticationViewModelOld authViewModel;
     LocationViewModel locationViewModel;
     NavController navController;
     private Button btnYes, btnNo;
@@ -63,7 +63,7 @@ public class LogoutFragment extends AppCompatDialogFragment {
 
 
         // Initialize ViewModel
-        authViewModel = new ViewModelProvider(requireActivity()).get(AuthenticationViewModel.class);
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthenticationViewModelOld.class);
         authViewModel.init();
 
         btnYes = rootView.findViewById(R.id.btnYes);

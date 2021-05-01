@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.sharedprefs.UserSession;
-import com.pureeats.driverapp.viewmodels.AuthenticationViewModel;
+import com.pureeats.driverapp.viewmodels.AuthenticationViewModelOld;
 import com.pureeats.driverapp.views.auth.AuthActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
@@ -34,7 +34,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     Animation topAnimation;
     Animation bottomAnimation;
 
-    AuthenticationViewModel authenticationViewModel;
+    AuthenticationViewModelOld authenticationViewModel;
     private UserSession userSession;
     private static int SPLASH_TIME_OUT = 1000;
 
@@ -48,7 +48,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         userSession = new UserSession(this);
 
         // Initialize ViewModel
-        authenticationViewModel = new ViewModelProvider(this).get(AuthenticationViewModel.class);
+        authenticationViewModel = new ViewModelProvider(this).get(AuthenticationViewModelOld.class);
         authenticationViewModel.init();
 
         initializeWidgets();

@@ -18,7 +18,7 @@ import com.pureeats.driverapp.adapters.OrderListAdapter;
 import com.pureeats.driverapp.databinding.FragmentLoginHistoryBinding;
 import com.pureeats.driverapp.databinding.FragmentProfileBinding;
 import com.pureeats.driverapp.models.request.RequestToken;
-import com.pureeats.driverapp.viewmodels.AuthenticationViewModel;
+import com.pureeats.driverapp.viewmodels.AuthenticationViewModelOld;
 import com.pureeats.driverapp.viewmodels.LocationViewModel;
 import com.pureeats.driverapp.viewmodels.OrderViewModel;
 
@@ -26,7 +26,7 @@ public class LoginHistoryFragment extends Fragment {
     private final String TAG = this.getClass().getSimpleName();
 
     private FragmentLoginHistoryBinding mBinding;
-    AuthenticationViewModel authViewModel;
+    AuthenticationViewModelOld authViewModel;
     LocationViewModel locationViewModel;
     NavController navController;
     LoginHistoryAdapter loginHistoryAdapter;
@@ -42,7 +42,7 @@ public class LoginHistoryFragment extends Fragment {
         super.onViewCreated(rootView, savedInstanceState);
 
         // Initialize ViewModel
-        authViewModel = new ViewModelProvider(requireActivity()).get(AuthenticationViewModel.class);
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthenticationViewModelOld.class);
         authViewModel.init();
 
         // Initialize NavController

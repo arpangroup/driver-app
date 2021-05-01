@@ -22,7 +22,7 @@ import com.pureeats.driverapp.databinding.FragmentLoginUsingOTPBinding;
 import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.models.User;
 import com.pureeats.driverapp.sharedprefs.UserSession;
-import com.pureeats.driverapp.viewmodels.AuthenticationViewModel;
+import com.pureeats.driverapp.viewmodels.AuthenticationViewModelOld;
 import com.pureeats.driverapp.views.MainActivity;
 
 public class LoginUsingOTPFragment extends Fragment {
@@ -30,7 +30,7 @@ public class LoginUsingOTPFragment extends Fragment {
     private static long COUNT_DOWN_TIME = 1 * 60 *1000; // 1 Min;
 
     private FragmentLoginUsingOTPBinding mBinding;
-    AuthenticationViewModel authenticationViewModel;
+    AuthenticationViewModelOld authenticationViewModel;
     NavController navController;
 
     private long mTimeLeftInMills = COUNT_DOWN_TIME;
@@ -59,7 +59,7 @@ public class LoginUsingOTPFragment extends Fragment {
         super.onViewCreated(rootView, savedInstanceState);
 
         // Initialize ViewModel
-        authenticationViewModel = new ViewModelProvider(requireActivity()).get(AuthenticationViewModel.class);
+        authenticationViewModel = new ViewModelProvider(requireActivity()).get(AuthenticationViewModelOld.class);
         authenticationViewModel.init();
         mBinding.txtPhone.setText(authenticationViewModel.getPhoneNumber().getValue());
         initOTPInput();
