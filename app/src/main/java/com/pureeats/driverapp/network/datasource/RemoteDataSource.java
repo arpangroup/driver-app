@@ -1,7 +1,6 @@
 package com.pureeats.driverapp.network.datasource;
 
 import com.pureeats.driverapp.BuildConfig;
-import com.pureeats.driverapp.commons.Constants;
 import com.pureeats.driverapp.models.request.RequestToken;
 
 import java.util.concurrent.TimeUnit;
@@ -16,7 +15,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RemoteDataSource {
-    private static final String BASE_URL = Constants.WEBSITE_URL;
+    private static final String BASE_URL = "https://admin.pureeatstest.xyz/";
 
     private static HttpLoggingInterceptor getLogger(){
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();

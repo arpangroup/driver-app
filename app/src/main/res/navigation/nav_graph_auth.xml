@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/otpSentFragment"
-        android:name="com.pureeats.driverapp.views.auth.LoginFragment"
+        android:name="com.pureeats.driverapp.views.auth.AuthFragment"
         android:label="LoginFragment"
-        tools:layout="@layout/fragment_login" >
+        tools:layout="@layout/fragment_auth" >
         <action
             android:id="@+id/action_otpSentFragment_to_loginUsingPasswordFragment"
             app:destination="@id/loginUsingPasswordFragment"
@@ -19,7 +19,7 @@
             app:destination="@id/signupFragment" />
         <action
             android:id="@+id/action_otpSentFragment_to_loginUsingOTPFragment"
-            app:destination="@id/loginUsingOTPFragment" />
+            app:destination="@id/otpFragment" />
     </fragment>
     <fragment
         android:id="@+id/signupFragment"
@@ -33,14 +33,14 @@
         tools:layout="@layout/fragment_login_using_password" >
         <action
             android:id="@+id/action_loginUsingPasswordFragment_to_loginUsingOTPFragment"
-            app:destination="@id/loginUsingOTPFragment"
+            app:destination="@id/otpFragment"
             app:popUpTo="@id/loginUsingPasswordFragment" />
     </fragment>
     <fragment
-        android:id="@+id/loginUsingOTPFragment"
-        android:name="com.pureeats.driverapp.views.auth.LoginUsingOTPFragment"
+        android:id="@+id/otpFragment"
+        android:name="com.pureeats.driverapp.views.auth.OtpFragment"
         android:label="Login Using OTP"
-        tools:layout="@layout/fragment_login_using_o_t_p" >
+        tools:layout="@layout/fragment_otp" >
         <action
             android:id="@+id/action_loginUsingOTPFragment_to_loginUsingPasswordFragment"
             app:destination="@id/loginUsingPasswordFragment"

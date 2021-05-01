@@ -16,10 +16,16 @@ public class UserSession {
     public static final String RESTAURANT_DATA = "RESTAURANT_DATA";
     public static final String PUSH_TOKEN = "PUSH_TOKEN";
     public static final String ACCEPTING_ORDER = "ACCEPTING_ORDER";
+    private final String KEY_PUSH_TOKEN = "key_push_token";
     //public static final SharedPreferences sharedPref = mContext.getSharedPreferences("curito_prefs",0);
 
     public UserSession(Context context) {
         this.mContext = context;
+    }
+
+
+    private SharedPreferences getUserPreference(){
+        return mContext.getSharedPreferences(USER_SESSION,0);
     }
 
 
@@ -95,30 +101,46 @@ public class UserSession {
         }
     }
     public static User getUserData(Context context){
-        SharedPreferences sharedPref = context.getSharedPreferences(USER_SESSION,0);
-        String userJson = sharedPref.getString(USER_DATA, null);
-        if(userJson != null){
-            return new Gson().fromJson(userJson, User.class);
+        User user = null;
+        try {
+            String userJson = getStr(USER_DATA);
+            if(userJson != null){
+                User userObj = new Gson().fromJson(userJson, User.class);
+                return userObj;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        return null;
+        return user;
+    }
+
+    public Boolean savePushToken(String pushToken) {
+        try {
+            if(pushToken != null){
+                setStr(KEY_PUSH_TOKEN, pushToken);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public String getPushToken() {
+        return getStr(KEY_PUSH_TOKEN);
     }
 
 
 
 
-    private static void clearSharedPreference(){
+    public Boolean clear(){
         try{
-            SharedPreferences sharedPref = mContext.getSharedPreferences(USER_SESSION,0);
-            SharedPreferences.Editor editor = sharedPref.edit();
+            SharedPreferences.Editor editor = getUserPreference().edit();
             editor.clear();
             editor.apply();//editor.commit();
+            return true;
         }catch (Exception e){
             Log.e(TAG, "Error in clearSharedPreference() method in UserSession  "+e);
         }
-    }
-    public static void logOut(){
-        setStr(PUSH_TOKEN, null);
-        clearSharedPreference();
+        return false;
     }
 
 

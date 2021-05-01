@@ -19,6 +19,7 @@
     <color name="green_dark">#60b244</color>
     <color name="lightorange">#db9c69</color>
     <color name="viewline">#cccccc</color>
+    <color name="theme_color">#FA0F30</color>
 
     <color name="black_overlay">#66000000</color>
     <color name="holo_red_dark">#ffcc0000</color>

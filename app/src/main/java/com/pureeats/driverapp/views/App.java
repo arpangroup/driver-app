@@ -10,12 +10,18 @@ import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.pureeats.driverapp.R;
+import com.pureeats.driverapp.sharedprefs.UserSession;
 
 public class App extends Application {
+    private final String TAG = "Application";
+    UserSession userSession;
+
     public static final String CHANNEL_ID_NEW_ORDER = "channel_new_orders";
     public static final String CHANNEL_ID_PUSH_NOTIFICATION = "channel_push_notifications";
     public static final String CHANNEL_ID_NEW_ORDER_FETCH_SERVICE = "channel_new_order_fetch_service";
@@ -45,6 +51,8 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        userSession = new UserSession(this);
+        if(userSession.getPushToken() == null) generatePushNotificationToken();
         createNotificationChannels();
     }
 
@@ -109,6 +117,23 @@ public class App extends Application {
             manager.createNotificationChannel(serviceChannel);
 
         }
+    }
+
+    private void generatePushNotificationToken(){
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                        return;
+                    }
+
+                    // Get new FCM registration token
+                    String token = task.getResult();
+                    userSession.savePushToken(token);
+                    System.out.println("############################## PUSH_TOKEN ###########################");
+                    System.out.println(token);
+                    System.out.println("#####################################################################");
+                });
     }
 
 }

@@ -1,11 +1,8 @@
 package com.pureeats.driverapp.models;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.BindingAdapter;
 import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.pureeats.driverapp.adapters.DishListAdapter;
 import com.pureeats.driverapp.commons.OrderStatus;
 import com.pureeats.driverapp.utils.FormatDate;
 import com.google.gson.annotations.SerializedName;
@@ -97,15 +94,6 @@ public class Order implements Comparable{
     private int toggle = 1;
     private boolean isAutoCancelled = false;
 
-
-    @BindingAdapter(value = "setDishes")
-    public static void setDishes(RecyclerView recyclerView, List<Dish> dishes){
-        if(dishes != null){
-            DishListAdapter dishListAdapter = new DishListAdapter();
-            dishListAdapter.submitList(dishes);
-            recyclerView.setAdapter(dishListAdapter);
-        }
-    }
 
 
     public String pickUpByTime(){

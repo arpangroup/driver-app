@@ -4,7 +4,6 @@ import com.pureeats.driverapp.commons.ErrorCode;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
 @NoArgsConstructor

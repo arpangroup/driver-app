@@ -6,9 +6,8 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.gson.Gson;
-import com.pureeats.driverapp.network.Api;
 import com.pureeats.driverapp.network.Resource;
+import com.pureeats.driverapp.network.api.Api;
 import com.pureeats.driverapp.network.datasource.RemoteDataSource;
 
 import org.json.JSONObject;
@@ -87,11 +86,4 @@ public abstract class BaseRepository {
 
         return mutableResponse;
     }
-
-
-    public LiveData<Boolean> logout(Api api){
-        //return safeApiCallOld(api.logout());
-        return new MutableLiveData<>(true);
-    }
-
 }

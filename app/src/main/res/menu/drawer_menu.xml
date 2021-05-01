@@ -42,7 +42,7 @@
                     android:title="Profile" />
 
                 <item
-                    android:id="@+id/logoutFragment"
+                    android:id="@+id/nav_logout"
                     android:icon="@drawable/ic_baseline_power_settings_new_24"
                     android:title="Logout" />
             </group>

@@ -6,7 +6,6 @@ import android.net.NetworkInfo;
 
 import com.pureeats.driverapp.exceptions.NoInternetException;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -21,9 +20,9 @@ public class NetworkConnectionInterceptor implements Interceptor {
         this.applicationContext = context.getApplicationContext();
     }
 
-    @NotNull
+
     @Override
-    public Response intercept(@NotNull Chain chain) throws IOException {
+    public Response intercept(Chain chain) throws IOException {
         if(!isInternetAvailable()) throw new NoInternetException("Make sure you have an active data connection");
         return chain.proceed(chain.request());
     }

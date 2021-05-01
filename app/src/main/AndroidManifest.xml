@@ -3,55 +3,44 @@
     package="com.pureeats.driverapp">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-<!--    <uses-permission android:name="android.permission.RECEIVE_SMS" />-->
-<!--    <uses-permission android:name="android.permission.READ_PHONE_STATE" />-->
-<!--    <uses-permission android:name="android.permission.READ_SMS" />-->
-<!--    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- <uses-permission android:name="android.permission.RECEIVE_SMS" /> -->
+    <!-- <uses-permission android:name="android.permission.READ_PHONE_STATE" /> -->
+    <!-- <uses-permission android:name="android.permission.READ_SMS" /> -->
+    <!-- <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" /> -->
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-    <!--EndLessService-->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- EndLessService -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-        android:name="com.pureeats.driverapp.views.App"
+        android:name=".views.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-<!--        <activity-->
-<!--            android:name="com.example.driverapp.views.order.ProcessOrderActivity"-->
-<!--            android:launchMode="singleTop"-->
-<!--            android:parentActivityName="com.example.driverapp.views.MainActivity">-->
-<!--            <meta-data-->
-<!--                android:name="android.support.PARENT_ACTIVITY"-->
-<!--                android:value="com.example.driverapp.views.MainActivity" />-->
-<!--        </activity>-->
-        <activity
-            android:name="com.pureeats.driverapp.views.order.ProcessOrderActivityDialog"
-            android:launchMode="singleTop"
-            android:parentActivityName="com.pureeats.driverapp.views.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.pureeats.driverapp.views.MainActivity" />
-        </activity>
+        <activity android:name=".views.auth.AuthActivity"></activity>
+        <activity android:name=".views.MainActivity" /> <!-- <activity -->
+        <!-- android:name="com.example.driverapp.views.order.ProcessOrderActivity" -->
+        <!-- android:launchMode="singleTop" -->
+        <!-- android:parentActivityName="com.example.driverapp.views.MainActivity"> -->
+        <!-- <meta-data -->
+        <!-- android:name="android.support.PARENT_ACTIVITY" -->
+        <!-- android:value="com.example.driverapp.views.MainActivity" /> -->
+        <!-- </activity> -->
 
-        <activity android:name="com.pureeats.driverapp.views.MainActivity"></activity>
-        <activity android:name="com.pureeats.driverapp.views.auth.AuthActivity"></activity>
-        <activity android:name="com.pureeats.driverapp.views.SplashScreenActivity">
+        <activity
+            android:name=".views.SplashScreenActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -59,41 +48,31 @@
             </intent-filter>
         </activity>
 
+
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDHOCpobHOC5KsYSoIMV5l7i6s-iQxCIXA" />
-
-<!--        <service android:name=".firebase.MessagingService">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="com.google.firebase.MESSAGING_EVENT" />-->
-<!--            </intent-filter>-->
-<!--        </service>-->
-
-<!--        <service-->
-<!--            android:name=".services.EndlessService"-->
-<!--            android:enabled="true"-->
-<!--            android:exported="false">-->
-<!--        </service>-->
-
-                <service
-                    android:name="com.pureeats.driverapp.services.FetchOrderService"
-                    android:enabled="true"
-                    android:exported="false">
-                </service>
-
+            android:value="AIzaSyDHOCpobHOC5KsYSoIMV5l7i6s-iQxCIXA" /> <!-- <service android:name=".firebase.MessagingService"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="com.google.firebase.MESSAGING_EVENT" /> -->
+        <!-- </intent-filter> -->
+        <!-- </service> -->
+        <!-- <service -->
+        <!-- android:name=".services.EndlessService" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="false"> -->
+        <!-- </service> -->
         <receiver
-            android:name="com.pureeats.driverapp.receivers.BootCompleteReceiver"
+            android:name=".receivers.BootCompleteReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
-
     </application>
 
 </manifest>

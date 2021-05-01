@@ -1,32 +1,37 @@
 package com.pureeats.driverapp.views.auth;
 
-import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.pureeats.driverapp.databinding.ActivityAuthBinding;
-import com.pureeats.driverapp.R;
-import com.pureeats.driverapp.viewmodels.AuthenticationViewModelOld;
 
 public class AuthActivity extends AppCompatActivity {
-    private final String TAG = this.getClass().getSimpleName();
-    ActivityAuthBinding mBinding;
-    AuthenticationViewModelOld authenticationViewModel;
-    NavController navController;
+    private final String TAG = getClass().getSimpleName();
+    private ActivityAuthBinding mBinding;
+
+    public static Intent getIntent(Context context){
+        return new Intent(context, AuthActivity.class);
+    }
+    public static void start(Context context){
+        context.startActivity(getIntent(context));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = ActivityAuthBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
-        authenticationViewModel = new ViewModelProvider(this).get(AuthenticationViewModelOld.class);
-        authenticationViewModel.init();
+        // In Activity's onCreate() for instance
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window w = getWindow();
+            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
 
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment_container);
-        //NavigationUI.setupActionBarWithNavController(this, navController);
     }
-
 }

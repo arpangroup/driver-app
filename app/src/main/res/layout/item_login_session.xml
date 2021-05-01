@@ -53,9 +53,9 @@
             android:alpha="0.5"
             android:background="#4DC5C5C5" />
 
-<!--        <View-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="12dp"-->
-<!--            android:background="@color/lightsilver" />-->
+        <!--        <View-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="12dp"-->
+        <!--            android:background="@color/lightsilver" />-->
     </LinearLayout>
 </layout>

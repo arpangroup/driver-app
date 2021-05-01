@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".views.fragments.ProfileFragment">
 
     <data>
         <import type="android.view.View"/>
@@ -15,8 +16,7 @@
         android:layout_height="match_parent"
         android:weightSum="5"
         android:background="@color/white"
-        android:orientation="vertical"
-        tools:context=".views.ProfileFragment">
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"

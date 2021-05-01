@@ -3,61 +3,56 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_main"
-    app:startDestination="@id/dashboardFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
-        android:id="@+id/dashboardFragment"
-        android:name="com.pureeats.driverapp.views.DashboardFragment"
+        android:id="@+id/homeFragment"
+        android:name="com.pureeats.driverapp.views.fragments.HomeFragment"
         android:label="Duty Status"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/offerFragment"
-        android:name="com.pureeats.driverapp.views.OfferFragment"
+        android:name="com.pureeats.driverapp.views.fragments.OfferFragment"
         android:label="Offers"
         tools:layout="@layout/fragment_offer" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.pureeats.driverapp.views.ProfileFragment"
+        android:name="com.pureeats.driverapp.views.fragments.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/loginHistoryFragment"
-        android:name="com.pureeats.driverapp.views.LoginHistoryFragment"
+        android:name="com.pureeats.driverapp.views.fragments.LoginHistoryFragment"
         android:label="Login History"
         tools:layout="@layout/fragment_login_history" />
     <fragment
         android:id="@+id/orderHistoryFragment"
-        android:name="com.pureeats.driverapp.views.OrderHistoryFragment"
+        android:name="com.pureeats.driverapp.views.fragments.OrderHistoryFragment"
         android:label="Orders"
         tools:layout="@layout/fragment_order_history" />
     <fragment
         android:id="@+id/notificationListFragment"
-        android:name="com.pureeats.driverapp.views.NotificationListFragment"
+        android:name="com.pureeats.driverapp.views.fragments.NotificationListFragment"
         android:label="Notifications"
         tools:layout="@layout/fragment_notification_list" />
     <fragment
         android:id="@+id/acceptedOrderListFragment"
-        android:name="com.pureeats.driverapp.views.order.AcceptedOrderListFragment"
+        android:name="com.pureeats.driverapp.views.fragments.AcceptedOrderListFragment"
         android:label="Accepted Orders"
         tools:layout="@layout/fragment_accepted_order_list" />
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.pureeats.driverapp.views.ChatFragment"
+        android:name="com.pureeats.driverapp.views.fragments.ChatFragment"
         android:label="Chat Support"
         tools:layout="@layout/fragment_chat" />
-    <dialog
-        android:id="@+id/logoutFragment"
-        android:name="com.pureeats.driverapp.views.auth.LogoutFragment"
-        android:label="Logout"
-        tools:layout="@layout/fragment_logout" />
     <fragment
         android:id="@+id/earningHistoryFragment"
-        android:name="com.pureeats.driverapp.views.EarningHistoryFragment"
+        android:name="com.pureeats.driverapp.views.fragments.EarningHistoryFragment"
         android:label="Earnings"
         tools:layout="@layout/fragment_earning_history" />
     <fragment
         android:id="@+id/tripSummaryFragment"
-        android:name="com.pureeats.driverapp.views.order.TripSummaryFragment"
+        android:name="com.pureeats.driverapp.views.fragments.TripSummaryFragment"
         android:label="Trip Summary"
         tools:layout="@layout/fragment_trip_summary" />
 </navigation>

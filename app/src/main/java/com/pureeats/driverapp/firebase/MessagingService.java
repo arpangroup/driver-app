@@ -14,7 +14,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.sharedprefs.UserSession;
 import com.pureeats.driverapp.views.App;
-import com.pureeats.driverapp.views.order.ProcessOrderActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -97,12 +96,12 @@ public class MessagingService extends FirebaseMessagingService {
 
     private void openAcceptOrderDialog(String orderJson, String  title, String message){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, App.CHANNEL_ID_NEW_ORDER);
+        /*
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 
             Intent fullScreenIntent = new Intent(this, ProcessOrderActivity.class);
             TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(getApplicationContext());
             taskStackBuilder.addNextIntentWithParentStack(fullScreenIntent);
-            //fullScreenIntent.putExtra(Constants.NOTIFICATION_IDS, notificationId);
             fullScreenIntent.putExtra(INTENT_EXTRA_ORDER_STATUS, orderJson);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -132,6 +131,7 @@ public class MessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Starting DialogActivity......");
             startActivity(intent);
         }
+        */
 
 
     }

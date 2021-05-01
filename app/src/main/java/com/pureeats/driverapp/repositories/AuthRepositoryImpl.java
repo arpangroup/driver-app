@@ -10,8 +10,8 @@ import com.google.gson.Gson;
 import com.pureeats.driverapp.models.ApiResponse;
 import com.pureeats.driverapp.models.User;
 import com.pureeats.driverapp.models.request.LoginRequest;
-import com.pureeats.driverapp.network.Api;
 import com.pureeats.driverapp.network.Resource;
+import com.pureeats.driverapp.network.api.Api;
 import com.pureeats.driverapp.sharedprefs.UserSession;
 
 import java.util.HashMap;
@@ -38,7 +38,7 @@ public class AuthRepositoryImpl extends BaseRepository implements AuthRepository
 
     @Override
     public LiveData<Resource<ApiResponse<User>>> loginByOtp(@NonNull String phone, @NonNull String otp, String pushNotificationToken, @Nullable Map<String, String> meta) {
-        LoginRequest loginRequest = new LoginRequest(phone, otp);
+        LoginRequest loginRequest = new LoginRequest(phone, otp, pushNotificationToken, meta);
         Log.d(TAG, "REQUEST: "+new Gson().toJson(loginRequest));
         return safeApiCall(api.loginUsingOtp(loginRequest));
     }
