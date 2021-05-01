@@ -24,14 +24,14 @@ public class DeliveryGuySetGpsRequest extends RequestToken {
     public DeliveryGuySetGpsRequest(RequestToken requestToken, LatLng latLng) {
         setToken(requestToken.getToken());
         setUserId(requestToken.getUserId());
-        setDeliveryGuyId(requestToken.getDeliveryGuyId());
+        //setDeliveryGuyId(requestToken.getDeliveryGuyId());
         this.deliveryLat = latLng.latitude;
         this.deliveryLong = latLng.longitude;
     }
     public DeliveryGuySetGpsRequest(RequestToken requestToken, Location location) {
         setToken(requestToken.getToken());
         setUserId(requestToken.getUserId());
-        setDeliveryGuyId(requestToken.getDeliveryGuyId());
+        //setDeliveryGuyId(requestToken.getDeliveryGuyId());
         this.deliveryLat = location.getLatitude();
         this.deliveryLong = location.getLongitude();
         this.bearing = location.getBearing();

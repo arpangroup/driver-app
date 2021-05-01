@@ -129,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
                     actionOnService(Actions.STOP);
                     mBinding.drawerLayout.close();
                 }
-                RequestToken requestToken = new RequestToken(this);
                 logout();
             }
         });

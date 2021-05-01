@@ -9,10 +9,12 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.pureeats.driverapp.models.ApiResponse;
 import com.pureeats.driverapp.models.User;
+import com.pureeats.driverapp.models.response.LoginHistory;
 import com.pureeats.driverapp.network.Resource;
 import com.pureeats.driverapp.repositories.AuthRepositoryImpl;
 import com.pureeats.driverapp.utils.CommonUtils;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -37,9 +39,12 @@ public class AuthViewModel extends BaseViewModel {
             return new MutableLiveData<>(Resource.error("", "Invalid Phone Number"));
         }
     }
-
     public LiveData<Resource<ApiResponse<User>>> loginByOtp(@NonNull String phone, @NonNull String otp, String pushToken, Map<String, String> meta){
         return authRepository.loginByOtp(phone, otp, pushToken, meta);
+    }
+
+    public  LiveData<Resource<ApiResponse<List<LoginHistory>>>> getLoginHistory(){
+        return authRepository.getLoginHistory();
     }
 
 

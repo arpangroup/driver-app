@@ -92,7 +92,7 @@ public interface Api {
 
 
     @GET("/api/delivery/get-login-history/{user_id}")
-    Call<com.pureeats.driverapp.models.response.ApiResponse<List<LoginHistory>>> loginHistory(@Path("user_id") String riderId);
+    Call<ApiResponse<List<LoginHistory>>> loginHistory(@Path("user_id") String riderId);
 
 
 

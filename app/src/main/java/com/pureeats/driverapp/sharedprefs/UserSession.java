@@ -2,10 +2,12 @@ package com.pureeats.driverapp.sharedprefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.pureeats.driverapp.models.User;
 import com.google.gson.Gson;
+import com.pureeats.driverapp.models.request.RequestToken;
 
 public class UserSession {
     private static final String TAG = "USER_SESSION";
@@ -17,6 +19,7 @@ public class UserSession {
     public static final String PUSH_TOKEN = "PUSH_TOKEN";
     public static final String ACCEPTING_ORDER = "ACCEPTING_ORDER";
     private final String KEY_PUSH_TOKEN = "key_push_token";
+    private static final String KEY_REQUEST_TOKEN = "key_request_token";
     //public static final SharedPreferences sharedPref = mContext.getSharedPreferences("curito_prefs",0);
 
     public UserSession(Context context) {
@@ -51,6 +54,9 @@ public class UserSession {
             return false;
         }
     }
+
+
+
     public static boolean isPushNotificationAvailable(){
         boolean result = false;
         try{
@@ -67,12 +73,32 @@ public class UserSession {
             String userStr = new Gson().toJson(user);
             setStr(USER_DATA, userStr);
 
+            String userId = String.valueOf(user.getId());
+            String authToken = user.getAuthToken();
+            RequestToken requestToken = new RequestToken(userId, authToken);
+            String requestTokenJson = new Gson().toJson(requestToken);
+            if(!TextUtils.isEmpty(authToken)){
+                setStr(KEY_REQUEST_TOKEN, requestTokenJson);
+            }
             return true;
         }catch (Exception e){
             Log.e(TAG, "Error in setUserData() method in UserSession  "+e);
             return false;
         }
     }
+
+    public RequestToken getRequestToken() {
+        try{
+            String requestTokenJson = getStr(KEY_REQUEST_TOKEN);
+            if (requestTokenJson != null){
+                return new Gson().fromJson(requestTokenJson, RequestToken.class);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static boolean setPushNotificationToken(String token){
         try{
             setStr(PUSH_TOKEN, token);
