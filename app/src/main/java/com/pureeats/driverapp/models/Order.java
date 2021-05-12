@@ -64,6 +64,9 @@ public class Order implements Comparable{
 
     @SerializedName("already_accepted")
     private boolean alreadyAccepted;
+    @SerializedName("customer_phone")
+    private String customerPhone;
+    private String commission;
 
     @SerializedName("restaurant_accept_at")
     private String restaurantAcceptAt;

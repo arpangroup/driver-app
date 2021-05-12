@@ -58,6 +58,7 @@ import com.pureeats.driverapp.views.order.DialogActivity;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -356,7 +357,11 @@ public class EndlessService extends Service {
         heartBeatResponse.getNewOrders().forEach(this::pushNewOrder);
         heartBeatResponse.getAcceptedOrders().forEach(this::pushOngoingOrder);
         heartBeatResponse.getPickedupOrders().forEach(this::pushOngoingOrder);
-        handleStatusChanged(heartBeatResponse.getAcceptedOrders());
+
+        List<Order> upcomingOrders = new ArrayList<>();
+        upcomingOrders.addAll(heartBeatResponse.getAcceptedOrders());
+        upcomingOrders.addAll(heartBeatResponse.getPickedupOrders());
+        handleStatusChanged(upcomingOrders);
 
 
     }

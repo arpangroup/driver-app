@@ -81,12 +81,14 @@ public class OrderRepositoryImpl extends AuthRepositoryImpl implements OrderRepo
         return safeApiCall(api.sendMessage(new ProcessOrderRequest(requestToken, order.getId())));
     }
     public LiveData<Resource<Order>> deliverOrder(Order order, String deliveryPin){
-        Direction direction  = order.getDirection();
         DeliverOrderRequest request = new DeliverOrderRequest(requestToken, order.getId(), deliveryPin);
-        request.setDistanceTravelled(direction.getDistance().getValue());
-        request.setDistanceTravelledText(direction.getDistance().getText());
-        request.setDurationVal(direction.getDuration().getValue());
-        request.setDurationText(direction.getDuration().getText());
+        Direction direction  = order.getDirection();
+        if(direction != null && direction.getDistance() != null && direction.getDuration() != null){
+            request.setDistanceTravelled(direction.getDistance().getValue());
+            request.setDistanceTravelledText(direction.getDistance().getText());
+            request.setDurationVal(direction.getDuration().getValue());
+            request.setDurationText(direction.getDuration().getText());
+        }
         Log.d(TAG, "DELIVER_ORDER_REQUEST: " + new Gson().toJson(request));
         return safeApiCall(api.deliverOrder(request));
     }

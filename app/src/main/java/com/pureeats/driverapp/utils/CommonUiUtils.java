@@ -2,11 +2,13 @@ package com.pureeats.driverapp.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.location.Location;
 import android.provider.Settings;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.google.android.gms.common.util.CollectionUtils;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Collection;
@@ -68,4 +70,5 @@ public class CommonUiUtils {
         }
         return result;
     }
+
 }

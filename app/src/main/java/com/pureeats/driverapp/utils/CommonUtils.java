@@ -6,6 +6,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
@@ -19,7 +20,7 @@ import androidx.core.content.ContextCompat;
 import com.android.volley.BuildConfig;
 import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.commons.Constants;
-import com.pureeats.driverapp.models.Location;
+import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.models.Restaurant;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -31,6 +32,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -251,6 +253,55 @@ public class CommonUtils {
         } catch (Exception e) {
             e.printStackTrace();
             return 0l;
+        }
+    }
+
+    public static String capitalize(String str) {
+        if (str == null) return str;
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
+
+    public static String getTipDuration(String riderAssignedAt, String deliverAt){
+       try {
+           long startTime = getTimeInMilliseconds(riderAssignedAt);
+           long endTime = getTimeInMilliseconds(deliverAt);
+           long millis = endTime - startTime;
+
+           //long hour = TimeUnit.MILLISECONDS.toHours(requiredTime);
+           //long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);
+           //long seconds = (TimeUnit.MILLISECONDS.toSeconds(millis) % 60);
+           //return minutes + " minutes " + seconds + " seconds";
+
+           String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+                   TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+                   TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+          return hms;
+
+       }catch (Exception e){
+            return "null";
+       }
+    }
+
+
+    public static String calculateDistance(Order order){
+        try{
+
+            LatLng latLngRestaurant = CommonUtils.getRestaurantLocation(order.getRestaurant());
+            LatLng latLngCustomer = CommonUtils.getUserLocation(order.getLocation());
+
+            android.location.Location locationA = new android.location.Location("locationA");
+            locationA.setLatitude(latLngRestaurant.latitude);
+            locationA.setLongitude(latLngRestaurant.longitude);
+            android.location.Location locationB = new Location("locationB");
+            locationB.setLatitude(latLngCustomer.latitude);
+            locationB.setLongitude(latLngCustomer.longitude);
+
+            float distanceInMeter = locationA.distanceTo(locationB);
+            float distanceInKm = distanceInMeter / 1000;
+
+            return distanceInKm + " km";
+        }catch (Exception e){
+            return "0 km";
         }
     }
 

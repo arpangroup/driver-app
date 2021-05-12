@@ -7,8 +7,10 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
+import com.pureeats.driverapp.commons.Actions;
 import com.pureeats.driverapp.databinding.ActivityDialogBinding;
 import com.pureeats.driverapp.models.Order;
+import com.pureeats.driverapp.receivers.OrderArrivedReceiver;
 import com.pureeats.driverapp.sharedprefs.UserSession;
 
 public class DialogActivity extends AppCompatActivity {
@@ -40,6 +42,9 @@ public class DialogActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        try {
+            sendBroadcast(OrderArrivedReceiver.getBroadcastIntent(getApplicationContext(), Actions.DISMISS_ORDER_NOTIFICATION, mOrder));
+        }catch (Throwable t){}
         super.onDestroy();
     }
 

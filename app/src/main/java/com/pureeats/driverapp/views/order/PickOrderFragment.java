@@ -116,7 +116,7 @@ public class PickOrderFragment extends BaseDialogFragment<OrderViewModel, Fragme
     }
 
     private void processOrder(Order order){
-        viewModel.acceptOrder(order).observe(mContext, resource -> {
+        viewModel.pickedUpOrder(order).observe(mContext, resource -> {
             switch (resource.status){
                 case LOADING:
                     break;

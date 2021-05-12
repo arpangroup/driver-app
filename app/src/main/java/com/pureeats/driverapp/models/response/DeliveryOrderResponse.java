@@ -19,6 +19,6 @@ public class DeliveryOrderResponse {
     private List<Order> acceptedOrders;
     @SerializedName("new_orders")
     private List<Order> newOrders;
-    @SerializedName("listed_orders")
-    private List<Order> listedOrders;
+    @SerializedName("pickedup_orders")
+    private List<Order> pickedupOrders;
 }

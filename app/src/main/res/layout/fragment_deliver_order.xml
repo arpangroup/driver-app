@@ -7,9 +7,17 @@
     <data>
         <import type="android.view.View"/>
         <import type="com.pureeats.driverapp.commons.OrderStatus"/>
+        <import type="com.pureeats.driverapp.utils.CommonUtils"/>
         <variable
             name="order"
             type="com.pureeats.driverapp.models.Order" />
+
+        <variable
+            name="isMessageSending"
+            type="Boolean" />
+        <variable
+            name="toggleItems"
+            type="Boolean" />
     </data>
 
     <RelativeLayout
@@ -37,300 +45,298 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
                     <!-- RestaurantDetails-->
-                    <LinearLayout
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:padding="16dp">
 
-                        <LinearLayout
+                        <Button
+                            android:id="@+id/btnToggleCustomerDetails"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:drawableRight="@drawable/ic_baseline_arrow_drop_down_24"
+                            android:drawableTint="@color/green"
+                            android:enabled="false"
+                            android:minHeight="0dp"
+                            android:text="Customer Details"
+                            android:textAllCaps="false"
+                            android:textColor="@color/green"
+                            bind:layout_constraintStart_toStartOf="parent"
+                            bind:layout_constraintTop_toTopOf="parent" />
+
+
+                        <TextView
+                            android:id="@+id/textView8"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:text="@{CommonUtils.capitalize(order.user.name), default=`Customer Name`}"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            bind:layout_constraintEnd_toStartOf="@+id/btnCallToCustomer"
+                            bind:layout_constraintStart_toStartOf="parent"
+                            bind:layout_constraintTop_toBottomOf="@+id/btnToggleCustomerDetails" />
+
+                        <TextView
+                            android:id="@+id/textView6"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="16dp"
-                            android:paddingTop="16dp"
-                            android:orientation="horizontal">
+                            android:layout_marginEnd="24dp"
+                            android:maxLines="2"
+                            android:text="@{order.address, default=`Customer address`}"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            bind:layout_constraintEnd_toEndOf="parent"
+                            bind:layout_constraintStart_toStartOf="parent"
+                            bind:layout_constraintTop_toBottomOf="@+id/textView8" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/green"
-                                android:text="Customer details" />
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="-2dp"
-                                android:src="@drawable/ic_baseline_arrow_drop_down_24"
-                                app:tint="@color/green" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:elevation="0dp"
-                        app:cardElevation="0dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <Button
+                            android:visibility="@{order.customerPhone != null ? View.VISIBLE : View.GONE, default=`visible`}"
+                            android:id="@+id/btnCallToCustomer"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="16dp"
-                            android:orientation="vertical">
+                            android:drawableLeft="@drawable/ic_baseline_add_ic_call_24"
+                            android:background="@drawable/button_border"
+                            android:minWidth="0dp"
+                            android:minHeight="0dp"
+                            android:elevation="0dp"
+                            android:drawablePadding="8dp"
+                            android:drawableTint="@color/blue"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="8dp"
+                            android:text="Call"
+                            android:textAllCaps="false"
+                            android:textColor="@color/blue"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toTopOf="@+id/textView6"
+                            bind:layout_constraintBottom_toBottomOf="parent"
+                            bind:layout_constraintEnd_toEndOf="parent"
+                            bind:layout_constraintTop_toTopOf="parent" />
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layoutDirection="rtl"
-                                android:orientation="horizontal">
 
-                                <LinearLayout
-                                    android:id="@+id/callToCustomer"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
-                                    android:paddingLeft="12dp"
-                                    android:paddingRight="12dp"
-                                    android:paddingTop="8dp"
-                                    android:paddingBottom="8dp"
-                                    android:background="@drawable/rectangle_gray_border"
-                                    android:orientation="horizontal">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="@color/blue"
-                                        android:textSize="12sp"
-                                        android:textStyle="bold"
-                                        android:text="Call" />
-
-                                    <ImageView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="match_parent"
-                                        android:textAlignment="center"
-                                        android:src="@drawable/ic_baseline_add_ic_call_24"
-                                        app:tint="@color/blue" />
-                                </LinearLayout>
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:textStyle="bold"
-                                    android:textSize="18sp"
-                                    android:textColor="@color/black"
-                                    android:text="@{order.user.name}"
-                                    android:hint="Placeholder Customer name" />
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layoutDirection="ltr"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:maxLines="2"
-                                    android:textStyle="bold"
-                                    android:textSize="16sp"
-                                    android:text="@{order.address}"
-                                    android:hint="Placeholder Customer Address" />
-                            </LinearLayout>
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.8dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="16dp"
                         android:layout_marginBottom="8dp"
                         android:alpha="0.9"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
-                        android:background="@color/lightsilver" />
+                        android:background="@color/placeholder_bg" />
 
 
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_marginTop="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:orientation="vertical">
+                        android:padding="16dp">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:id="@+id/textView7"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layoutDirection="rtl"
-                            android:orientation="horizontal">
-                            <TextView
-                                android:id="@+id/earningToday"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="16dp"
-                                android:layoutDirection="ltr"
-                                android:textColor="@color/black"
-                                android:textStyle="bold"
-                                android:textSize="24sp"
-                                android:text="@{order.paymentMode.equals(`COD`) ? `₹ `+order.total : `prepaid` }"
-                                android:hint="₹ 377" />
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="8dp"
+                            android:text="@{order.restaurant.name, default=`Placeholder Restaurant Name`}"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            bind:layout_constraintEnd_toStartOf="@+id/txtCommission"
+                            bind:layout_constraintStart_toStartOf="parent"
+                            bind:layout_constraintTop_toTopOf="parent" />
 
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="8dp"
-                                android:layout_gravity="center"
-                                android:layoutDirection="ltr"
-                                android:textStyle="bold"
-                                android:textSize="18sp"
-                                android:textColor="@color/black"
-                                android:text="@{order.restaurant.name}"
-                                android:hint="Placeholder Restaurant Name" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/toggle_items"
+                        <TextView
+                            android:id="@+id/txtCommission"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:layoutDirection="ltr"
+                            android:text="@{order.paymentMode.equals(`COD`) ? `₹ `+order.total : `prepaid`, default=`₹ 377` }"
+                            android:textColor="@color/black"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            bind:layout_constraintEnd_toEndOf="parent"
+                            bind:layout_constraintTop_toTopOf="parent" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/green"
-                                android:text="@{order.orderitems.size() + `items` }"
-                                android:hint="2 items" />
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:visibility="@{toggleItems ? View.VISIBLE : View.GONE, default=`gone`}"
+                            android:id="@+id/dishRecycler"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="16dp"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            bind:layout_constraintBottom_toTopOf="@+id/btnToggleItems"
+                            bind:layout_constraintTop_toBottomOf="@+id/textView7"
+                            tools:layout_editor_absoluteX="16dp"
+                            tools:listitem="@layout/item_dish" />
 
-                            <ImageView
-                                android:id="@+id/img_toggle_item"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="-2dp"
-                                android:src="@drawable/ic_baseline_arrow_drop_down_24"
-                                app:tint="@color/green" />
-                        </LinearLayout>
-                    </LinearLayout>
+                        <Button
+                            android:id="@+id/btnToggleItems"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:drawableRight="@drawable/ic_baseline_arrow_drop_down_24"
+                            android:drawableTint="@color/green"
+                            android:minHeight="0dp"
+                            android:text="@{order.orderitems.size() + `items`, default=`2 items` }"
+                            android:textAllCaps="false"
+                            android:textColor="@color/green"
+                            bind:layout_constraintBottom_toBottomOf="parent"
+                            bind:layout_constraintStart_toStartOf="parent"
+                            bind:layout_constraintTop_toBottomOf="@+id/dishRecycler" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:visibility="gone"
-                        android:id="@+id/dish_recycler"
-                        android:layout_below="@+id/toolbar"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginLeft="16dp"
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        tools:listitem="@layout/item_dish"  />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:background="#32AFAFAF"
+                        android:layout_marginTop="20dp"
                         android:padding="16dp"
-                        android:orientation="horizontal">
+                        android:background="#32AFAFAF">
 
-                        <LinearLayout
+                        <RadioButton
+                            android:id="@+id/radioButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:checked="true"
+                            bind:layout_constraintStart_toStartOf="parent"
+                            bind:layout_constraintTop_toTopOf="parent" />
 
-                            <RadioButton
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:checked="true" />
-
-                            <View
-                                android:layout_width="1dp"
-                                android:layout_height="100dp"
-                                android:layout_gravity="center_horizontal"
-                                android:background="@color/colorPrimary" />
-
-                            <RadioButton
-                                android:id="@+id/radio_confirm"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:checked="false" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <RadioButton
+                            android:id="@+id/radioConfirm"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:layout_marginTop="24dp"
+                            android:checked="false"
+                            bind:layout_constraintStart_toStartOf="parent"
+                            bind:layout_constraintTop_toBottomOf="@+id/layoutMessage" />
+
+
+                        <RelativeLayout
+                            android:id="@+id/layoutMessage"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:paddingVertical="6dp"
+                            android:background="@drawable/rectangle_gray_border"
+                            bind:layout_constraintEnd_toEndOf="parent"
+                            bind:layout_constraintStart_toEndOf="@+id/view2"
+                            bind:layout_constraintTop_toBottomOf="@+id/radioButton">
 
                             <TextView
+                                android:id="@+id/textView3"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:layout_alignParentTop="true"
-                                android:textSize="20sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/black"
-                                android:text="Message Customer" />
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="16dp"
+                                android:layout_marginEnd="16dp"
+                                android:layout_toLeftOf="@+id/btnSendMessage"
+                                android:text="I have reached the door\nPlease collect your order"
+                                android:textColor="@color/silver"
+                                android:textSize="14sp" />
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="16dp"
-                                android:layout_centerInParent="true"
-                                android:padding="8dp"
-                                android:background="@drawable/rectangle_gray_border"
-                                android:layoutDirection="rtl"
-                                android:orientation="horizontal">
-
-                                <Button
-                                    android:id="@+id/btnSendMessage"
-                                    android:enabled="@{order.isOrderReachedMessageSend == 0? true : false}"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:drawableLeft="@drawable/ic_baseline_message_24"
-                                    android:text="Send"
-                                    android:textColor="@color/white"
-                                    android:drawableTint="@color/white"
-                                    android:paddingHorizontal="16dp"
-                                    android:fontFamily="@font/sfpro_display_medium"
-                                    android:textSize="16sp"
-                                    android:drawablePadding="2dp"
-                                    android:background="@drawable/background_green"
-                                    android:textAllCaps="false"/>
-
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="14sp"
-                                    android:textColor="@color/silver"
-                                    android:text="I have reached the door\nPlease collect your order" />
-                            </LinearLayout>
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="20dp"
-                                android:layout_gravity="bottom"
-                                android:textSize="20sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/black"
-                                android:text="@{`Handover ` + order.orderitems.size() + ` items to Customer`}"
-                                android:hint="Handover 2 items to Customer" />
                             <Button
-                                android:id="@+id/btn_item_given_to_customer"
-                                android:layout_width="match_parent"
+                                android:visibility="@{isMessageSending ? View.GONE : View.VISIBLE}"
+                                android:id="@+id/btnSendMessage"
+                                android:enabled="@{order.isOrderReachedMessageSend == 0? true : false}"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:enabled="false"
-                                android:layout_marginTop="16dp"
-                                android:padding="16dp"
+                                android:layout_centerVertical="true"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="12dp"
+                                android:gravity="center_vertical"
+                                android:background="@drawable/rounded_green_button"
+                                android:drawableStart="@drawable/ic_baseline_message_24"
+                                android:drawablePadding="16dp"
+                                android:drawableTint="@color/white"
+                                android:fontFamily="@font/sfpro_display_medium"
+                                android:paddingHorizontal="16dp"
+                                android:text="@{order.isOrderReachedMessageSend == 0 ? `Send` : `Received`, default=`Send`}"
+                                android:textAllCaps="false"
                                 android:textColor="@color/white"
-                                android:background="@drawable/background_green"
-                                android:text="Given item to Customer"/>
+                                android:textSize="16sp" />
+                            <ProgressBar
+                                android:visibility="@{isMessageSending ? View.VISIBLE : View.GONE}"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="24dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"/>
 
-                        </LinearLayout>
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/textView5"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:hint="Handover 2 items to Customer"
+                            android:text="@{`Handover ` + order.orderitems.size() + ` items to Customer`}"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            bind:layout_constraintBottom_toBottomOf="@+id/radioConfirm"
+                            bind:layout_constraintEnd_toEndOf="parent"
+                            bind:layout_constraintStart_toEndOf="@+id/radioConfirm"
+                            bind:layout_constraintTop_toTopOf="@+id/radioConfirm" />
 
 
-                    </LinearLayout>
+                        <View
+                            android:id="@+id/view2"
+                            android:layout_width="1dp"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center_horizontal"
+                            android:background="@color/colorPrimary"
+                            bind:layout_constraintBottom_toTopOf="@+id/radioConfirm"
+                            bind:layout_constraintEnd_toEndOf="@+id/radioButton"
+                            bind:layout_constraintStart_toStartOf="@+id/radioConfirm"
+                            bind:layout_constraintTop_toBottomOf="@+id/radioButton" />
+
+                        <TextView
+                            android:id="@+id/textView4"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginStart="8dp"
+                            android:text="Message Customer"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            bind:layout_constraintEnd_toEndOf="parent"
+                            bind:layout_constraintStart_toEndOf="@+id/radioButton"
+                            bind:layout_constraintTop_toTopOf="@+id/radioButton" />
+
+                        <Button
+                            android:id="@+id/btnItemGivenToCustomer"
+                            android:enabled="false"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="24dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="16dp"
+                            android:background="@drawable/rounded_green_button"
+                            android:padding="16dp"
+                            android:text="Given item to Custome"
+                            android:textColor="@color/white"
+                            bind:layout_constraintBottom_toBottomOf="parent"
+                            bind:layout_constraintEnd_toEndOf="parent"
+                            bind:layout_constraintStart_toStartOf="parent"
+                            bind:layout_constraintTop_toBottomOf="@+id/textView5" />
 
 
 
+
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
                 </LinearLayout>
@@ -338,6 +344,7 @@
 
             <com.ncorti.slidetoact.SlideToActView
                 android:id="@+id/btnAccept"
+                app:slider_locked="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -352,8 +359,7 @@
                 app:text="Finish above task and deliver order"
                 app:text_style="bold"
                 app:text_size="16sp"
-                app:slider_height="60dp"
-                app:slider_locked="false" />
+                app:slider_height="60dp"/>
 
         </RelativeLayout>
 

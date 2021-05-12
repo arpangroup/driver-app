@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.gms.common.util.CollectionUtils;
 import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.adapters.AcceptedOrderListAdapter;
 import com.pureeats.driverapp.commons.OrderStatus;
@@ -96,6 +97,9 @@ public class AcceptedOrderListFragment extends BaseDialogFragment<OrderViewModel
                     DeliveryOrderResponse deliveryOrderResponse =  resource.data;
                     if(deliveryOrderResponse != null){
                         acceptedOrders = deliveryOrderResponse.getAcceptedOrders();
+                        if (!CollectionUtils.isEmpty(deliveryOrderResponse.getPickedupOrders())) {
+                            acceptedOrders.addAll(deliveryOrderResponse.getPickedupOrders());
+                        }
                         Collections.sort(acceptedOrders);
                         adapter.updateAll(acceptedOrders);
                     }
