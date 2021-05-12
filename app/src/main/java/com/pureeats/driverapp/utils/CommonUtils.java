@@ -2,6 +2,7 @@ package com.pureeats.driverapp.utils;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,14 +12,18 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
-import com.pureeats.driverapp.BuildConfig;
+import com.android.volley.BuildConfig;
+import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.commons.Constants;
 import com.pureeats.driverapp.models.Location;
 import com.pureeats.driverapp.models.Restaurant;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.pureeats.driverapp.views.App;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +33,7 @@ import java.util.regex.Pattern;
 public class CommonUtils {
 
     public static void makePhoneCall(Activity activity, String phoneNumber){
+        if(phoneNumber == null) return;
         if(phoneNumber.trim().length() > 0){
             if(ContextCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED){
                 ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CALL_PHONE}, Constants.REQUEST_CALL_ACTIVITY);
@@ -58,10 +64,10 @@ public class CommonUtils {
         try{
             System.out.println("==============address==============================");
             System.out.println(address);
-            Location orderLocation = new Gson().fromJson(address, Location.class);
+            Map<String, Double> orderLocation = new Gson().fromJson(address, Map.class);
             System.out.println("ORDER_LOCATION: "+orderLocation);
-            double lat = Double.parseDouble(orderLocation.getLat());
-            double lng = Double.parseDouble(orderLocation.getLng());
+            double lat = orderLocation.get("latitude");
+            double lng = orderLocation.get("longitude");
             latLng = new LatLng(lat, lng);
         }catch (Exception e){
             e.printStackTrace();
@@ -166,6 +172,41 @@ public class CommonUtils {
         deviceInfo.put("releaseVersionCode", Build.VERSION.RELEASE);
         deviceInfo.put("host", Build.HOST);
         return deviceInfo;
+    }
+
+    public static void displayNotification(Context context, String title, String message) {
+        //Intent notificationIntent = new Intent(context, HomePageNavigationActivityOld.class);
+        //PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(context, App.CHANNEL_ID_PUSH_NOTIFICATION)
+                        .setSmallIcon(R.drawable.ic_launcher_background)
+                        .setContentTitle(title)
+                        .setContentText(message)
+                        //.setContentIntent(pendingIntent)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setAutoCancel(true)// clear notification after click
+                        //.setChannelId(App.CHANNEL_ID_PUSH_NOTIFICATION);
+                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.notify(App.NOTIFICATION_CHANNEL_ID_PUSH_NOTIFICATION, builder.build());
+    }
+
+    public static void openNavigationActivity(Context context, LatLng destination){
+        try{
+            Uri uri = Uri.parse("google.navigation:q="+destination.latitude + ","  + destination.longitude +  "&mode=1");
+            //Uri uri = Uri.parse("https://www.google.co.in/maps/dir/" + sSource + "/" + sDestination);
+            Intent intent  = new Intent(Intent.ACTION_VIEW, uri);
+            intent.setPackage("com.google.android.apps.maps");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }catch (ActivityNotFoundException e){
+            // when google map is not installed
+            Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.google.ndroid.apps.maps");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            context.startActivity(intent);
+        }
     }
 
 }

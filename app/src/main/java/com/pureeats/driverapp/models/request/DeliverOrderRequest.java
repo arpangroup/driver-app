@@ -25,8 +25,13 @@ public class DeliverOrderRequest extends RequestToken {
     @SerializedName("duration_text")
     private String durationText;
 
-    public DeliverOrderRequest(int orderId, String deliveryPin) {
-        super();
+//    public DeliverOrderRequest(int orderId, String deliveryPin) {
+//        super();
+//        this.orderId = orderId;
+//        this.deliveryPin = deliveryPin;
+//    }
+    public DeliverOrderRequest(RequestToken requestToken, int orderId, String deliveryPin) {
+        super(requestToken.getUserId(), requestToken.getToken());
         this.orderId = orderId;
         this.deliveryPin = deliveryPin;
     }

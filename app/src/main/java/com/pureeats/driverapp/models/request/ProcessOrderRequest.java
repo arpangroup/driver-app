@@ -19,6 +19,11 @@ public class ProcessOrderRequest extends RequestToken {
         this.orderId = orderId;
     }
 
+    public ProcessOrderRequest(RequestToken requestToken, int orderId) {
+        super(requestToken.getUserId(), requestToken.getToken());
+        this.orderId = orderId;
+    }
+
     public ProcessOrderRequest(String uniqueOrderId) {
         super();
         this.uniqueOrderId = uniqueOrderId;

@@ -46,7 +46,7 @@ public class AuthFragment extends BaseDialogFragment<AuthViewModel, FragmentAuth
                         break;
                     case ERROR:
                         mBinding.btnVerify.setEnabled(true);
-                        CommonUiUtils.showSnackBarWithoutAction(getView(), resource.message);
+                        CommonUiUtils.showSnackBar(getView(), resource.message);
                         break;
                     case SUCCESS:
                         ApiResponse<Object> apiResponse = resource.data;
@@ -54,12 +54,12 @@ public class AuthFragment extends BaseDialogFragment<AuthViewModel, FragmentAuth
                             try{
                                 navController.navigate(R.id.otpFragment);
                             }catch (Exception e){
-                                CommonUiUtils.showSnackBarWithoutAction(requireView(), "Exception occur during navigation");
+                                CommonUiUtils.showSnackBar(requireView(), "Exception occur during navigation");
                                 e.printStackTrace();
                             }
                         }else{
                             ErrorCode errorCode = ErrorCode.getErrorCode(apiResponse.getCode());
-                            CommonUiUtils.showSnackBarWithoutAction(getView(), errorCode.getMessage());
+                            CommonUiUtils.showSnackBar(getView(), errorCode.getMessage());
                         }
                         break;
                 }

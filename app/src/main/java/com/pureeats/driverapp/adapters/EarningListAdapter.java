@@ -17,7 +17,7 @@ public class EarningListAdapter extends BaseAdapter<Earning, ItemEarningBinding>
 
     @Override
     public int getLayout() {
-        return R.layout.item_dish;
+        return R.layout.item_earning;
     }
 
     @Override

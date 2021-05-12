@@ -40,14 +40,11 @@ public class CommonUiUtils {
     public static void showSnackBar(View view, String message){
         //fragment.requireView()
         Snackbar snackBar  = Snackbar.make(view,  message,  Snackbar.LENGTH_LONG);
-        snackBar.setAction("CLOSE", view1 -> {
-            snackBar.dismiss();
-        });
         snackBar.show();
 
     }
 
-    public static void showSnackBarWithoutAction(View view, String message){
+    public static void showSnackBarWithAction(View view, String message){
         //fragment.requireView()
         Snackbar snackBar  = Snackbar.make(view,  message,  Snackbar.LENGTH_LONG);
         snackBar.show();

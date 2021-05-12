@@ -3,13 +3,16 @@ package com.pureeats.driverapp.views;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -21,15 +24,20 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
 import com.pureeats.driverapp.R;
+import com.pureeats.driverapp.adapters.AcceptedOrderListAdapter;
 import com.pureeats.driverapp.commons.Actions;
 import com.pureeats.driverapp.commons.Constants;
 import com.pureeats.driverapp.databinding.ActivityMainBinding;
 import com.pureeats.driverapp.models.User;
-import com.pureeats.driverapp.models.request.RequestToken;
+import com.pureeats.driverapp.services.EndlessService;
 import com.pureeats.driverapp.sharedprefs.ServiceTracker;
 import com.pureeats.driverapp.sharedprefs.UserSession;
+import com.pureeats.driverapp.utils.CommonUiUtils;
 import com.pureeats.driverapp.utils.CommonUtils;
+import com.pureeats.driverapp.utils.GpsUtils;
 import com.pureeats.driverapp.views.auth.AuthActivity;
+import com.pureeats.driverapp.views.fragments.AcceptedOrderListFragment;
+import com.pureeats.driverapp.views.order.AcceptOrderDialog;
 
 import static com.pureeats.driverapp.sharedprefs.ServiceTracker.getServiceState;
 
@@ -49,18 +57,25 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
-        userSession = new UserSession(this);
+        userSession = new UserSession(getApplicationContext());
         navController = Navigation.findNavController(this, R.id.navHostFragmentMain);
         NavigationUI.setupWithNavController(mBinding.navView, navController);
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> mBinding.toolbar.title.setText(destination.getLabel()));
         mBinding.toolbar.navMenu.setOnClickListener(view -> mBinding.drawerLayout.openDrawer(GravityCompat.START));
         initClicks();
-
-
+        //mBinding.btnView.setOnClickListener(view -> AcceptOrderDialog.newInstance(1).show(getSupportFragmentManager().beginTransaction(), AcceptOrderDialog.class.getName()));
+        EndlessService.getOngoingOrders().observe(this, orders -> {
+            Log.d(TAG, "getOngoingOrders.....");
+            mBinding.setOngoingOrders(orders);
+        });
     }
 
 
     private void initClicks() {
+        mBinding.btnView.setOnClickListener(view -> {
+            AcceptedOrderListFragment.newInstance().show(getSupportFragmentManager(), AcceptedOrderListFragment.class.getName());
+        });
+
         ServiceTracker.ServiceState currentServiceState = getServiceState(this);
         NavigationView navigationView = (NavigationView) mBinding.navView;
         View headerView = navigationView.getHeaderView(0);
@@ -113,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         switchCompat.setOnCheckedChangeListener((compoundButton, isChecked) -> {
             if (isChecked) {
                 Log.d(TAG, "START THE FOREGROUND SERVICE ON DEMAND");
-                if (getServiceState(this) == ServiceTracker.ServiceState.STARTED) {
+                if (getServiceState(this) == ServiceTracker.ServiceState.STARTED || isEndlessServiceRunning()) {
                     return;
                 } else {
                     ServiceTracker.setServiceState(this, ServiceTracker.ServiceState.STARTED);
@@ -129,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
                     actionOnService(Actions.STOP);
                     mBinding.drawerLayout.close();
                 }
-                logout();
+                //logout();
             }
         });
 
@@ -145,8 +160,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void actionOnService(Actions action) {
-        /*
-        Intent intent = new Intent(this, FetchOrderService.class);
+        Intent intent = new Intent(this, EndlessService.class);
         intent.setAction(action.name());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Log.d(TAG, "Starting the service in >=26 Mode");
@@ -156,12 +170,39 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "Starting the service in < 26 Mode");
             startService(intent);
         }
-         */
     }
     private void logout(){
         userSession.clear();
         AuthActivity.start(this);
         finishAffinity();
         finish();
+    }
+
+    private boolean isEndlessServiceRunning(){
+        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        if(activityManager != null){
+            for (ActivityManager.RunningServiceInfo serviceInfo : activityManager.getRunningServices(Integer.MAX_VALUE)){
+                if(EndlessService.class.getName().equals(serviceInfo.service.getClassName())){
+                    if(serviceInfo.foreground){
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        return false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new GpsUtils(this).turnGPSOn(isGPSEnable -> {
+            if (!isGPSEnable) CommonUiUtils.showSnackBar(getWindow().getDecorView(), "GPS not enabled");
+        });
+        if(getServiceState(this) == ServiceTracker.ServiceState.STARTED && !isEndlessServiceRunning()){
+            actionOnService(Actions.START);
+        }else if(getServiceState(this) == ServiceTracker.ServiceState.STOPPED && isEndlessServiceRunning()){
+            actionOnService(Actions.STOP);
+        }
     }
 }

@@ -13,6 +13,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:clickable="true"
+            android:background="?attr/selectableItemBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -63,8 +66,7 @@
                         android:textSize="18sp"
                         android:layout_gravity="center"
                         android:textColor="@color/black"
-                        android:text="@{order.uniqueOrderId}"
-                        android:hint="Order ID: 173T5353763563" />
+                        android:text="@{order.uniqueOrderId, default=`Order ID: 173T5353763563`}"/>
 
                 </LinearLayout>
 
@@ -92,8 +94,7 @@
                             android:maxLines="2"
                             android:textStyle="bold"
                             android:textSize="14sp"
-                            android:text="@{order.restaurant.name}"
-                            android:hint="Placeholder Restaurant name" />
+                            android:text="@{order.restaurant.name, default=`Placeholder Restaurant name`}"/>
 
                     </LinearLayout>
 
@@ -107,22 +108,20 @@
 
 
                     <TextView
+                        android:visibility="@{order.user != null ? View.VISIBLE : View.GONE}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:maxLines="2"
                         android:textStyle="bold"
                         android:textSize="14sp"
-                        android:text="@{order.user.name}"
-                        android:hint="Placeholder name" />
+                        android:text="@{order.user.name, default=`Placeholder user name`}"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:maxLines="2"
                         android:textStyle="bold"
                         android:textSize="14sp"
-                        android:text="@{order.address}"
-                        android:hint="Placeholder address" />
+                        android:text="@{order.address, default=`Placeholder address`}"/>
                 </LinearLayout>
             </LinearLayout>
 

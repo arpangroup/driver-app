@@ -49,10 +49,10 @@ public class MessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        Log.d(TAG, "onMessageReceived() called....");
         super.onMessageReceived(remoteMessage);
         PUSH_NOTIFICATION_SOURCE notificationSource = getNotificationSource(remoteMessage);
         Map<String, String> data = remoteMessage.getData();
-        Log.d(TAG, "onMessageReceived() called....");
 
         String orderStatusIdStr = data.get("order_status_id");
         if(orderStatusIdStr == null) return;
@@ -143,6 +143,7 @@ public class MessagingService extends FirebaseMessagingService {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
+
         }
         Log.d(TAG, "SENDING: " + orderJson);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);

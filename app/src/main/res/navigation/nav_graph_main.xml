@@ -52,7 +52,7 @@
         tools:layout="@layout/fragment_earning_history" />
     <fragment
         android:id="@+id/tripSummaryFragment"
-        android:name="com.pureeats.driverapp.views.fragments.TripSummaryFragment"
+        android:name="com.pureeats.driverapp.views.fragments.TripHistoryListFragment"
         android:label="Trip Summary"
-        tools:layout="@layout/fragment_trip_summary" />
+        tools:layout="@layout/fragment_trip_history_list" />
 </navigation>

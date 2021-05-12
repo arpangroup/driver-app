@@ -40,6 +40,7 @@ public class AuthRepositoryImpl extends BaseRepository implements AuthRepository
         HashMap<String, String> map = new HashMap<>();
         map.put("phone", phone);
         return safeApiCall(api.verifyPhone(map));
+       // return safeApiCall(api.sendLoginOtp(phone));
     }
 
     @Override

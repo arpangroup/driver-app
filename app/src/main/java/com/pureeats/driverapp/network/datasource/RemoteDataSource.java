@@ -1,6 +1,7 @@
 package com.pureeats.driverapp.network.datasource;
 
 import com.pureeats.driverapp.BuildConfig;
+import com.pureeats.driverapp.commons.Constants;
 import com.pureeats.driverapp.models.request.RequestToken;
 
 import java.util.concurrent.TimeUnit;
@@ -15,7 +16,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RemoteDataSource {
-    private static final String BASE_URL = "https://admin.pureeatstest.xyz/";
+    private static final String BASE_URL = Constants.WEBSITE_URL;
 
     private static HttpLoggingInterceptor getLogger(){
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -35,12 +36,17 @@ public class RemoteDataSource {
                 .addInterceptor(getLogger())
                 /*=================AVOID SSL [START]======================*/
                 // remove this section for production
-                .hostnameVerifier(new HostnameVerifier() {
-                    @Override
-                    public boolean verify(String s, SSLSession sslSession) {
-                        return true;
-                    }
-                })
+                .hostnameVerifier((s, sslSession) -> true)
+                /*=================AVOID SSL[END]======================*/
+                .build();
+    }
+    private static OkHttpClient getOkHttpClientWithoutInterceptor(){
+        return new OkHttpClient.Builder()
+                .readTimeout(120, TimeUnit.SECONDS)
+                .connectTimeout(120, TimeUnit.SECONDS)
+                /*=================AVOID SSL [START]======================*/
+                // remove this section for production
+                .hostnameVerifier((s, sslSession) -> true)
                 /*=================AVOID SSL[END]======================*/
                 .build();
     }
@@ -85,6 +91,15 @@ public class RemoteDataSource {
                 .build()
                 .create(api);
     }
+    public static <T> T buildApiWithoutInterceptor(Class<T> api){
+        return new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(getOkHttpClientWithoutInterceptor())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(api);
+    }
+
 
 
     public static <T> T buildApi(Class<T> api, RequestToken requestToken){ //overloaded function without authtoken

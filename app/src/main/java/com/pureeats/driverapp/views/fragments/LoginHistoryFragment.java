@@ -12,12 +12,12 @@ import androidx.navigation.Navigation;
 
 import com.pureeats.driverapp.adapters.LoginHistoryAdapter;
 import com.pureeats.driverapp.databinding.FragmentLoginHistoryBinding;
+import com.pureeats.driverapp.models.ApiResponse;
 import com.pureeats.driverapp.models.response.LoginHistory;
 import com.pureeats.driverapp.network.api.Api;
 import com.pureeats.driverapp.repositories.AuthRepositoryImpl;
-import com.pureeats.driverapp.repositories.BaseRepository;
+import com.pureeats.driverapp.utils.CommonUiUtils;
 import com.pureeats.driverapp.viewmodels.AuthViewModel;
-import com.pureeats.driverapp.viewmodels.BaseViewModel;
 import com.pureeats.driverapp.views.base.BaseDialogFragment;
 
 import java.util.ArrayList;
@@ -28,26 +28,38 @@ public class LoginHistoryFragment extends BaseDialogFragment<AuthViewModel, Frag
     private final String TAG = getClass().getName();
     private NavController navController;
     private List<LoginHistory> loginHistoryList = new ArrayList<>();
-    private LoginHistoryAdapter loginHistoryAdapter;
+    private LoginHistoryAdapter adapter;
 
     @Override
     public void onViewCreated(@NonNull View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
         navController = Navigation.findNavController(rootView);
         // Initialize RecyclerView
-        loginHistoryAdapter = new LoginHistoryAdapter(loginHistoryList);
-        mBinding.loginHistoryRecycler.setAdapter(loginHistoryAdapter);
+        adapter = new LoginHistoryAdapter(loginHistoryList);
+        mBinding.loginHistoryRecycler.setAdapter(adapter);
+        observeViewModel();
 
     }
 
     private void observeViewModel(){
         viewModel.getLoginHistory().observe(mContext, resource ->{
+            if(mBinding == null) return;
             switch (resource.status){
                 case LOADING:
+                    mBinding.progressbar.setVisibility(View.VISIBLE);
                     break;
                 case ERROR:
+                    mBinding.progressbar.setVisibility(View.GONE);
+                    CommonUiUtils.showSnackBar(getView(), resource.message);
                     break;
                 case SUCCESS:
+                    mBinding.progressbar.setVisibility(View.GONE);
+                    ApiResponse<List<LoginHistory>> apiResponse = resource.data;
+                    if(apiResponse != null){
+                        adapter.updateAll(apiResponse.getData());
+                    }else{
+                        CommonUiUtils.showSnackBar(getView(), apiResponse.getMessage());
+                    }
                     break;
             }
         });

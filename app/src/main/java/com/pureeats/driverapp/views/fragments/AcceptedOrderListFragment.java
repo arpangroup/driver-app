@@ -1,5 +1,7 @@
 package com.pureeats.driverapp.views.fragments;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,27 +9,104 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 
-import com.pureeats.driverapp.databinding.ActivityMainBinding;
+import com.pureeats.driverapp.R;
+import com.pureeats.driverapp.adapters.AcceptedOrderListAdapter;
+import com.pureeats.driverapp.commons.OrderStatus;
 import com.pureeats.driverapp.databinding.FragmentAcceptedOrderListBinding;
+import com.pureeats.driverapp.models.Order;
+import com.pureeats.driverapp.models.response.DeliveryOrderResponse;
 import com.pureeats.driverapp.network.api.Api;
-import com.pureeats.driverapp.repositories.AuthRepositoryImpl;
-import com.pureeats.driverapp.repositories.BaseRepository;
-import com.pureeats.driverapp.viewmodels.BaseViewModel;
+import com.pureeats.driverapp.repositories.OrderRepositoryImpl;
+import com.pureeats.driverapp.viewmodels.OrderViewModel;
 import com.pureeats.driverapp.views.base.BaseDialogFragment;
+import com.pureeats.driverapp.views.order.ReachDirectionFragment;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
-public class AcceptedOrderListFragment extends BaseDialogFragment<BaseViewModel, FragmentAcceptedOrderListBinding, BaseRepository> {
+public class AcceptedOrderListFragment extends BaseDialogFragment<OrderViewModel, FragmentAcceptedOrderListBinding, OrderRepositoryImpl> {
     private final String TAG = getClass().getName();
+    private List<Order> acceptedOrders = new ArrayList<>();
+    private AcceptedOrderListAdapter adapter;
+    private ProgressDialog progressDialog;
+
+    public static AcceptedOrderListFragment newInstance(){
+        AcceptedOrderListFragment dialog = new AcceptedOrderListFragment();
+        dialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogFragmentTheme);
+        dialog.setCancelable(true);
+        return dialog;
+    }
+
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onViewCreated(@NonNull View rootView, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(rootView, savedInstanceState);
+        adapter = new AcceptedOrderListAdapter(acceptedOrders, this::processOrder);
+        mBinding.orderRecycler.setAdapter(adapter);
+        progressDialog = new ProgressDialog(mContext);
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        mBinding.toolbar.setNavigationOnClickListener(view -> dismiss());
+    }
+
+    private void processOrder(Order order){
+        //DialogActivity.start(mContext, order);
+        // First check the order details, because in the mean time the status might changed in server side
+        viewModel.getSingleDeliveryOrder(order).observe(mContext, resource -> {
+            switch (resource.status){
+                case LOADING:
+                    progressDialog.show();
+                    break;
+                case ERROR:
+                    progressDialog.dismiss();
+                    break;
+                case SUCCESS:
+                    progressDialog.dismiss();
+                    Order currentOrder = resource.data;
+                    if(!currentOrder.isAlreadyAccepted())gotoNextActivity(resource.data);
+                    else new AlertDialog.Builder(mContext).setTitle("Order is already accepted").show();
+                    break;
+            }
+        });
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        observeViewModel();
+    }
+
+    private void observeViewModel(){
+        viewModel.getDeliveryOrders().observe(mContext, resource -> {
+            if (mBinding == null) return;
+            switch (resource.status){
+                case LOADING:
+                    mBinding.progressbar.setVisibility(View.VISIBLE);
+                    break;
+                case ERROR:
+                    mBinding.progressbar.setVisibility(View.GONE);
+                    break;
+                case SUCCESS:
+                    mBinding.progressbar.setVisibility(View.GONE);
+                    DeliveryOrderResponse deliveryOrderResponse =  resource.data;
+                    if(deliveryOrderResponse != null){
+                        acceptedOrders = deliveryOrderResponse.getAcceptedOrders();
+                        Collections.sort(acceptedOrders);
+                        adapter.updateAll(acceptedOrders);
+                    }
+                    break;
+            }
+        });
     }
 
     @Override
-    public Class<BaseViewModel> getViewModel() {
-        return BaseViewModel.class;
+    public Class<OrderViewModel> getViewModel() {
+        return OrderViewModel.class;
     }
 
     @Override
@@ -36,7 +115,14 @@ public class AcceptedOrderListFragment extends BaseDialogFragment<BaseViewModel,
     }
 
     @Override
-    public BaseRepository getRepository() {
-        return new AuthRepositoryImpl(remoteDataSource.buildApi(Api.class), userSession);
+    public OrderRepositoryImpl getRepository() {
+        return new OrderRepositoryImpl(remoteDataSource.buildApi(Api.class), userSession);
+    }
+
+    @Override
+    public void onDestroy() {
+        if(progressDialog != null) progressDialog.dismiss();
+        progressDialog = null;
+        super.onDestroy();
     }
 }

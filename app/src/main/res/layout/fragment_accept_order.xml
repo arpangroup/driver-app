@@ -9,6 +9,7 @@
             name="order"
             type="com.pureeats.driverapp.models.Order" />
 
+
         <variable
             name="deliveryTime"
             type="String" />
@@ -137,16 +138,14 @@
                     android:textStyle="bold"
                     android:textSize="22sp"
                     android:textColor="@color/black"
-                    android:text="@{order.restaurant.name}"
-                    android:hint="Placeholder Restaurant Name" />
+                    android:text="@{order.restaurant.name, default=`Placeholder Restaurant Name`}"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
                     android:textSize="16sp"
                     android:textColor="@color/silver"
-                    android:text="@{order.uniqueOrderId}"
-                    android:hint="Unique Order Idt" />
+                    android:text="@{order.uniqueOrderId, default=`Unique Order Id`}"/>
 
                 <TextView
                     android:layout_width="match_parent"

@@ -28,8 +28,9 @@ public class App extends Application {
     public static final String CHANNEL_NAME_NEW_ORDER = "channel new orders";
     public static final String CHANNEL_NAME_PUSH_NOTIFICATION = "channel push notifications";
     public static final String CHANNEL_NAME_NEW_ORDER_FETCH_SERVICE = "channel new order fetch service";
-    public static final int NOTIFICATION_ID_NEW_ORDER = 600;
-    public static final int NOTIFICATION_ID_PUSH_NOTIFICATION = 601;
+    public static final int NOTIFICATION_CHANNEL_ID_RUNNING_ORDER = 600;
+    public static final int NOTIFICATION_CHANNEL_ID_NEW_ORDER = 601;
+    public static final int NOTIFICATION_CHANNEL_ID_PUSH_NOTIFICATION = 602;
 
     public static final Intent[] POWERMANAGER_INTENTS = {
             new Intent().setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")),

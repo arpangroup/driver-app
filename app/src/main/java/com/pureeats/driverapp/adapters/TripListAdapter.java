@@ -17,7 +17,7 @@ public class TripListAdapter extends BaseAdapter<TripDetails, ItemTripBinding> {
 
     @Override
     public int getLayout() {
-        return R.layout.item_login_session;
+        return R.layout.item_trip;
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.pureeats.driverapp.models.ApiResponse;
 import com.pureeats.driverapp.network.Resource;
 import com.pureeats.driverapp.network.api.Api;
 import com.pureeats.driverapp.network.datasource.RemoteDataSource;
@@ -86,4 +87,5 @@ public abstract class BaseRepository {
 
         return mutableResponse;
     }
+
 }

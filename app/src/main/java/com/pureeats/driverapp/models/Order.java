@@ -26,13 +26,15 @@ public class Order implements Comparable{
     private String uniqueOrderId;
     @SerializedName("orderstatus_id")
     private int orderStatusId; //[1=>ORDER_PLACED, 2=>ORDER_RECEIVED, 3=>DELIVERY_GUY_ASSIGNED, 4=>ON_THE_WAY, 5=>DELIVERED, 6=>CANCELED, 7=>SELF_PICKUP]
+//    @SerializedName("extra_status")
+//    private String extraStatus;
     private int user_id;
-    private String coupon_name;
+//    private String coupon_name;
     private String location;
     private String address;
-    private String tax;
-    @SerializedName("restaurant_charge")
-    private int restaurantCharge;
+//    private String tax;
+//    @SerializedName("restaurant_charge")
+//    private int restaurantCharge;
     @SerializedName("delivery_charge")
     private String deliveryCharge;
     private double total;
@@ -56,6 +58,27 @@ public class Order implements Comparable{
     private String payable;
     @SerializedName("delivery_distance")
     private double deliveryDistance;
+    @SerializedName("is_order_reached_message_send")
+    private int isOrderReachedMessageSend;
+
+    @SerializedName("already_accepted")
+    private boolean alreadyAccepted;
+
+    @SerializedName("restaurant_accept_at")
+    private String restaurantAcceptAt;
+    @SerializedName("restaurant_ready_at")
+    private String restaurantReadyAt;
+    @SerializedName("rider_accept_at")
+    private String riderAcceptAt;
+    @SerializedName("rider_reached_pickup_location_at")
+    private String riderReachedPickupLocationAt;
+    @SerializedName("rider_picked_at")
+    private String riderPickedAt;
+    @SerializedName("rider_reached_drop_location_at")
+    private String riderReachedDropLocationAt;
+    @SerializedName("rider_deliver_at")
+    private String riderDeliverAt;
+
 
     @SerializedName("restaurant")
     private Restaurant restaurant;

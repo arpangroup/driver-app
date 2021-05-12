@@ -121,7 +121,7 @@ public class OtpFragment extends BaseDialogFragment<AuthViewModel, FragmentOtpBi
                         break;
                     case ERROR:
                         mBinding.progress.setVisibility(View.GONE);
-                        CommonUiUtils.showSnackBarWithoutAction(requireView(), resource.message);
+                        CommonUiUtils.showSnackBar(requireView(), resource.message);
                         break;
                     case SUCCESS:
                         mBinding.progress.setVisibility(View.GONE);
@@ -135,11 +135,11 @@ public class OtpFragment extends BaseDialogFragment<AuthViewModel, FragmentOtpBi
                                 mContext.finish();
                             }else {
                                 String errorMessage = apiResponse != null ? apiResponse.getMessage() : "";
-                                CommonUiUtils.showSnackBarWithoutAction(requireView(), errorMessage);
+                                CommonUiUtils.showSnackBar(requireView(), errorMessage);
                             }
                         }catch (Throwable t){
                             t.printStackTrace();
-                            CommonUiUtils.showSnackBarWithoutAction(requireView(), "Invalid Server response format");
+                            CommonUiUtils.showSnackBar(requireView(), "Invalid Server response format");
                         }
                         break;
                 }
