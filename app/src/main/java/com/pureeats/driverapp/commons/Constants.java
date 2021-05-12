@@ -17,6 +17,7 @@ public class Constants {
 
     public static final int PER_KM_DELIVERY_TIME_IN_MINUTE = 6;
     public static final int DELIVERY_TIME_HOLD_IN_MINUTE = 30;
+    public static final long ONE_SECOND = 1000;
 
 
     private static LatLng DEFAULT_LOCATION_KOLKATA = new LatLng(22.5714427, 88.3428709);

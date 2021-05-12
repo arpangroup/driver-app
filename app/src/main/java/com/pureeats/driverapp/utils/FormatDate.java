@@ -289,7 +289,7 @@ public class FormatDate {
     }
 
     public static Long getTimeFromDateString(String dateStr){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         try {
             Date date = sdf.parse(dateStr);

@@ -7,6 +7,7 @@ import com.pureeats.driverapp.commons.OrderStatus;
 import com.pureeats.driverapp.utils.FormatDate;
 import com.google.gson.annotations.SerializedName;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -120,21 +121,21 @@ public class Order implements Comparable{
 
 
     public String pickUpByTime(){
-        long createdTimeInLong = FormatDate.getTimeFromDateString(this.createdAt);
-        int deliveryTime = Integer.parseInt(restaurant.getDeliveryTime());
-        long targetTime = createdTimeInLong + this.prepareTime;
+        long createdTimeInLong = FormatDate.getTimeFromDateString(this.restaurantAcceptAt);
+        int deliveryTimeInMin = Integer.parseInt(restaurant.getDeliveryTime());
+        //long targetTime = createdTimeInLong + this.prepareTime;
+        long targetTime = createdTimeInLong + (this.prepareTime * 1000 * 60);//30 min
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm aa");
+        DateFormat dateFormat = new SimpleDateFormat("hh:mm aa");
         Date date = new Date(targetTime);
         System.out.println("================================");
         System.out.println("Approx. Delivery Time: "+this.restaurant.getDeliveryTime());
         System.out.println("PrepareTime: "+this.prepareTime);
-        System.out.println("CreatedAt: "+this.createdAt);
+        System.out.println("CreatedAt: "+this.restaurantAcceptAt);
+        System.out.println("TARGET_TIME: " + targetTime);
         //System.out.println("DATE: "+ date);
         String time = dateFormat.format(targetTime);
         return time;
-
-
 
     }
 

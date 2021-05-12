@@ -25,12 +25,40 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.pureeats.driverapp.views.App;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CommonUtils {
+    public static final String TAG = "CommonUtils";
+    private static DecimalFormat DECIMAL_FORMATTER = new DecimalFormat("#.##");
+    private static final String SPACE_REPLACE_PATTERN = "_^_";
+    private static final String SPACE = " ";
+
+    public static final String DATE_FORMAT = "dd-MM-YYYY hh:mm aa";
+    public static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy";
+    public static final String DATE_FORMAT_MM_DD_YYYY = "MM/dd/yyyy";
+    public static final String DATE_FORMAT_DDMMYYYY = "dd-MM-yyyy";
+    public static final String DATE_FORMAT_dd_MMM_yyyy = "dd-MMM-yyyy";
+    public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String DATE_FORMAT_yyyy_MM_dd = "yyyy-MM-dd";
+
+    public static SimpleDateFormat sdfhh_mm_aa = new SimpleDateFormat("hh:mm aa");//03:40 PM
+    public static SimpleDateFormat sdfDefaultDateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
+    public static DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
+
+    public static DateTimeFormatter formaterMMddyyyy = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+    public static DateTimeFormatter formaterddMMyyyy = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    public static final SimpleDateFormat sdf_yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
+    public static final SimpleDateFormat sdf_yyyy = new SimpleDateFormat("yyyy");
+    public static DateTimeFormatter formateryyyy_MM_dd = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    public static final String CUSTOM_PARAM_DELIMITER = "~#CUST_PARAM_DELIMITER#~";
+    public static DateTimeFormatter formatteryyyy_MM_dd_ = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public static void makePhoneCall(Activity activity, String phoneNumber){
         if(phoneNumber == null) return;
@@ -206,6 +234,23 @@ public class CommonUtils {
             Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.google.ndroid.apps.maps");
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             context.startActivity(intent);
+        }
+    }
+
+    /**
+     * Input Format : "2021-01-21 02:29:55"
+     * Output Format: 10837474
+     *
+     * @param dateStr
+     * @return
+     */
+    public static long getTimeInMilliseconds(String dateStr) {
+        try {
+            Date date = sdfDefaultDateFormat.parse(dateStr);
+            return date.getTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0l;
         }
     }
 
