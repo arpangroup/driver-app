@@ -258,7 +258,7 @@
                                 android:id="@+id/btnClickPhoto"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="#4CAF50"
+                                android:background="@drawable/rounded_green_button"
                                 android:textColor="@color/white"
                                 android:text="Click photo" />
                         </androidx.cardview.widget.CardView>

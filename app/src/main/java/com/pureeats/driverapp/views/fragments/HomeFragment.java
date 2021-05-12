@@ -1,5 +1,8 @@
 package com.pureeats.driverapp.views.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -9,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +35,7 @@ import com.pureeats.driverapp.viewmodels.AuthViewModel;
 import com.pureeats.driverapp.viewmodels.BaseViewModel;
 import com.pureeats.driverapp.viewmodels.OrderViewModel;
 import com.pureeats.driverapp.views.base.BaseDialogFragment;
+import com.pureeats.driverapp.views.order.VerifyBillDialog;
 
 import java.util.ArrayList;
 

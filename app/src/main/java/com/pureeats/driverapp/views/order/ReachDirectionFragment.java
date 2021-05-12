@@ -44,6 +44,7 @@ import com.pureeats.driverapp.network.api.Api;
 import com.pureeats.driverapp.repositories.OrderRepositoryImpl;
 import com.pureeats.driverapp.services.EndlessService;
 import com.pureeats.driverapp.utils.AnimationUtils;
+import com.pureeats.driverapp.utils.CommonUiUtils;
 import com.pureeats.driverapp.utils.CommonUtils;
 import com.pureeats.driverapp.utils.MapUtils;
 import com.pureeats.driverapp.viewmodels.OrderViewModel;
@@ -137,6 +138,7 @@ public class ReachDirectionFragment extends BaseDialogFragment<OrderViewModel, F
             case LOADING:
                 break;
             case ERROR:
+                CommonUiUtils.showSnackBar(getView(), resource.message);
                 break;
             case SUCCESS:
                 gotoNextActivity(resource.data);

@@ -1,5 +1,6 @@
 package com.pureeats.driverapp.views.order;
 
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -15,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.gson.Gson;
 import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.commons.Constants;
@@ -24,6 +26,7 @@ import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.network.Resource;
 import com.pureeats.driverapp.network.api.Api;
 import com.pureeats.driverapp.repositories.OrderRepositoryImpl;
+import com.pureeats.driverapp.utils.CommonUiUtils;
 import com.pureeats.driverapp.utils.CommonUtils;
 import com.pureeats.driverapp.viewmodels.OrderViewModel;
 import com.pureeats.driverapp.views.base.BaseDialogFragment;
@@ -37,7 +40,7 @@ public class PickOrderFragment extends BaseDialogFragment<OrderViewModel, Fragme
     private CountDownTimer countDownTimer;
     private Order mOrder;
     private boolean isReadyMarked = false;
-    private static final long FETCH_INTERVAL = 30 * ONE_SECOND;
+    private static final long FETCH_INTERVAL = 10 * ONE_SECOND;
     private boolean isFirstTime = true;
 
     private final Handler handler = new Handler();
@@ -61,8 +64,10 @@ public class PickOrderFragment extends BaseDialogFragment<OrderViewModel, Fragme
         mBinding.setLifecycleOwner(this);
         mOrder = new Gson().fromJson(getArguments().getString("order_json"), Order.class);
         mBinding.setOrder(mOrder);
+        mBinding.btnAccept.setLocked(true);
         mBinding.btnAccept.setOnSlideCompleteListener(slideToActView -> processOrder(mOrder));
         mBinding.toolbar.back.setOnClickListener(view -> dismissOrderDialog());
+        mBinding.btnClickPhoto.setOnClickListener(view -> VerifyBillDialog.newInstance().show(getChildFragmentManager(), VerifyBillDialog.class.getName()));
         handleStatus(mOrder);
     }
 
@@ -75,6 +80,7 @@ public class PickOrderFragment extends BaseDialogFragment<OrderViewModel, Fragme
             isReadyMarked = true;
             remainingPreparingTime.setValue(0L);
             mBinding.btnAccept.setEnabled(true);
+            mBinding.btnAccept.setLocked(false);
 
             if(countDownTimer != null) countDownTimer.cancel();
             if(runnable != null)handler.removeCallbacks(runnable);
@@ -90,6 +96,11 @@ public class PickOrderFragment extends BaseDialogFragment<OrderViewModel, Fragme
             if(isReadyMarked){
                 mBinding.txtDeliveryCountdown.setText("READY");
                 mBinding.txtDeliveryCountdown.setTextColor(mContext.getColor(R.color.green));
+                mBinding.btnAccept.setOuterColor(R.color.orange);
+
+                if(!isFirstTime){
+                    new AlertDialog.Builder(mContext).setTitle("Order is Ready to Pickup").setPositiveButton("OK", null).show();
+                }
             }else{
                 mBinding.txtDeliveryCountdown.setText(DateUtils.formatElapsedTime(aLong));
             }
@@ -121,6 +132,7 @@ public class PickOrderFragment extends BaseDialogFragment<OrderViewModel, Fragme
                 case LOADING:
                     break;
                 case ERROR:
+                    CommonUiUtils.showSnackBar(getView(), resource.message);
                     break;
                 case SUCCESS:
                     gotoNextActivity(resource.data);
