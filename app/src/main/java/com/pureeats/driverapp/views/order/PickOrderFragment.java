@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -67,7 +68,15 @@ public class PickOrderFragment extends BaseDialogFragment<OrderViewModel, Fragme
         mBinding.btnAccept.setLocked(true);
         mBinding.btnAccept.setOnSlideCompleteListener(slideToActView -> processOrder(mOrder));
         mBinding.toolbar.back.setOnClickListener(view -> dismissOrderDialog());
-        mBinding.btnClickPhoto.setOnClickListener(view -> VerifyBillDialog.newInstance().show(getChildFragmentManager(), VerifyBillDialog.class.getName()));
+        mBinding.btnClickPhoto.setOnClickListener(view -> new VerifyBillDialog.Builder(mContext)
+                .setPhotoClickListener((dialog, base64EnodedText) -> {
+                    System.out.println("################ HOME_FRAGMENT_BASE_64 ############################");
+                    System.out.println(base64EnodedText);
+                    System.out.println("#####################################################");
+                    //dialog.dismiss();
+                    Toast.makeText(mContext, "clicked....", Toast.LENGTH_SHORT).show();
+                })
+                .show());
         handleStatus(mOrder);
     }
 

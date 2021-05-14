@@ -1,7 +1,10 @@
 package com.pureeats.driverapp.views.order;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -28,11 +31,15 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.pureeats.driverapp.R;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.pureeats.driverapp.utils.CommonUtils;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -46,17 +53,15 @@ public class VerifyBillDialog extends BottomSheetDialogFragment {
     private Button btnClickNoBill, btnClickPhoto;
     private ImageView imageview;
 
-    public interface VerifyBillDialogListener {
-        public void onClickPhotoOfBill();
-        public void onClickHaveNoBill();
+    private OnPhotoClickListener mPhotoClickedListener;
+    private OnClickListener mNoBillClickedListener;
+
+   public void setPhotoClickListener(final OnPhotoClickListener listener){
+       mPhotoClickedListener = listener;
+   }
+    public void setNoBillClickListener(final OnClickListener listener){
+        mNoBillClickedListener = listener;
     }
-
-    private VerifyBillDialogListener mListener;
-
-    public static VerifyBillDialog newInstance() {
-        return new VerifyBillDialog();
-    }
-
 
     @NonNull
     @Override
@@ -68,37 +73,6 @@ public class VerifyBillDialog extends BottomSheetDialogFragment {
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from((View)rootView.getParent());
         //bottomSheetBehavior.setPeekHeight(screenUtils.getHeight());
         bottomSheetBehavior.setDraggable(false);
-
-        /*
-        final View view = View.inflate(getContext(), R.layout.layout_location_search, null);
-        dialog.setContentView(view);
-        BottomSheetBehavior bottomSheetBehavior  =  BottomSheetBehavior.from((View)view.getParent());
-        bottomSheetBehavior.setPeekHeight(BottomSheetBehavior.PEEK_HEIGHT_AUTO);
-        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if(bottomSheetBehavior.STATE_EXPANDED == newState){
-                    showView(appBarLayout, getActionBarSize());
-                    hideView(linearLayout);
-                }
-
-                if(bottomSheetBehavior.STATE_COLLAPSED == newState){
-                    hideView(appBarLayout);
-                    showView(linearLayout, getActionBarSize());
-                }
-
-                if(bottomSheetBehavior.STATE_HIDDEN == newState){
-                   dismiss();
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
-            }
-        });
-         */
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setWhiteNavigationBar(dialog);
         }
@@ -119,7 +93,11 @@ public class VerifyBillDialog extends BottomSheetDialogFragment {
 
 
         btnClose.setOnClickListener(view -> dismiss());
-        btnClickNoBill.setOnClickListener(view -> openGallery());
+        btnClickNoBill.setOnClickListener(view -> {
+            //openGallery();
+            if(mNoBillClickedListener != null) mNoBillClickedListener.onClick(this, 1);
+            dismiss();
+        });
         btnClickPhoto.setOnClickListener(view -> openCamera());
 
         return rootView;
@@ -187,6 +165,13 @@ public class VerifyBillDialog extends BottomSheetDialogFragment {
 
                     Bitmap selectedImage = (Bitmap) imageReturnedIntent.getExtras().get("data");
                     imageview.setImageBitmap(selectedImage);
+
+                    String image64Str = CommonUtils.convertToBase64(selectedImage);
+
+                    if(mPhotoClickedListener != null){
+                        mPhotoClickedListener.onClick(this, image64Str);
+                        dismiss();
+                    }
                 }
                 break;
             case GALLERY_REQUEST:
@@ -210,5 +195,47 @@ public class VerifyBillDialog extends BottomSheetDialogFragment {
                 }
                 break;
         }
+    }
+
+
+    public static class Builder {
+        private Context context;
+        private String title;
+        private OnPhotoClickListener mPhotoClickedListener;
+        private OnClickListener mNoBillClickedListener;
+
+        public Builder(Context context) {
+            this.context = context;
+        }
+
+        public Builder setTitle(String title){
+            this.setTitle(title);
+            return this;
+        }
+
+        public Builder setPhotoClickListener(final OnPhotoClickListener listener){
+            this.mPhotoClickedListener = listener;
+            return this;
+        }
+        public Builder setNoBillClickListener(final OnClickListener listener){
+            this.mNoBillClickedListener = listener;
+            return this;
+        }
+
+        public void show(){
+            VerifyBillDialog dialog = new VerifyBillDialog();
+            dialog.setPhotoClickListener(mPhotoClickedListener);
+            dialog.setNoBillClickListener(mNoBillClickedListener);
+            FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+            dialog.show(fragmentManager, getClass().getName());
+        }
+    }
+
+
+    public interface OnPhotoClickListener {
+        void onClick(VerifyBillDialog dialog, String base64EnodedText);
+    }
+    public interface OnClickListener {
+        void onClick(VerifyBillDialog dialog, int res);
     }
 }
