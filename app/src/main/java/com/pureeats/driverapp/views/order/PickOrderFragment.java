@@ -40,6 +40,7 @@ public class PickOrderFragment extends BaseDialogFragment<OrderViewModel, Fragme
     private static final long ONE_SECOND = 1000;
     private CountDownTimer countDownTimer;
     private Order mOrder;
+    private String billPhoto = null;
     private boolean isReadyMarked = false;
     private static final long FETCH_INTERVAL = 10 * ONE_SECOND;
     private boolean isFirstTime = true;
@@ -66,10 +67,19 @@ public class PickOrderFragment extends BaseDialogFragment<OrderViewModel, Fragme
         mOrder = new Gson().fromJson(getArguments().getString("order_json"), Order.class);
         mBinding.setOrder(mOrder);
         mBinding.btnAccept.setLocked(true);
+        mBinding.btnAccept.setLocked(true);
         mBinding.btnAccept.setOnSlideCompleteListener(slideToActView -> processOrder(mOrder));
         mBinding.toolbar.back.setOnClickListener(view -> dismissOrderDialog());
+        mBinding.radioConfirm.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            if(isChecked){
+                mBinding.btnAccept.setLocked(false);
+            }else{
+                mBinding.btnAccept.setLocked(true);
+            }
+        });
         mBinding.btnClickPhoto.setOnClickListener(view -> new VerifyBillDialog.Builder(mContext)
                 .setPhotoClickListener((dialog, base64EnodedText) -> {
+                    billPhoto = base64EnodedText;
                     System.out.println("################ HOME_FRAGMENT_BASE_64 ############################");
                     System.out.println(base64EnodedText);
                     System.out.println("#####################################################");
@@ -136,7 +146,7 @@ public class PickOrderFragment extends BaseDialogFragment<OrderViewModel, Fragme
     }
 
     private void processOrder(Order order){
-        viewModel.pickedUpOrder(order).observe(mContext, resource -> {
+        viewModel.pickedUpOrder(order, billPhoto).observe(mContext, resource -> {
             switch (resource.status){
                 case LOADING:
                     break;

@@ -243,7 +243,7 @@
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:textColor="@color/black"
-                            android:text="Restaurant hanovered the food?" />
+                            android:text="Restaurant handovered the food?" />
 
                         <androidx.cardview.widget.CardView
                             android:layout_width="match_parent"
