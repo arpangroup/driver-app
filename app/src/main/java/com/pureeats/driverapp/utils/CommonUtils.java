@@ -37,6 +37,7 @@ import com.pureeats.driverapp.views.App;
 import com.pureeats.driverapp.views.order.DialogActivity;
 
 import java.io.ByteArrayOutputStream;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -362,6 +363,11 @@ public class CommonUtils {
         }catch (Exception e){
 
         }
+    }
+
+    public static String getTimeFromDate(String dateStr){
+        DateFormat dateFormat = sdfhh_mm_aa;
+        return sdfhh_mm_aa.format(getTimeInMilliseconds(dateStr));
     }
 
 }

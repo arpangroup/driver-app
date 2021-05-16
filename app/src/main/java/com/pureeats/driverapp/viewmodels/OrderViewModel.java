@@ -38,8 +38,8 @@ public class OrderViewModel extends BaseViewModel {
     public LiveData<Resource<Order>> acceptOrder(Order order){
         return orderRepository.acceptOrder(order);
     }
-    public LiveData<Resource<Order>> pickedUpOrder(Order order, String billPhoto){
-        return orderRepository.pickedUpOrder(order, billPhoto);
+    public LiveData<Resource<Order>> pickedUpOrder(Order order, List<String> billPhotos){
+        return orderRepository.pickedUpOrder(order, billPhotos);
     }
     public LiveData<Resource<Order>> reachedPickupLocation(Order order){
         return orderRepository.reachedPickUpLocation(order);

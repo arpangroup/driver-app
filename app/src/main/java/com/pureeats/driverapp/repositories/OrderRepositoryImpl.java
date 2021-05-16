@@ -68,9 +68,9 @@ public class OrderRepositoryImpl extends AuthRepositoryImpl implements OrderRepo
     public LiveData<Resource<Order>> acceptOrder(Order order){
         return safeApiCall(api.acceptOrder(new ProcessOrderRequest(requestToken, order.getId())));
     }
-    public LiveData<Resource<Order>> pickedUpOrder(Order order, String billPhoto){
+    public LiveData<Resource<Order>> pickedUpOrder(Order order, List<String> billPhotos){
         ProcessOrderRequest processOrderRequest = new ProcessOrderRequest(requestToken, order.getId());
-        processOrderRequest.setBillPhoto(billPhoto);
+        processOrderRequest.setBillPhotos(billPhotos);
         Log.d(TAG, "PICKUP_ORDER_REQUEST: " + new Gson().toJson(processOrderRequest));
         return safeApiCall(api.pickedUpOrder(processOrderRequest));
     }

@@ -11,6 +11,8 @@ import com.google.android.gms.common.util.CollectionUtils;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -70,5 +72,7 @@ public class CommonUiUtils {
         }
         return result;
     }
+
+
 
 }

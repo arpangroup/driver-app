@@ -17,9 +17,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.common.util.CollectionUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.gson.Gson;
 import com.pureeats.driverapp.R;
+import com.pureeats.driverapp.adapters.DishListAdapter;
 import com.pureeats.driverapp.commons.Constants;
 import com.pureeats.driverapp.commons.OrderStatus;
 import com.pureeats.driverapp.databinding.FragmentPickOrderBinding;
@@ -32,15 +34,18 @@ import com.pureeats.driverapp.utils.CommonUtils;
 import com.pureeats.driverapp.viewmodels.OrderViewModel;
 import com.pureeats.driverapp.views.base.BaseDialogFragment;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 public class PickOrderFragment extends BaseDialogFragment<OrderViewModel, FragmentPickOrderBinding, OrderRepositoryImpl> {
     private final String TAG = getClass().getName();
+    private boolean toggleItems = false;
     private static final long ONE_SECOND = 1000;
     private CountDownTimer countDownTimer;
     private Order mOrder;
-    private String billPhoto = null;
+    private List<String> billPhotos = new ArrayList<>();
     private boolean isReadyMarked = false;
     private static final long FETCH_INTERVAL = 10 * ONE_SECOND;
     private boolean isFirstTime = true;
@@ -67,24 +72,39 @@ public class PickOrderFragment extends BaseDialogFragment<OrderViewModel, Fragme
         mOrder = new Gson().fromJson(getArguments().getString("order_json"), Order.class);
         mBinding.setOrder(mOrder);
         mBinding.btnAccept.setLocked(true);
-        mBinding.btnAccept.setLocked(true);
+        mBinding.setToggleItems(toggleItems);
+        mBinding.dishRecycler.setAdapter(new DishListAdapter(CollectionUtils.isEmpty(mOrder.getOrderitems()) ? new ArrayList<>() : mOrder.getOrderitems()));
         mBinding.btnAccept.setOnSlideCompleteListener(slideToActView -> processOrder(mOrder));
         mBinding.toolbar.back.setOnClickListener(view -> dismissOrderDialog());
+        mBinding.btnToggleItems.setOnClickListener(view -> {
+            toggleItems = !toggleItems;
+            mBinding.setToggleItems(toggleItems);
+        });
+        mBinding.btnCallToCustomer.setOnClickListener(view -> CommonUtils.makePhoneCall(mContext, mOrder.getCustomerPhone()));
         mBinding.radioConfirm.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            if(isChecked){
+            OrderStatus orderStatus = OrderStatus.getStatus(mOrder.getOrderStatusId());
+            if(isChecked && orderStatus == OrderStatus.ORDER_READY_AND_DELIVERY_REACHED_TO_PICKUP){
                 mBinding.btnAccept.setLocked(false);
             }else{
                 mBinding.btnAccept.setLocked(true);
             }
         });
+
         mBinding.btnClickPhoto.setOnClickListener(view -> new VerifyBillDialog.Builder(mContext)
                 .setPhotoClickListener((dialog, base64EnodedText) -> {
-                    billPhoto = base64EnodedText;
+                    billPhotos.add(base64EnodedText);
                     System.out.println("################ HOME_FRAGMENT_BASE_64 ############################");
                     System.out.println(base64EnodedText);
                     System.out.println("#####################################################");
-                    //dialog.dismiss();
-                    Toast.makeText(mContext, "clicked....", Toast.LENGTH_SHORT).show();
+
+                    if(billPhotos.size() == Constants.BILL_PHOTO_REQUIRED){
+                        mBinding.btnClickPhoto.setText("Confirm items to proceed");
+                        mBinding.radioConfirm.setEnabled(true);
+                        mBinding.btnClickPhoto.setEnabled(false);
+                    }else{
+                        int remaingPhoto = Constants.BILL_PHOTO_REQUIRED - billPhotos.size();
+                        mBinding.btnClickPhoto.setText("Click " + remaingPhoto + " more photos to proceed");
+                    }
                 })
                 .show());
         handleStatus(mOrder);
@@ -99,7 +119,7 @@ public class PickOrderFragment extends BaseDialogFragment<OrderViewModel, Fragme
             isReadyMarked = true;
             remainingPreparingTime.setValue(0L);
             mBinding.btnAccept.setEnabled(true);
-            mBinding.btnAccept.setLocked(false);
+            if(mBinding.radioConfirm.isChecked())mBinding.btnAccept.setLocked(false);
 
             if(countDownTimer != null) countDownTimer.cancel();
             if(runnable != null)handler.removeCallbacks(runnable);
@@ -146,7 +166,7 @@ public class PickOrderFragment extends BaseDialogFragment<OrderViewModel, Fragme
     }
 
     private void processOrder(Order order){
-        viewModel.pickedUpOrder(order, billPhoto).observe(mContext, resource -> {
+        viewModel.pickedUpOrder(order, billPhotos).observe(mContext, resource -> {
             switch (resource.status){
                 case LOADING:
                     break;

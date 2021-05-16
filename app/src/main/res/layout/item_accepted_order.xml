@@ -4,6 +4,7 @@
 
     <data>
         <import type="android.view.View"/>
+        <import type="com.pureeats.driverapp.utils.CommonUtils"/>
         <variable
             name="order"
             type="com.pureeats.driverapp.models.Order" />
@@ -49,7 +50,7 @@
                             android:textColor="@color/blue"
                             android:textSize="12sp"
                             android:textStyle="bold"
-                            android:text="Foof" />
+                            android:text="Food" />
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -85,7 +86,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textStyle="bold"
-                            android:text="@{`ID: ` + order.id + `, status: `+order.orderStatusId }"/>
+                            android:text="@{CommonUtils.getTimeFromDate(order.createdAt), default=`10:45 AM`}"/>
+<!--                        android:text="@{`ID: ` + order.id + `, status: `+order.orderStatusId }"-->
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

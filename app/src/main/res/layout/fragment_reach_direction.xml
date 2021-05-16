@@ -7,6 +7,7 @@
 
     <data>
         <import type="android.view.View"/>
+        <import type="com.pureeats.driverapp.utils.CommonUtils"/>
         <import type="com.pureeats.driverapp.commons.OrderStatus"/>
         <variable
             name="order"
@@ -122,6 +123,7 @@
                                 android:orientation="horizontal">
 
                                 <LinearLayout
+                                    android:visibility="@{order.restaurant != null &amp; order.restaurant.contactNumber != null ? View.VISIBLE : View.GONE}"
                                     android:id="@+id/layout_call_restaurant"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -157,8 +159,7 @@
                                     android:textStyle="bold"
                                     android:textSize="18sp"
                                     android:textColor="@color/black"
-                                    android:text="@{order.restaurant.name}"
-                                    android:hint="Restaurant Placeholder name" />
+                                    android:text="@{order.restaurant.name, default=`Restaurant Name`}" />
 
                             </LinearLayout>
 
@@ -175,8 +176,14 @@
                                     android:maxLines="2"
                                     android:textStyle="bold"
                                     android:textSize="16sp"
-                                    android:text="@{order.restaurant.address}"
-                                    android:hint="Placeholder Address" />
+                                    android:text="@{order.restaurant.address, default=`Restaurant Address`}" />
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:maxLines="1"
+                                    android:textStyle="bold"
+                                    android:textSize="16sp"
+                                    android:text="@{`Order Placed at `+ CommonUtils.getTimeFromDate(order.createdAt), default=`Order Placed at 10:15 AM`}" />
                             </LinearLayout>
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
@@ -201,6 +208,8 @@
                                 android:orientation="horizontal">
 
                                 <LinearLayout
+
+                                    android:visibility="@{order.customerPhone != null ? View.VISIBLE : View.GONE}"
                                     android:id="@+id/layout_call_customer"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -236,8 +245,7 @@
                                     android:textSize="18sp"
                                     android:layout_gravity="center"
                                     android:textColor="@color/black"
-                                    android:text="@{order.uniqueOrderId}"
-                                    android:hint="Placeholder Order Id" />
+                                    android:text="@{order.uniqueOrderId, default=`Order ID`}"/>
 
                             </LinearLayout>
 
@@ -254,8 +262,7 @@
                                     android:maxLines="2"
                                     android:textStyle="bold"
                                     android:textSize="14sp"
-                                    android:text="@{order.user.name}"
-                                    android:hint="Placeholder name" />
+                                    android:text="@{order.user.name, default=`Customer Name`}"/>
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -263,8 +270,14 @@
                                     android:maxLines="2"
                                     android:textStyle="bold"
                                     android:textSize="14sp"
-                                    android:text="@{order.address}"
-                                    android:hint="Placeholder address" />
+                                    android:text="@{order.address, default=`Customers delivery address`}"/>
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:maxLines="1"
+                                    android:textStyle="bold"
+                                    android:textSize="16sp"
+                                    android:text="@{`Order Placed at `+ CommonUtils.getTimeFromDate(order.createdAt), default=`Order Placed at 10:15 AM`}" />
                             </LinearLayout>
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>

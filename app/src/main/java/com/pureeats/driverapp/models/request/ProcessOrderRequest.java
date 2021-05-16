@@ -2,6 +2,9 @@ package com.pureeats.driverapp.models.request;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,8 +13,8 @@ import lombok.Setter;
 public class ProcessOrderRequest extends RequestToken {
     @SerializedName("order_id")
     private int orderId;
-    @SerializedName("bill_photo")
-    private String billPhoto;
+    @SerializedName("bill_photos")
+    private List<String> billPhotos = new ArrayList<>();
 
     @SerializedName("unique_order_id")
     private String uniqueOrderId;
@@ -30,4 +33,13 @@ public class ProcessOrderRequest extends RequestToken {
         super();
         this.uniqueOrderId = uniqueOrderId;
     }
+
+    public void setBillPhoto(String photo){
+        billPhotos.add(photo);
+    }
+    public void setBillPhotos(List<String> photos){
+        billPhotos.addAll(photos);
+    }
+
+
 }
