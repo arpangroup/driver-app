@@ -25,6 +25,7 @@ import com.pureeats.driverapp.repositories.BaseRepository;
 import com.pureeats.driverapp.sharedprefs.UserSession;
 import com.pureeats.driverapp.viewmodels.BaseViewModel;
 import com.pureeats.driverapp.viewmodels.ViewModelFactory;
+import com.pureeats.driverapp.views.App;
 import com.pureeats.driverapp.views.order.AcceptOrderDialog;
 import com.pureeats.driverapp.views.order.DeliverOrderFragment;
 import com.pureeats.driverapp.views.order.DialogActivity;
@@ -41,6 +42,8 @@ public abstract class BaseDialogFragment<VM extends BaseViewModel, B extends Vie
     protected VM viewModel;
     protected RemoteDataSource remoteDataSource = new RemoteDataSource();
     private ViewModelFactory factory;
+
+    protected App app;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,6 +82,7 @@ public abstract class BaseDialogFragment<VM extends BaseViewModel, B extends Vie
         factory = new ViewModelFactory(getRepository());
         //viewModel = new ViewModelProvider(this, factory).get(getViewModel());
         viewModel = new ViewModelProvider(requireActivity(), factory).get(getViewModel());
+        app = App.getInstance();
 
         return mBinding.getRoot();
     }

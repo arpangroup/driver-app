@@ -9,12 +9,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.AudioAttributes;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.SoundPool;
-import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.PowerManager;
@@ -26,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.TaskStackBuilder;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -37,10 +30,8 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.gson.Gson;
 import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.commons.Actions;
-import com.pureeats.driverapp.commons.NotificationSoundType;
 import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.models.request.HeartbeatRequest;
 import com.pureeats.driverapp.models.request.RequestToken;
@@ -50,15 +41,11 @@ import com.pureeats.driverapp.network.datasource.RemoteDataSource;
 import com.pureeats.driverapp.receivers.OrderArrivedReceiver;
 import com.pureeats.driverapp.sharedprefs.ServiceTracker;
 import com.pureeats.driverapp.sharedprefs.UserSession;
-import com.pureeats.driverapp.utils.CommonUtils;
 import com.pureeats.driverapp.views.App;
 import com.pureeats.driverapp.views.MainActivity;
-import com.pureeats.driverapp.views.order.DialogActivity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -96,9 +83,6 @@ public class EndlessService extends Service {
             newOrderList.add(newOrder);
             sendBroadcast(OrderArrivedReceiver.getBroadcastIntent(this, Actions.NEW_ORDER_ARRIVED, newOrder));
         }
-
-
-
     }
     private void pushCancelledOrder(Order cancelledOrder){
         Log.d(TAG, "Inside pushOrder.....");
@@ -131,30 +115,6 @@ public class EndlessService extends Service {
         return ongoingOrderList;
     }
 
-    private void handleStatusChanged(List<Order> upcomingOrders){
-        //check if any accepted order is transfer to other DeliveryGuy:
-        // i.e., the order which is present in ongoing orders, but not present in acceptedOrders
-        //Log.d(TAG, "handleStatusChanged");
-        if(ongoingOrderList == null || CollectionUtils.isEmpty(ongoingOrderList.getValue())) return;
-
-
-//        ongoingOrderList.getValue().forEach(existingOrder ->{
-//            boolean isPresent = upcomingOrders.stream().anyMatch(u -> u.getId() == existingOrder.getId());
-//            if(!isPresent){ // if the ongoing order is not present in upcoming acceptedOrderList
-//                // remove the order from the ongoing order list:
-//                CommonUtils.displayNotification(this, "Order cancelled", "Order is transfered to other delivery guy or it cancelled by the customer");
-//                List<Order> existingOrders = new ArrayList<>(ongoingOrderList.getValue());
-//                existingOrders.removeIf(order -> order.getId() == existingOrder.getId());
-//                ongoingOrderList.setValue(existingOrders);
-//            }
-//        });
-
-
-
-    }
-
-
-
 
 
     @Override
@@ -167,9 +127,9 @@ public class EndlessService extends Service {
                 if(action.equals(Actions.START.name()))startService();
                 else if(action.equals(Actions.STOP.name()))stopService();
                 //else if(action.equals(Actions.NEW_ORDER_ARRIVED.name())) startMediaPlayer(NotificationSoundType.ORDER_ARRIVE);
-                else if(action.equals(Actions.NEW_ORDER_ARRIVED.name())) {
-                    app.playOrderArrivedTone(intent.getIntExtra("order_id", 0));
-                }
+//                else if(action.equals(Actions.NEW_ORDER_ARRIVED.name())) {
+//                    app.playOrderArrivedTone(intent.getIntExtra("order_id", 0));
+//                }
                 else if(action.equalsIgnoreCase(Actions.ORDER_CANCELLED.name()) || action.equalsIgnoreCase(Actions.DISMISS_ORDER_NOTIFICATION.name())) {
                     app.stopOrderArrivedRingTone(intent.getIntExtra("order_id", 0));
                 }
@@ -195,6 +155,7 @@ public class EndlessService extends Service {
         if(isServiceStarted) return;
         Log.d(TAG, "Starting the foreground service task");
         isServiceStarted = true;
+        app = App.getInstance();
         ServiceTracker.setServiceState(this, ServiceTracker.ServiceState.STARTED);
         getLocationUpdates();
 
@@ -232,6 +193,11 @@ public class EndlessService extends Service {
                 wakeLock.release();
             }
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+
+            if(timer != null){
+                timer.cancel();
+            }
+            app.clearAllArrivedOrderNotification();
             stopForeground(true);
             stopSelf();
         }catch (Exception e){
@@ -253,18 +219,7 @@ public class EndlessService extends Service {
         startForeground(App.NOTIFICATION_CHANNEL_ID_RUNNING_ORDER, createNotification());
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
 
-        mLocationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(@NonNull LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-                if (locationResult != null && locationResult.getLastLocation() != null) {
-                    double lat = locationResult.getLastLocation().getLatitude();
-                    double lng = locationResult.getLastLocation().getLongitude();
-                    lastLocation = new LatLng(lat, lng);
-                    Log.d(TAG, "LATLNG: " + lastLocation);
-                }
-            }
-        };
+        startLocationUpdate();
 
 
     }
@@ -282,6 +237,7 @@ public class EndlessService extends Service {
         //sendBroadcast(broadcastIntent);
 
     }
+
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
@@ -301,6 +257,21 @@ public class EndlessService extends Service {
         Log.d(TAG,  "Some component want to bind with the service");
         // We don't provide binding, so return null
         return null;
+    }
+
+    private void startLocationUpdate(){
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                if (locationResult != null && locationResult.getLastLocation() != null) {
+                    double lat = locationResult.getLastLocation().getLatitude();
+                    double lng = locationResult.getLastLocation().getLongitude();
+                    lastLocation = new LatLng(lat, lng);
+                    Log.d(TAG, "LATLNG: " + lastLocation);
+                }
+            }
+        };
     }
 
     private Notification createNotification(){
@@ -331,7 +302,7 @@ public class EndlessService extends Service {
 
 
     private void scheduleHeartBeat(LatLng latLng, List<Order> processedOrders){
-        //Log.d(TAG, "SCHEDULE_HEARTBEAT: "+latLng);
+        Log.d(TAG, "SCHEDULE_HEARTBEAT: "+latLng);
         if (latLng == null)return;
         Api apiInterface = RemoteDataSource.buildApiWithoutInterceptor(Api.class);
 
@@ -366,13 +337,6 @@ public class EndlessService extends Service {
         heartBeatResponse.getCancelledOrders().forEach(this::pushCancelledOrder);
         heartBeatResponse.getAcceptedOrders().forEach(this::pushOngoingOrder);
         heartBeatResponse.getPickedupOrders().forEach(this::pushOngoingOrder);
-
-        List<Order> upcomingOrders = new ArrayList<>();
-        upcomingOrders.addAll(heartBeatResponse.getAcceptedOrders());
-        upcomingOrders.addAll(heartBeatResponse.getPickedupOrders());
-        handleStatusChanged(upcomingOrders);
-
-
     }
 
 

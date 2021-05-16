@@ -4,7 +4,9 @@ import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioAttributes;
@@ -16,10 +18,16 @@ import android.os.Build;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.TaskStackBuilder;
 
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
 import com.pureeats.driverapp.R;
+import com.pureeats.driverapp.commons.Actions;
+import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.sharedprefs.UserSession;
+import com.pureeats.driverapp.utils.CommonUtils;
+import com.pureeats.driverapp.views.order.DialogActivity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +42,7 @@ public class App extends Application {
     private int ORDER_ARRIVED_SOUND;
     private int ORDER_CANCELLED_SOUND;
     private int LOOP_INDEFINITE = -1; // -1: Infinite; 2: 2 times, 3: 3 times; 0: no loop
-    private Map<Integer, Integer> orderIdStreamIdMap = new HashMap<>();// Usesd to stop the sound/sytream
+    private HashMap<Integer, Integer> orderIdStreamIdMap = new HashMap<>();// Usesd to stop the sound/sytream
 
     public static final String CHANNEL_ID_NEW_ORDER = "channel_new_orders";
     public static final String CHANNEL_ID_PUSH_NOTIFICATION = "channel_push_notifications";
@@ -183,12 +191,16 @@ public class App extends Application {
     }
 
     public void playOrderArrivedTone(int orderId){
+        if (mSoundPool == null || orderIdStreamIdMap == null) return;;
        try{
-           mSoundPool.autoPause();
+           //mSoundPool.autoPause();
+           if(orderIdStreamIdMap.get(orderId) != null)mSoundPool.pause(orderIdStreamIdMap.getOrDefault(orderId, 0));//if same is orderid is already playing
            int streamId = mSoundPool.play(ORDER_ARRIVED_SOUND, 0.1f, 0.1f, 0, LOOP_INDEFINITE, 1);
            System.out.println("######## PlayingOrderArrivedSoundInStreamId: " + streamId + ", OrderId: " + orderId);
            orderIdStreamIdMap.put(orderId, streamId);
-       }catch (Throwable t){}
+       }catch (Throwable t){
+           t.printStackTrace();
+       }
     }
 
     public void stopOrderArrivedRingTone(int orderId){
@@ -196,10 +208,64 @@ public class App extends Application {
         orderIdStreamIdMap.forEach((k, v) -> System.out.println("Key : " + k + ", Value : " + v));
         try {
             int streamId = orderIdStreamIdMap.get(orderId);
+            Log.d(TAG, "Stopping StreamID: " + streamId);
             //mSoundPool.autoPause();
             mSoundPool.stop(streamId);
         }catch (Throwable t){
             t.printStackTrace();
         }
+    }
+
+    public void clearAllArrivedOrderNotification(){
+        mSoundPool.autoPause();
+        //mSoundPool.release();
+        //mSoundPool = null;
+
+        try{
+            orderIdStreamIdMap.forEach((k, v) -> CommonUtils.cancelNotification(getApplicationContext(), k));
+        }catch (Throwable t){
+            t.printStackTrace();
+        }
+    }
+
+
+    public void showOrderArriveNotification(Order order) {
+        //Log.d(TAG, "showOrderArriveNotification...");
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID_PUSH_NOTIFICATION);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Intent fullScreenIntent = new Intent(this, DialogActivity.class);
+            TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(getApplicationContext());
+            taskStackBuilder.addNextIntentWithParentStack(fullScreenIntent);
+            fullScreenIntent.setAction(Actions.ACCEPT_ORDER_FRAGMENT.name());
+            fullScreenIntent.putExtra(DialogActivity.INTENT_EXTRA_ORDER, new Gson().toJson(order));
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, order.getId(), fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            builder.setSmallIcon(R.drawable.ic_launcher_background)
+                    .setContentTitle("New Order Arrive")
+                    .setContentText("Order # " + order.getUniqueOrderId())
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setCategory(NotificationCompat.CATEGORY_CALL)
+                    .setFullScreenIntent(pendingIntent, true)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setOngoing(true);
+            Notification notification = builder.build();
+
+            //Log.d(TAG, "Opening DialogActivity from Notification......");
+            NotificationManager notificationManager = this.getSystemService(NotificationManager.class);
+            notificationManager.notify(order.getId(), notification);
+        }else{
+            Intent intent = new Intent(this, DialogActivity.class);
+            TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);
+            taskStackBuilder.addNextIntentWithParentStack(intent);
+            intent.putExtra(DialogActivity.INTENT_EXTRA_ORDER, new Gson().toJson(order));
+            intent.setAction(Actions.ACCEPT_ORDER_FRAGMENT.name());
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            //Log.d(TAG, "Starting DialogActivity......");
+            startActivity(intent);
+        }
+        playOrderArrivedTone(order.getId());
+
     }
 }

@@ -173,7 +173,8 @@ public class AcceptOrderDialog extends BaseDialogFragment<OrderViewModel, Fragme
 
     private void sendDismissBroadcast(){
         try {
-            mContext.sendBroadcast(OrderArrivedReceiver.getBroadcastIntent(mContext, Actions.DISMISS_ORDER_NOTIFICATION, mOrder));
+            //mContext.sendBroadcast(OrderArrivedReceiver.getBroadcastIntent(mContext, Actions.DISMISS_ORDER_NOTIFICATION, mOrder));
+            app.stopOrderArrivedRingTone(mOrder.getId());
         }catch (Throwable t){}
     }
 
