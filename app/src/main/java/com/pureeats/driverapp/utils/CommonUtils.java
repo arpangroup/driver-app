@@ -2,12 +2,15 @@ package com.pureeats.driverapp.utils;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
@@ -22,6 +25,7 @@ import androidx.core.content.ContextCompat;
 import com.android.volley.BuildConfig;
 import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.commons.Constants;
+import com.pureeats.driverapp.commons.NotificationSoundType;
 import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.models.Restaurant;
 import com.google.android.gms.maps.model.LatLng;
@@ -35,6 +39,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -207,6 +213,10 @@ public class CommonUtils {
         return deviceInfo;
     }
 
+    public static void displayNotification(Context context, String title, String message, NotificationSoundType soundType) {
+        displayNotification(context, title, message);
+        playNotificationSound(context, soundType);
+    }
     public static void displayNotification(Context context, String title, String message) {
         //Intent notificationIntent = new Intent(context, HomePageNavigationActivityOld.class);
         //PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -312,6 +322,41 @@ public class CommonUtils {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
         return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
+    }
+
+
+    public static void playNotificationSound(Context context, NotificationSoundType soundType){
+        MediaPlayer mediaPlayer = new MediaPlayer();
+
+        if(soundType == NotificationSoundType.ORDER_ARRIVE) mediaPlayer = MediaPlayer.create(context, R.raw.order_arrived_ringtone);
+        else if(soundType == NotificationSoundType.ORDER_CANCELED) mediaPlayer = MediaPlayer.create(context, R.raw.swiggy_order_cancel_ringtone);
+        else mediaPlayer = MediaPlayer.create(context, R.raw.default_notification_sound);
+
+        try{
+            mediaPlayer.start();
+        }catch (Exception e){
+            //e.printStackTrace();
+        }
+    }
+
+    private void stopMediaPlayer(MediaPlayer mMediaPlayer){
+        try {
+            if(mMediaPlayer != null){
+                mMediaPlayer.stop();
+                mMediaPlayer.release();
+                mMediaPlayer = null;
+            }
+        }catch (Throwable t){}
+    }
+
+    public static void cancelNotification(Context context, int notifyId) {
+        try{
+            String ns = Context.NOTIFICATION_SERVICE;
+            NotificationManager nMgr = (NotificationManager) context.getSystemService(ns);
+            nMgr.cancel(notifyId);
+        }catch (Exception e){
+
+        }
     }
 
 }

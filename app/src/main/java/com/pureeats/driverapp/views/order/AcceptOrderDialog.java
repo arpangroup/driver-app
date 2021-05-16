@@ -67,28 +67,32 @@ public class AcceptOrderDialog extends BaseDialogFragment<OrderViewModel, Fragme
     }
 
     private void processOrder(Order order){
+        sendDismissBroadcast();
         viewModel.acceptOrder(order).observe(mContext, resource -> {
             switch (resource.status){
                 case LOADING:
                     break;
                 case ERROR:
-                    CommonUiUtils.showSnackBar(getView(), resource.message);
+                    showAlert(resource.message);
                     break;
                 case SUCCESS:
                     Order currentOrder = resource.data;
                     if(!currentOrder.isAlreadyAccepted()){
                         gotoNextActivity(currentOrder);
                     }else{
-                        sendDismissBroadcast();
-                        new AlertDialog.Builder(mContext)
-                                .setTitle("Order is already accepted")
-                                .setCancelable(false)
-                                .setPositiveButton("OK", (dialog, i) -> dismissOrderDialog()).show();
+                       showAlert("Order is already accepted");
                     }
 
                     break;
             }
         });
+    }
+
+    private void showAlert(String title){
+        new AlertDialog.Builder(mContext)
+                .setTitle(title)
+                .setCancelable(false)
+                .setPositiveButton("OK", (dialog, i) -> dismissOrderDialog()).show();
     }
 
 
@@ -112,7 +116,7 @@ public class AcceptOrderDialog extends BaseDialogFragment<OrderViewModel, Fragme
         int numberOfSeconds = (int) ORDER_ACCEPT_TIME / 1000; // Ex : 20000/1000 = 20
         float factor = (float) (100.0f / numberOfSeconds); // 100/20 = 5, for each second multiply this, for sec 1 progressPercentage = 1x5 =5, for sec 5 progressPercentage = 5x5 = 25, for sec 20 progressPercentage = 20x5 =100
 
-        Log.d("PROGRESS_PERCENTAGE: ", "NUMBER_OF_SECONDS: " + numberOfSeconds);
+        //Log.d("PROGRESS_PERCENTAGE: ", "NUMBER_OF_SECONDS: " + numberOfSeconds);
         //Log.d("PROGRESS_PERCENTAGE: ", "FACTOR: " + factor);
 
        countDownTimer = new CountDownTimer(mTimeLeftInMills, 1000){

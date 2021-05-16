@@ -8,6 +8,9 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.RingtoneManager;
+import android.media.SoundPool;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
@@ -18,9 +21,20 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.sharedprefs.UserSession;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class App extends Application {
     private final String TAG = "Application";
+    private static App mInstance;
     UserSession userSession;
+
+
+    private static SoundPool mSoundPool;
+    private int ORDER_ARRIVED_SOUND;
+    private int ORDER_CANCELLED_SOUND;
+    private int LOOP_INDEFINITE = -1; // -1: Infinite; 2: 2 times, 3: 3 times; 0: no loop
+    private Map<Integer, Integer> orderIdStreamIdMap = new HashMap<>();// Usesd to stop the sound/sytream
 
     public static final String CHANNEL_ID_NEW_ORDER = "channel_new_orders";
     public static final String CHANNEL_ID_PUSH_NOTIFICATION = "channel_push_notifications";
@@ -52,13 +66,23 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        mInstance = this;
         userSession = new UserSession(this);
         if(userSession.getPushToken() == null) generatePushNotificationToken();
         createNotificationChannels();
+        initSoundPools();
+    }
+
+    public static synchronized App getInstance(){
+        return mInstance;
     }
 
     private void createNotificationChannels() {
         Uri sound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.default_notification_sound);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri emergencySoundUri = Uri.parse("android.resource://"+getPackageName()+ "/raw/order_arrived_ringtone");
+
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             NotificationChannel notificationChannelNewOrder = new NotificationChannel(
                     CHANNEL_ID_NEW_ORDER,
@@ -83,7 +107,7 @@ public class App extends Application {
                     .setUsage(AudioAttributes.USAGE_ALARM)
                     .build();
 
-            notificationChannelNewOrder.setSound(sound, attributes);
+            notificationChannelNewOrder.setSound(emergencySoundUri, attributes);
 
 
             notificationChannelNewOrder.setDescription("This is New Order Notification Channel");
@@ -137,4 +161,45 @@ public class App extends Application {
                 });
     }
 
+
+    private void initSoundPools(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+
+            mSoundPool = new SoundPool.Builder()
+                    .setMaxStreams(5)
+                    .setAudioAttributes(audioAttributes)
+                    .build();
+        }else{
+            mSoundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+        }
+
+        ORDER_ARRIVED_SOUND = mSoundPool.load(this, R.raw.order_arrived_ringtone, 1);
+        ORDER_CANCELLED_SOUND = mSoundPool.load(this, R.raw.swiggy_order_cancel_ringtone, 2);
+
+    }
+
+    public void playOrderArrivedTone(int orderId){
+       try{
+           mSoundPool.autoPause();
+           int streamId = mSoundPool.play(ORDER_ARRIVED_SOUND, 0.1f, 0.1f, 0, LOOP_INDEFINITE, 1);
+           System.out.println("######## PlayingOrderArrivedSoundInStreamId: " + streamId + ", OrderId: " + orderId);
+           orderIdStreamIdMap.put(orderId, streamId);
+       }catch (Throwable t){}
+    }
+
+    public void stopOrderArrivedRingTone(int orderId){
+        Log.d(TAG, "stopOrderArrivedTone... OrderId: "+ orderId);
+        orderIdStreamIdMap.forEach((k, v) -> System.out.println("Key : " + k + ", Value : " + v));
+        try {
+            int streamId = orderIdStreamIdMap.get(orderId);
+            //mSoundPool.autoPause();
+            mSoundPool.stop(streamId);
+        }catch (Throwable t){
+            t.printStackTrace();
+        }
+    }
 }

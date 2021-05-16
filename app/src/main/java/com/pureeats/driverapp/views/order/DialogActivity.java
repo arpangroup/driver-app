@@ -42,9 +42,6 @@ public class DialogActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        try {
-            sendBroadcast(OrderArrivedReceiver.getBroadcastIntent(getApplicationContext(), Actions.DISMISS_ORDER_NOTIFICATION, mOrder));
-        }catch (Throwable t){}
         super.onDestroy();
     }
 

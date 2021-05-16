@@ -5,6 +5,7 @@ import com.pureeats.driverapp.models.User;
 import com.pureeats.driverapp.models.request.DeliverOrderRequest;
 import com.pureeats.driverapp.models.request.DeliveryGuyGetGpsRequest;
 import com.pureeats.driverapp.models.request.DeliveryGuySetGpsRequest;
+import com.pureeats.driverapp.models.request.HeartbeatRequest;
 import com.pureeats.driverapp.models.request.LoginRequest;
 import com.pureeats.driverapp.models.LoginResponse;
 import com.pureeats.driverapp.models.Order;
@@ -62,7 +63,7 @@ public interface Api {
 //    Call<Map<String, List<Object>>> scheduleHeartbeat(@Body DeliveryGuySetGpsRequest requestToken);
 
     @POST("/api/delivery/heartbeat")
-    Call<HeartBeatResponse> scheduleHeartbeat(@Body DeliveryGuySetGpsRequest requestToken);
+    Call<HeartBeatResponse> scheduleHeartbeat(@Body HeartbeatRequest heartbeatRequest);
 
 
 

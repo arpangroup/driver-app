@@ -24,7 +24,7 @@ public class Constants {
     private static LatLng DEFAULT_LOCATION_WESTBENGAL = new LatLng(22.9868, 87.8550);
     public static LatLng DEFAULT_LOCATION = DEFAULT_LOCATION_WESTBENGAL;
     //public static final String WEBSITE_URL = "https://admin.pureeatstest.xyz/";
-    public static final String WEBSITE_URL = "http://192.168.0.102:8000/";
+    public static final String WEBSITE_URL = "http://192.168.0.100:8000/";
 //    public static final String WEBSITE_URL = "https://admin.pureeats.in/";
     public static final String DELIVERY_IMAGE_URL = WEBSITE_URL + "assets/img/delivery/";
 
@@ -34,11 +34,4 @@ public class Constants {
 
 
 
-
-    public static final String ACTION_START = "START";
-    public static final String ACTION_STOP = "STOP";
-    public static final String ACTION_NEW_ORDER_ARRIVED = "NEW_ORDER_ARRIVED";
-    public static final String ACTION_ORDER_CANCELLED = "ORDER_CANCELLED";
-    public static final String DISMISS_ORDER_NOTIFICATION = "DISMISS_ORDER_NOTIFICATION";
-    public static final String ACTION_ORDER_ACCEPTED = "ORDER_ACCEPTED";
 }
