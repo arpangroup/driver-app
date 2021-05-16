@@ -124,7 +124,10 @@ public class PickOrderFragment extends BaseDialogFragment<OrderViewModel, Fragme
             if(countDownTimer != null) countDownTimer.cancel();
             if(runnable != null)handler.removeCallbacks(runnable);
         }else {
-            startOrderPrepareCountDownTimer(order.getRestaurantAcceptAt(), order.getPrepareTime());
+            int deliveryTime = order.getRestaurant() != null ? Integer.parseInt(order.getRestaurant().getDeliveryTime()) : 0;
+            int prepareTime = deliveryTime + order.getPrepareTime();
+
+            startOrderPrepareCountDownTimer(order.getRestaurantAcceptAt(), prepareTime);
             mBinding.btnAccept.setEnabled(false);
             syncOrderStatus();
         }
