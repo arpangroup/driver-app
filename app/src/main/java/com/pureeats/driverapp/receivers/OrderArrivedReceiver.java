@@ -12,6 +12,7 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.gson.Gson;
 import com.pureeats.driverapp.R;
@@ -37,22 +38,13 @@ public class OrderArrivedReceiver extends BroadcastReceiver {
     private final String ORDER_CANCELLED_TITLE = "Order Cancelled";
     private final String ORDER_CANCELLED_MESSAGE = "##UNIQUE_ORDER_ID## is cancelled, please ignore this message if already notified";
 
-    public static Intent getBroadcastIntent(final Context context, final Actions action, final Order order){
-        Intent broadcastIntent = new Intent(context, OrderArrivedReceiver.class);
-        broadcastIntent.setAction(action.name());
-        broadcastIntent.putExtra("extra_order", new Gson().toJson(order));
-        Log.d(TAG, "SEND_BROADCAST: " + action.name() + " :: OrderID: " + order.getId());
-        context.sendBroadcast(broadcastIntent);
-        return broadcastIntent;
-    }
-
     @Override
     public void onReceive(Context context, Intent intent) {
         //Log.d(TAG, "Inside onReceive()............." + intent.getAction());
         if(app == null)app = App.getInstance();
         String orderJson = intent.getStringExtra("extra_order");
         Order order = new Gson().fromJson(orderJson, Order.class);
-        if(orderSet.contains(order.getId())) return;
+        //if(orderSet.contains(order.getId())) return;
         orderSet.add(order.getId());
 
         switch (Objects.requireNonNull(Actions.getStatus(intent.getAction()))){
@@ -60,13 +52,12 @@ public class OrderArrivedReceiver extends BroadcastReceiver {
                 app.showOrderArriveNotification(order);
                 break;
             case ORDER_CANCELLED:
-                // First cancel if any ongoing notification is showing in statusbar
-                //EndlessService.stopOrderArrivedRingtone(context, order.getId());
-                //CommonUtils.cancelNotification(context, order.getId());
-                //app.stopOrderArrivedRingTone(order.getId());
-
+                app.stopOrderArrivedRingTone(order.getId());//remove any ongoing notification is showing in statusbar
                 String message = ORDER_CANCELLED_MESSAGE.replace("##UNIQUE_ORDER_ID##", order.getUniqueOrderId());
                 CommonUtils.displayNotification(context, ORDER_CANCELLED_TITLE, message, NotificationSoundType.ORDER_CANCELED);
+
+                intent.setAction(getClass().getName());
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                 break;
             case DISMISS_ORDER_NOTIFICATION:
             case ORDER_ACCEPTED:

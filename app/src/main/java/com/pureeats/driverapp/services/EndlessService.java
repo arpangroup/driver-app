@@ -30,6 +30,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.commons.Actions;
 import com.pureeats.driverapp.models.Order;
@@ -81,7 +82,13 @@ public class EndlessService extends Service {
         boolean isNewOrder = newOrderList.stream().noneMatch(order -> order.getId() == newOrder.getId());
         if (isNewOrder){
             newOrderList.add(newOrder);
-            sendBroadcast(OrderArrivedReceiver.getBroadcastIntent(this, Actions.NEW_ORDER_ARRIVED, newOrder));
+            //sendBroadcast(OrderArrivedReceiver.getBroadcastIntent(this, Actions.NEW_ORDER_ARRIVED, newOrder));
+
+            Intent broadcastIntent = new Intent(getApplicationContext(), OrderArrivedReceiver.class);
+            broadcastIntent.setAction(Actions.NEW_ORDER_ARRIVED.name());
+            broadcastIntent.putExtra("extra_order", new Gson().toJson(newOrder));
+            Log.d(TAG, "SEND_BROADCAST: " + Actions.NEW_ORDER_ARRIVED.name() + " :: OrderID: " + newOrder.getId());
+            sendBroadcast(broadcastIntent);
         }
     }
     private void pushCancelledOrder(Order cancelledOrder){
@@ -91,8 +98,13 @@ public class EndlessService extends Service {
             cancelledOrderList.add(cancelledOrder);
             newOrderList.removeIf(order -> order.getId() == cancelledOrder.getId());
 
-            //showFullScreenOrderArriveNotification(newOrder);
-            sendBroadcast(OrderArrivedReceiver.getBroadcastIntent(this, Actions.ORDER_CANCELLED, cancelledOrder));
+            //sendBroadcast(OrderArrivedReceiver.getBroadcastIntent(this, Actions.ORDER_CANCELLED, cancelledOrder));
+
+            Intent broadcastIntent = new Intent(getApplicationContext(), OrderArrivedReceiver.class);
+            broadcastIntent.setAction(Actions.ORDER_CANCELLED.name());
+            broadcastIntent.putExtra("extra_order", new Gson().toJson(cancelledOrder));
+            Log.d(TAG, "SEND_BROADCAST: " + Actions.ORDER_CANCELLED.name() + " :: OrderID: " + cancelledOrder.getId());
+            sendBroadcast(broadcastIntent);
 
         }
     }

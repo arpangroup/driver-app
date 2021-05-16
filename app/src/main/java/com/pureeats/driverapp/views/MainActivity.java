@@ -205,4 +205,9 @@ public class MainActivity extends AppCompatActivity {
             actionOnService(Actions.STOP);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

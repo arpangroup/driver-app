@@ -211,6 +211,7 @@ public class App extends Application {
             Log.d(TAG, "Stopping StreamID: " + streamId);
             //mSoundPool.autoPause();
             mSoundPool.stop(streamId);
+            CommonUtils.cancelNotification(getApplicationContext(), orderId);
         }catch (Throwable t){
             t.printStackTrace();
         }
