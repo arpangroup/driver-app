@@ -52,8 +52,8 @@ public interface Api {
     @POST("/api/delivery/update-user-info")
     Call<ApiResponse<UpdateDeliveryUserInfoResponse>> updateUserInfo(@Body RequestToken requestToken);
 
-    @GET("/api/delivery/get-login-history/{user_id}")
-    Call<ApiResponse<List<LoginHistory>>> loginHistory(@Path("user_id") String riderId);
+    @POST("/api/delivery/get-login-history")
+    Call<List<LoginHistory>> loginHistory(@Body RequestToken requestToken);
 
     @GET("/api/delivery/get-trip-summary/{rider_id}")
     Call<ApiResponse<List<TripDetails>>> getTripSummary(@Path("rider_id") String riderId);

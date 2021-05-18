@@ -16,5 +16,5 @@ public interface AuthRepository {
     LiveData<Resource<ApiResponse<Object>>> verifyPhone(String phone);
     LiveData<Resource<ApiResponse<User>>> loginByOtp(@NonNull String phone, @NonNull String otp, String pushNotificationToken, @Nullable Map<String, String> meta);
 
-    public LiveData<Resource<ApiResponse<List<LoginHistory>>>> getLoginHistory();
+    public LiveData<Resource<List<LoginHistory>>> getLoginHistory();
 }

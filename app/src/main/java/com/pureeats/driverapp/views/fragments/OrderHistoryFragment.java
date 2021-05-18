@@ -46,14 +46,18 @@ public class OrderHistoryFragment extends BaseDialogFragment<OrderViewModel, Fra
 
     private void observeViewModel(){
         viewModel.getUsersOrderStatistics().observe(requireActivity(), resource -> {
+            if(mBinding == null) return;
             switch (resource.status){
                 case LOADING:
+                    mBinding.setIsLoading(true);
                     break;
                 case ERROR:
+                    mBinding.setIsLoading(false);
                     break;
                 case SUCCESS:
+                    mBinding.setIsLoading(false);
                     ApiResponse<UpdateDeliveryUserInfoResponse> apiResponse = resource.data;
-                    if(apiResponse.isSuccess()){
+                    if(apiResponse != null && apiResponse.isSuccess()){
                         adapter.updateAll(apiResponse.getData().getOrders());
                     }
                     break;

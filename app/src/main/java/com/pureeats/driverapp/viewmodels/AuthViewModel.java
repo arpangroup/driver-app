@@ -43,7 +43,7 @@ public class AuthViewModel extends BaseViewModel {
         return authRepository.loginByOtp(phone, otp, pushToken, meta);
     }
 
-    public  LiveData<Resource<ApiResponse<List<LoginHistory>>>> getLoginHistory(){
+    public  LiveData<Resource<List<LoginHistory>>> getLoginHistory(){
         return authRepository.getLoginHistory();
     }
 

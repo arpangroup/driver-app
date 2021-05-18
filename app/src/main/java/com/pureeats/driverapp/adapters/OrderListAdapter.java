@@ -17,7 +17,7 @@ public class OrderListAdapter extends BaseAdapter<OrderDetailsView, ItemOrderHis
 
     @Override
     public int getLayout() {
-        return R.layout.item_login_session;
+        return R.layout.item_order_history;
     }
 
     @Override

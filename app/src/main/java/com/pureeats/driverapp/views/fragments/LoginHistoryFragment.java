@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.google.android.gms.common.util.CollectionUtils;
 import com.pureeats.driverapp.adapters.LoginHistoryAdapter;
 import com.pureeats.driverapp.databinding.FragmentLoginHistoryBinding;
 import com.pureeats.driverapp.models.ApiResponse;
@@ -54,11 +55,8 @@ public class LoginHistoryFragment extends BaseDialogFragment<AuthViewModel, Frag
                     break;
                 case SUCCESS:
                     mBinding.progressbar.setVisibility(View.GONE);
-                    ApiResponse<List<LoginHistory>> apiResponse = resource.data;
-                    if(apiResponse != null){
-                        adapter.updateAll(apiResponse.getData());
-                    }else{
-                        CommonUiUtils.showSnackBar(getView(), apiResponse.getMessage());
+                    if (!CollectionUtils.isEmpty(resource.data)){
+                        adapter.updateAll(resource.data);
                     }
                     break;
             }

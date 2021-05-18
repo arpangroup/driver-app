@@ -51,9 +51,8 @@ public class AuthRepositoryImpl extends BaseRepository implements AuthRepository
     }
 
     @Override
-    public LiveData<Resource<ApiResponse<List<LoginHistory>>>> getLoginHistory() {
-        if (requestToken == null) return  new MutableLiveData<>(Resource.authError());
-        return safeApiCall(api.loginHistory(requestToken.getUserId()));
+    public LiveData<Resource<List<LoginHistory>>> getLoginHistory() {
+        return safeApiCall(api.loginHistory(requestToken));
     }
 
 

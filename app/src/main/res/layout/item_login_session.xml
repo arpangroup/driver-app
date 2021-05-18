@@ -30,8 +30,8 @@
                     android:textAlignment="textEnd"
                     android:textStyle="bold"
                     android:textSize="16sp"
-                    android:textColor="@{loginHistory.logout_at == null ? @color/green : @color/silver}"
-                    android:text="@{loginHistory.logout_at == null ? `ACTIVE` : loginHistory.logout_at}"
+                    android:textColor="@{loginHistory.online ? @color/green : @color/silver}"
+                    android:text="@{loginHistory.online ? `online` : loginHistory.logoutAt}"
                     android:hint="17-aug, 12:00pm" />
                 <TextView
                     android:layout_width="wrap_content"
@@ -41,7 +41,7 @@
                     android:layout_gravity="center"
                     android:layout_marginRight="16dp"
                     android:textColor="@color/silver"
-                    android:text="@{loginHistory.login_at}"
+                    android:text="@{loginHistory.loginAt}"
                     android:hint="17-aug, 12:00pm" />
             </RelativeLayout>
 
