@@ -77,6 +77,11 @@ public class App extends Application {
         mInstance = this;
         userSession = new UserSession(this);
         if(userSession.getPushToken() == null) generatePushNotificationToken();
+        else{
+            System.out.println("############################## PUSH_TOKEN ###########################");
+            System.out.println(userSession.getPushToken());
+            System.out.println("#####################################################################");
+        }
         createNotificationChannels();
         initSoundPools();
     }

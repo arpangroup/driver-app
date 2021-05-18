@@ -5,13 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import android.app.ActivityManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,11 +26,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.Gson;
 import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.adapters.AcceptedOrderListAdapter;
 import com.pureeats.driverapp.commons.Actions;
 import com.pureeats.driverapp.commons.Constants;
+import com.pureeats.driverapp.commons.OrderStatus;
 import com.pureeats.driverapp.databinding.ActivityMainBinding;
+import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.models.User;
 import com.pureeats.driverapp.services.EndlessService;
 import com.pureeats.driverapp.sharedprefs.ServiceTracker;
@@ -52,6 +58,21 @@ public class MainActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "onReceive........");
+            if(intent.getAction().equals(Actions.ORDER_TRANSFERRED.name())){
+                new android.app.AlertDialog.Builder(MainActivity.this)
+                        .setTitle(intent.getStringExtra("title"))
+                        .setMessage(intent.getStringExtra("message"))
+                        .setCancelable(false)
+                        .setPositiveButton("OK", null).show();
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +90,22 @@ public class MainActivity extends AppCompatActivity {
             mBinding.setOngoingOrders(orders);
         });
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter intentFilter1 = new IntentFilter(Actions.ORDER_CANCELLED.name());
+        IntentFilter intentFilter2 = new IntentFilter(Actions.ORDER_TRANSFERRED.name());
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter1);
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter2);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(mReceiver);
+    }
+
 
 
     private void initClicks() {

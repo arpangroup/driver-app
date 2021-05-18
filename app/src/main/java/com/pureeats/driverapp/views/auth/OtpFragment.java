@@ -1,5 +1,6 @@
 package com.pureeats.driverapp.views.auth;
 
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -111,6 +112,9 @@ public class OtpFragment extends BaseDialogFragment<AuthViewModel, FragmentOtpBi
             String pushToken = userSession.getPushToken();
             if(mBinding != null) mBinding.btnVerify.setEnabled(false);
             Map<String, String> deviceDetails = CommonUtils.getDeviceInfo(mContext);
+            if (pushToken == null) {
+                new AlertDialog.Builder(mContext).setTitle("Push Notification token is missing");
+            }
 
 
             viewModel.loginByOtp(phone, otp, pushToken, null).observe(requireActivity(), resource -> {
@@ -129,6 +133,7 @@ public class OtpFragment extends BaseDialogFragment<AuthViewModel, FragmentOtpBi
                             ApiResponse<User> apiResponse = resource.data;
                             if(apiResponse != null && apiResponse.isSuccess()){
                                 User user = apiResponse.getData();
+                                user.setPushToken(userSession.getPushToken());
                                 userSession.setUserData(user);
                                 MainActivity.start(mContext);
                                 mContext.finishAffinity();

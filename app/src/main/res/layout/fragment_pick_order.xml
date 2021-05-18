@@ -275,6 +275,7 @@
 
 
                 <LinearLayout
+                    android:visibility="@{View.GONE, default=`visible`}"
                     android:id="@+id/layout_customer_details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

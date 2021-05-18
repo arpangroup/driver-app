@@ -1,18 +1,14 @@
 package com.pureeats.driverapp.firebase;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Intent;
-import android.os.Build;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.pureeats.driverapp.R;
-import com.pureeats.driverapp.sharedprefs.UserSession;
+import com.pureeats.driverapp.commons.Actions;
+import com.pureeats.driverapp.models.Notification;
+import com.pureeats.driverapp.receivers.OrderSyncBroadcastReceiver;
 import com.pureeats.driverapp.views.App;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -21,6 +17,7 @@ import java.util.Map;
 
 public class MessagingService extends FirebaseMessagingService {
     private final String TAG = this.getClass().getSimpleName();
+    Intent broadcastIntent;
     public static final String SERVICE_MESSAGE = "MessagingService";
     public static final String MESSAGE_ORDER_STATUS = "MESSAGE_ORDER_STATUS";
     public static final String INTENT_EXTRA_ORDER_STATUS = "INTENT_EXTRA_ORDER_STATUS";
@@ -36,10 +33,6 @@ public class MessagingService extends FirebaseMessagingService {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate()...................");
-        System.out.println("===========================PUSH_TOKEN================================");
-        System.out.println(UserSession.getPushNotificationToken());
-        Log.d("MessagingService", "TOKEN: " + UserSession.getPushNotificationToken());
-        System.out.println("=====================================================================");
     }
 
     @Override
@@ -53,10 +46,57 @@ public class MessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
         PUSH_NOTIFICATION_SOURCE notificationSource = getNotificationSource(remoteMessage);
         Map<String, String> data = remoteMessage.getData();
+        Log.d(TAG, "#################### MEsSAGE ##########################################");
+        data.forEach((k, v) -> System.out.println(k + " : " + v));
+        Log.d(TAG, "#######################################################################");
+        Notification notification = Notification.mapFrom(data);
 
-        String orderStatusIdStr = data.get("order_status_id");
-        if(orderStatusIdStr == null) return;
-        int orderStatusId = Integer.parseInt(orderStatusIdStr);
+
+        switch (notification.getNotificationType()){
+            case ORDER_ARRIVED:
+                broadcastIntent = OrderSyncBroadcastReceiver.getIntent(Actions.NEW_ORDER_ARRIVED, notification.getOrderId(), notification.getUniqueOrderId(), getApplicationContext());
+                sendBroadcast(broadcastIntent);
+                break;
+            case DELIVERY_ASSIGNED:
+                broadcastIntent = OrderSyncBroadcastReceiver.getIntent(Actions.NEW_ORDER_ARRIVED, notification.getOrderId(), notification.getUniqueOrderId(), getApplicationContext());
+                sendBroadcast(broadcastIntent);
+                break;
+            case DELIVERY_RE_ASSIGNED:
+                broadcastIntent = OrderSyncBroadcastReceiver.getIntent(Actions.NEW_ORDER_ARRIVED, notification.getOrderId(), notification.getUniqueOrderId(), getApplicationContext());
+                sendBroadcast(broadcastIntent);
+                break;
+            case ORDER_CANCELLED:
+                broadcastIntent = OrderSyncBroadcastReceiver.getIntent(Actions.NEW_ORDER_ARRIVED, notification.getOrderId(), notification.getUniqueOrderId(), getApplicationContext());
+                sendBroadcast(broadcastIntent);
+                break;
+            case ORDER_TRANSFERRED:
+                broadcastIntent = OrderSyncBroadcastReceiver.getIntent(Actions.NEW_ORDER_ARRIVED, notification.getOrderId(), notification.getUniqueOrderId(), getApplicationContext());
+                sendBroadcast(broadcastIntent);
+                break;
+            default:
+                break;
+        }
+
+
+        if(notification.getNotificationType() != null){
+
+
+            String type = data.get("type");
+            if(Actions.ORDER_TRANSFERRED.name().equals(type)){
+                Intent broadcastIntent = new Intent(getApplicationContext(), OrderSyncBroadcastReceiver.class);
+                broadcastIntent.setAction(Actions.ORDER_TRANSFERRED.name());
+                broadcastIntent.putExtra("title", data.get("title"));
+                broadcastIntent.putExtra("unique_order_id", data.get("unique_order_id"));
+                broadcastIntent.putExtra("order_id", data.get("order_id"));
+                broadcastIntent.putExtra("message", data.get("message"));
+                Log.d(TAG, "SEND_BROADCAST: " + Actions.ORDER_TRANSFERRED.name() + " :: UniqueOrderID: " + data.get("unique_order_id"));
+                sendBroadcast(broadcastIntent);
+                return;
+            }
+        }
+
+
+        int orderStatusId = notification.getOrderStatus().status();
         if(orderStatusId == 2 || orderStatusId == 7){//ORDER_ACCEPTED_BY_RESTAURANT AND ORDER_READY_BY_RESTAURANT
             Log.d(TAG, "#######################################################################");
             Log.d(TAG, "TITLE: "+data.get("title"));

@@ -10,10 +10,12 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.pureeats.driverapp.databinding.ActivityAuthBinding;
+import com.pureeats.driverapp.views.App;
 
 public class AuthActivity extends AppCompatActivity {
     private final String TAG = getClass().getSimpleName();
     private ActivityAuthBinding mBinding;
+    App app = App.getInstance();
 
     public static Intent getIntent(Context context){
         return new Intent(context, AuthActivity.class);

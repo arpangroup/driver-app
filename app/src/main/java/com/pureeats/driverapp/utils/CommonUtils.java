@@ -66,7 +66,6 @@ public class CommonUtils {
 
     public static SimpleDateFormat sdfhh_mm_aa = new SimpleDateFormat("hh:mm aa");//03:40 PM
     public static SimpleDateFormat sdfDefaultDateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
-    public static DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
 
     public static DateTimeFormatter formaterMMddyyyy = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     public static DateTimeFormatter formaterddMMyyyy = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -318,7 +317,7 @@ public class CommonUtils {
             float distanceInMeter = locationA.distanceTo(locationB);
             float distanceInKm = distanceInMeter / 1000;
 
-            return distanceInKm + " km";
+            return DECIMAL_FORMATTER.format(distanceInKm) + " km";
         }catch (Exception e){
             return "0 km";
         }

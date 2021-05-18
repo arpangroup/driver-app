@@ -133,29 +133,31 @@ public abstract class BaseDialogFragment<VM extends BaseViewModel, B extends Vie
             case ORDER_RECEIVED:
             case ORDER_READY:
                 AcceptOrderDialog.newInstance(new Gson().toJson(order)).show(mContext.getSupportFragmentManager(), AcceptOrderDialog.class.getName());
-                removeCurrentFragment(AcceptOrderDialog.class.getName());
+                //removeCurrentFragment(AcceptOrderDialog.class.getName());
                 break;
             case DELIVERY_GUY_ASSIGNED://On the way to pickup you order from restaurant
             case ORDER_READY_AND_DELIVERY_ASSIGNED://On the way to pickup you order from restaurant
                 ReachDirectionFragment.newInstance(order, false).show(mContext.getSupportFragmentManager(), ReachDirectionFragment.class.getName());
-                removeCurrentFragment(ReachDirectionFragment.class.getName());
+                //removeCurrentFragment(ReachDirectionFragment.class.getName());
+                removeCurrentFragment(AcceptOrderDialog.class.getName());
                 break;
             case ORDER_READY_AND_DELIVERY_REACHED_TO_PICKUP:
             case REACHED_PICKUP_LOCATION:
                 PickOrderFragment.newInstance(order).show(mContext.getSupportFragmentManager(), PickOrderFragment.class.getName());
-                removeCurrentFragment(PickOrderFragment.class.getName());
+                //removeCurrentFragment(PickOrderFragment.class.getName());
+                removeCurrentFragment(ReachDirectionFragment.class.getName());
                 break;
             case ON_THE_WAY:// Order is pickedUp and is on its way to deliver [PICKED]
                 ReachDirectionFragment.newInstance(order, true).show(mContext.getSupportFragmentManager(), ReachDirectionFragment.class.getName());
-                removeCurrentFragment(ReachDirectionFragment.class.getName());
+                removeCurrentFragment(PickOrderFragment.class.getName());
                 break;
             case REACHED_DROP_LOCATION:
                 DeliverOrderFragment.newInstance(order).show(mContext.getSupportFragmentManager(), DeliverOrderFragment.class.getName());
-                removeCurrentFragment(DeliverOrderFragment.class.getName());
+                removeCurrentFragment(ReachDirectionFragment.class.getName());
                 break;
             case DELIVERED:
                 TripDetailsFragment.newInstance(order).show(mContext.getSupportFragmentManager(), TripDetailsFragment.class.getName());
-                removeCurrentFragment(TripDetailsFragment.class.getName());
+                removeCurrentFragment(DeliverOrderFragment.class.getName());
                 break;
             case CANCELED:
                 break;

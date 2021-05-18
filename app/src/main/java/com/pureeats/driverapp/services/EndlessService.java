@@ -39,7 +39,7 @@ import com.pureeats.driverapp.models.request.RequestToken;
 import com.pureeats.driverapp.models.response.HeartBeatResponse;
 import com.pureeats.driverapp.network.api.Api;
 import com.pureeats.driverapp.network.datasource.RemoteDataSource;
-import com.pureeats.driverapp.receivers.OrderArrivedReceiver;
+import com.pureeats.driverapp.receivers.OrderSyncBroadcastReceiver;
 import com.pureeats.driverapp.sharedprefs.ServiceTracker;
 import com.pureeats.driverapp.sharedprefs.UserSession;
 import com.pureeats.driverapp.views.App;
@@ -84,7 +84,7 @@ public class EndlessService extends Service {
             newOrderList.add(newOrder);
             //sendBroadcast(OrderArrivedReceiver.getBroadcastIntent(this, Actions.NEW_ORDER_ARRIVED, newOrder));
 
-            Intent broadcastIntent = new Intent(getApplicationContext(), OrderArrivedReceiver.class);
+            Intent broadcastIntent = new Intent(getApplicationContext(), OrderSyncBroadcastReceiver.class);
             broadcastIntent.setAction(Actions.NEW_ORDER_ARRIVED.name());
             broadcastIntent.putExtra("extra_order", new Gson().toJson(newOrder));
             Log.d(TAG, "SEND_BROADCAST: " + Actions.NEW_ORDER_ARRIVED.name() + " :: OrderID: " + newOrder.getId());
@@ -100,7 +100,7 @@ public class EndlessService extends Service {
 
             //sendBroadcast(OrderArrivedReceiver.getBroadcastIntent(this, Actions.ORDER_CANCELLED, cancelledOrder));
 
-            Intent broadcastIntent = new Intent(getApplicationContext(), OrderArrivedReceiver.class);
+            Intent broadcastIntent = new Intent(getApplicationContext(), OrderSyncBroadcastReceiver.class);
             broadcastIntent.setAction(Actions.ORDER_CANCELLED.name());
             broadcastIntent.putExtra("extra_order", new Gson().toJson(cancelledOrder));
             Log.d(TAG, "SEND_BROADCAST: " + Actions.ORDER_CANCELLED.name() + " :: OrderID: " + cancelledOrder.getId());
@@ -314,13 +314,13 @@ public class EndlessService extends Service {
 
 
     private void scheduleHeartBeat(LatLng latLng, List<Order> processedOrders){
-        Log.d(TAG, "SCHEDULE_HEARTBEAT: "+latLng);
+        //Log.d(TAG, "SCHEDULE_HEARTBEAT: "+latLng);
         if (latLng == null)return;
         Api apiInterface = RemoteDataSource.buildApiWithoutInterceptor(Api.class);
 
         HeartbeatRequest heartbeatRequest = new HeartbeatRequest(requestToken, latLng);
         if(!CollectionUtils.isEmpty(processedOrders)) heartbeatRequest.addProcessdOrders(processedOrders);
-        //Log.d(TAG, "HEARTBEAT_REQUEST: " + "Latlng: "+ latLng + ", processed_orders: "+heartbeatRequest.getProcessingOrders());
+        Log.d(TAG, "HEARTBEAT_REQUEST: " + "Latlng: "+ latLng + ", processed_orders: "+heartbeatRequest.getProcessingOrders());
         apiInterface.scheduleHeartbeat(heartbeatRequest).enqueue(new Callback<HeartBeatResponse>() {
             @Override
             public void onResponse(Call<HeartBeatResponse> call, Response<HeartBeatResponse> response) {
@@ -340,15 +340,19 @@ public class EndlessService extends Service {
 
     private void handleHeartbeatResponse(HeartBeatResponse heartBeatResponse){
         if (heartBeatResponse == null) return;
-        //System.out.println("#####################################################");
-        //System.out.println("NEW_ORDERS: " + heartBeatResponse.getNewOrders());
-        //System.out.println("ACCEPTED_ORDERS: " + heartBeatResponse.getAcceptedOrders());
-        //System.out.println("PICKEDUP_ORDERS: " + heartBeatResponse.getPickedupOrders());
-        //System.out.println("#####################################################");
+//        System.out.println("#####################################################");
+//        System.out.println("NEW_ORDERS: " + heartBeatResponse.getNewOrders());
+//        System.out.println("ACCEPTED_ORDERS: " + heartBeatResponse.getAcceptedOrders());
+//        System.out.println("PICKEDUP_ORDERS: " + heartBeatResponse.getPickedupOrders());
+//        System.out.println("#####################################################");
         heartBeatResponse.getNewOrders().forEach(this::pushNewOrder);
         heartBeatResponse.getCancelledOrders().forEach(this::pushCancelledOrder);
-        heartBeatResponse.getAcceptedOrders().forEach(this::pushOngoingOrder);
-        heartBeatResponse.getPickedupOrders().forEach(this::pushOngoingOrder);
+
+        List<Order> processedOrders  = new ArrayList<>();
+        processedOrders.addAll(heartBeatResponse.getAcceptedOrders());
+        processedOrders.addAll(heartBeatResponse.getPickedupOrders());
+        processedOrders.forEach(this::pushOngoingOrder);
+        if(CollectionUtils.isEmpty(processedOrders)) ongoingOrderList.setValue(new ArrayList<>());
     }
 
 

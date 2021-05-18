@@ -16,7 +16,6 @@ import com.pureeats.driverapp.commons.Actions;
 import com.pureeats.driverapp.commons.OrderStatus;
 import com.pureeats.driverapp.databinding.ActivityDialogBinding;
 import com.pureeats.driverapp.models.Order;
-import com.pureeats.driverapp.receivers.OrderArrivedReceiver;
 import com.pureeats.driverapp.sharedprefs.UserSession;
 
 public class DialogActivity extends AppCompatActivity {
@@ -31,23 +30,44 @@ public class DialogActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "onReceive........");
             Log.d(TAG, "EXTRA: " + intent.getStringExtra(INTENT_EXTRA_ORDER));
-            if(intent.hasExtra(INTENT_EXTRA_ORDER)){
-                String orderJson = intent.getStringExtra(INTENT_EXTRA_ORDER);
-                Order order = new Gson().fromJson(orderJson, Order.class);
-                Log.d(TAG, "ORDER_ID: " + order.getId());
-                Log.d(TAG, "mORDER_ID: " + mOrder.getId());
-                Log.d(TAG, "ORDER_STATUS: " + order.getOrderStatusId());
-                if (order.getId() != mOrder.getId()) return;
-                OrderStatus orderStatus = OrderStatus.getStatus(order.getOrderStatusId());
-                if (orderStatus == null) return;
-                Log.d(TAG, "ORDER_STATUS: " + orderStatus.name());
+            Log.d(TAG, "ACTIONS: " + intent.getAction());
 
-                switch (orderStatus){
-                    case CANCELED:
-                        showAlert("Order Cancelled by the user");
-                        break;
+            if(intent.getAction().equals(Actions.ORDER_TRANSFERRED.name())){
+               String uniqueOrderId = intent.getStringExtra("unique_order_id");
+               String orderId = intent.getStringExtra("order_id");
+                Log.d(TAG, "UNIQUE_ORDER_ID: " + uniqueOrderId);
+                Log.d(TAG, "ORDER_ID: " + orderId);
+                Log.d(TAG, "mUNIQUE_ORDER_ID: " + mOrder.getUniqueOrderId());
+               if(mOrder.getUniqueOrderId().equalsIgnoreCase(uniqueOrderId)){
+                   Log.d(TAG, "Show alertDialog");
+                   new android.app.AlertDialog.Builder(DialogActivity.this)
+                           .setTitle(intent.getStringExtra("title"))
+                           .setMessage(intent.getStringExtra("message"))
+                           .setCancelable(false)
+                           .setPositiveButton("OK", (dialogInterface, i) -> finish()).show();
+               }
+
+            }else if(intent.getAction().equals(Actions.ORDER_CANCELLED.name())){
+                if(intent.hasExtra(INTENT_EXTRA_ORDER)){
+                    String orderJson = intent.getStringExtra(INTENT_EXTRA_ORDER);
+                    Order order = new Gson().fromJson(orderJson, Order.class);
+                    Log.d(TAG, "ORDER_ID: " + order.getId());
+                    Log.d(TAG, "mORDER_ID: " + mOrder.getId());
+                    Log.d(TAG, "ORDER_STATUS: " + order.getOrderStatusId());
+                    if (order.getId() != mOrder.getId()) return;
+                    OrderStatus orderStatus = OrderStatus.getStatus(order.getOrderStatusId());
+                    if (orderStatus == null) return;
+                    Log.d(TAG, "ORDER_STATUS: " + orderStatus.name());
+
+                    switch (orderStatus){
+                        case CANCELED:
+                            showAlert("Order Cancelled by the user");
+                            break;
+                    }
                 }
             }
+
+
         }
     };
 
@@ -81,8 +101,10 @@ public class DialogActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        IntentFilter intentFilter = new IntentFilter(OrderArrivedReceiver.class.getName());
-        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter);
+        IntentFilter intentFilter1 = new IntentFilter(Actions.ORDER_CANCELLED.name());
+        IntentFilter intentFilter2 = new IntentFilter(Actions.ORDER_TRANSFERRED.name());
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter1);
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter2);
     }
 
     @Override

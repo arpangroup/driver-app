@@ -94,7 +94,7 @@
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
                             android:paddingLeft="16dp"
@@ -113,7 +113,7 @@
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/black"
                                 android:textStyle="bold"
-                                android:textSize="24sp"
+                                android:textSize="22sp"
                                 android:text="@{`₹`+ order.deliveryCharge, default=`₹ 950.00`}"/>
 
 
@@ -140,7 +140,7 @@
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/black"
                                 android:textStyle="bold"
-                                android:textSize="24sp"
+                                android:textSize="22sp"
                                 android:text="@{CommonUtils.calculateDistance(order), default=`3.1 km`}"/>
 
 
@@ -178,7 +178,7 @@
                                 android:ellipsize="end"
                                 android:textColor="@color/black"
                                 android:textStyle="bold"
-                                android:textSize="24sp"
+                                android:textSize="22sp"
                                 android:text="@{CommonUtils.getTipDuration(order.riderAcceptAt, order.updatedAt), default=`3 hour28 min`}"/>
 
                         </LinearLayout>
@@ -204,7 +204,7 @@
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/black"
                                 android:textStyle="bold"
-                                android:textSize="24sp"
+                                android:textSize="22sp"
                                 android:text="@{`₹`+ order.commission, default=`₹ 400.35`}"/>
 
                         </LinearLayout>

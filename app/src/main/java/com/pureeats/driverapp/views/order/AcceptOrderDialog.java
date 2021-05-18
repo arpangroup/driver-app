@@ -20,9 +20,7 @@ import com.pureeats.driverapp.commons.OrderStatus;
 import com.pureeats.driverapp.databinding.FragmentAcceptOrderBinding;
 import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.network.api.Api;
-import com.pureeats.driverapp.receivers.OrderArrivedReceiver;
 import com.pureeats.driverapp.repositories.OrderRepositoryImpl;
-import com.pureeats.driverapp.utils.CommonUiUtils;
 import com.pureeats.driverapp.viewmodels.OrderViewModel;
 import com.pureeats.driverapp.views.base.BaseDialogFragment;
 

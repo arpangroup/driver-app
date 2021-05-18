@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -30,38 +31,56 @@ import java.util.Objects;
 import java.util.Set;
 
 
-public class OrderArrivedReceiver extends BroadcastReceiver {
+public class OrderSyncBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "OrderArrivedReceiver";
-    private Set<Integer> orderSet = new HashSet<>();
     private App app;
+    private  Order order;
 
     private final String ORDER_CANCELLED_TITLE = "Order Cancelled";
     private final String ORDER_CANCELLED_MESSAGE = "##UNIQUE_ORDER_ID## is cancelled, please ignore this message if already notified";
+
+    public static Intent getIntent(Actions action, int orderId, String uniqueOrderId, Context context){
+        Intent broadcastIntent = new Intent(context, OrderSyncBroadcastReceiver.class);
+        broadcastIntent.setAction(action.name());
+        broadcastIntent.putExtra("extra_order_id", orderId);
+        broadcastIntent.putExtra("extra_unique_order_id", orderId);
+        Log.d(TAG, "SEND_BROADCAST_INTENT: " + action.name() + " :: ORDER_ID: " + orderId);
+        return broadcastIntent;
+    }
+
 
     @Override
     public void onReceive(Context context, Intent intent) {
         //Log.d(TAG, "Inside onReceive()............." + intent.getAction());
         if(app == null)app = App.getInstance();
-        String orderJson = intent.getStringExtra("extra_order");
-        Order order = new Gson().fromJson(orderJson, Order.class);
-        //if(orderSet.contains(order.getId())) return;
-        orderSet.add(order.getId());
 
         switch (Objects.requireNonNull(Actions.getStatus(intent.getAction()))){
             case NEW_ORDER_ARRIVED:
+                order = new Gson().fromJson(intent.getStringExtra("extra_order"), Order.class);
                 app.showOrderArriveNotification(order);
                 break;
             case ORDER_CANCELLED:
+                order = new Gson().fromJson(intent.getStringExtra("extra_order"), Order.class);
                 app.stopOrderArrivedRingTone(order.getId());//remove any ongoing notification is showing in statusbar
                 String message = ORDER_CANCELLED_MESSAGE.replace("##UNIQUE_ORDER_ID##", order.getUniqueOrderId());
                 CommonUtils.displayNotification(context, ORDER_CANCELLED_TITLE, message, NotificationSoundType.ORDER_CANCELED);
 
-                intent.setAction(getClass().getName());
+                intent.setAction(Actions.ORDER_CANCELLED.name());
                 LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                 break;
             case DISMISS_ORDER_NOTIFICATION:
             case ORDER_ACCEPTED:
+                order = new Gson().fromJson(intent.getStringExtra("extra_order"), Order.class);
                 app.stopOrderArrivedRingTone(order.getId());
+                break;
+            case ORDER_TRANSFERRED:
+                CommonUtils.displayNotification(context, intent.getStringExtra("title"), intent.getStringExtra("message"), NotificationSoundType.ORDER_CANCELED);
+                int orderId = Integer.parseInt(intent.getStringExtra("order_id"));
+                app.stopOrderArrivedRingTone(orderId);
+
+                intent.setAction(Actions.ORDER_TRANSFERRED.name());
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
                 break;
         }
     }

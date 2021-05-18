@@ -75,6 +75,7 @@ public class PickOrderFragment extends BaseDialogFragment<OrderViewModel, Fragme
         mBinding.setToggleItems(toggleItems);
         mBinding.dishRecycler.setAdapter(new DishListAdapter(CollectionUtils.isEmpty(mOrder.getOrderitems()) ? new ArrayList<>() : mOrder.getOrderitems()));
         mBinding.btnAccept.setOnSlideCompleteListener(slideToActView -> processOrder(mOrder));
+
         mBinding.toolbar.back.setOnClickListener(view -> dismissOrderDialog());
         mBinding.btnToggleItems.setOnClickListener(view -> {
             toggleItems = !toggleItems;

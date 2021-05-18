@@ -26,7 +26,7 @@
 
         <include
             android:id="@+id/toolbar"
-            bind:title="@{`Deliver Order`}"
+            bind:title="@{`Deliver Order ` + order.uniqueOrderId}"
             layout="@layout/toolbar_reach_restaurant" />
 
         <RelativeLayout
