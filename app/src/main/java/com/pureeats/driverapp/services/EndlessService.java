@@ -57,6 +57,7 @@ import retrofit2.Response;
 public class EndlessService extends Service {
     //https://robertohuertas.com/2019/06/29/android_foreground_services/
     private static final String TAG = "EndlessService";
+    private static int HEARTBEAT_COUNT = 0;
     private App app;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationCallback mLocationCallback;
@@ -71,6 +72,7 @@ public class EndlessService extends Service {
     private boolean isServiceStarted = false;
 
     private static MutableLiveData<List<Order>> ongoingOrderList = new MutableLiveData<>();
+    private static MutableLiveData<Integer> countAcceptedOrders = new MutableLiveData<>(0);
 
 
     private List<Order> acceptedOrderList = new ArrayList<>();
@@ -82,12 +84,7 @@ public class EndlessService extends Service {
         boolean isNewOrder = newOrderList.stream().noneMatch(order -> order.getId() == newOrder.getId());
         if (isNewOrder){
             newOrderList.add(newOrder);
-            //sendBroadcast(OrderArrivedReceiver.getBroadcastIntent(this, Actions.NEW_ORDER_ARRIVED, newOrder));
-
-            Intent broadcastIntent = new Intent(getApplicationContext(), OrderSyncBroadcastReceiver.class);
-            broadcastIntent.setAction(Actions.NEW_ORDER_ARRIVED.name());
-            broadcastIntent.putExtra("extra_order", new Gson().toJson(newOrder));
-            Log.d(TAG, "SEND_BROADCAST: " + Actions.NEW_ORDER_ARRIVED.name() + " :: OrderID: " + newOrder.getId());
+            Intent broadcastIntent = OrderSyncBroadcastReceiver.getIntent(getApplicationContext(), Actions.ORDER_ARRIVED, newOrder.getId(), newOrder.getUniqueOrderId());
             sendBroadcast(broadcastIntent);
         }
     }
@@ -121,10 +118,9 @@ public class EndlessService extends Service {
         //Log.d(TAG, "post order to live data......");
         ongoingOrderList.setValue(existingOrders);
     }
-    public static LiveData<List<Order>> getOngoingOrders(){
-        //Log.d(TAG, "getOngoingOrders..................");
-        //Log.d(TAG, "RETURNING: " + ongoingOrderList.getValue());
-        return ongoingOrderList;
+    public static LiveData<Integer> getOngoingOrders(){
+        if(countAcceptedOrders == null) countAcceptedOrders = new MutableLiveData<>(0);
+        return countAcceptedOrders;
     }
 
 
@@ -210,6 +206,8 @@ public class EndlessService extends Service {
                 timer.cancel();
             }
             app.clearAllArrivedOrderNotification();
+            HEARTBEAT_COUNT = 0;
+            countAcceptedOrders.setValue(0);
             stopForeground(true);
             stopSelf();
         }catch (Exception e){
@@ -224,6 +222,7 @@ public class EndlessService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate()");
+        HEARTBEAT_COUNT = 0;
         requestToken = new UserSession(getApplicationContext()).getRequestToken();
         Log.d(TAG, "REQUEST_TOKEN: " + "user_id: "+ requestToken.getUserId() + ", token: " +requestToken.getToken());
         timer = new Timer();
@@ -239,6 +238,7 @@ public class EndlessService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        HEARTBEAT_COUNT = 0;
         mFusedLocationClient.removeLocationUpdates(mLocationCallback);
         timer = null;
         stopForeground(true);
@@ -307,6 +307,7 @@ public class EndlessService extends Service {
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
         notificationManager.notify(App.NOTIFICATION_CHANNEL_ID_RUNNING_ORDER, notification);
 
+
         return notification;
 
     }
@@ -315,12 +316,13 @@ public class EndlessService extends Service {
 
     private void scheduleHeartBeat(LatLng latLng, List<Order> processedOrders){
         //Log.d(TAG, "SCHEDULE_HEARTBEAT: "+latLng);
-        if (latLng == null)return;
+        //if (latLng == null)return;
         Api apiInterface = RemoteDataSource.buildApiWithoutInterceptor(Api.class);
 
         HeartbeatRequest heartbeatRequest = new HeartbeatRequest(requestToken, latLng);
+        heartbeatRequest.setCount(++HEARTBEAT_COUNT);
         if(!CollectionUtils.isEmpty(processedOrders)) heartbeatRequest.addProcessdOrders(processedOrders);
-        Log.d(TAG, "HEARTBEAT_REQUEST: " + "Latlng: "+ latLng + ", processed_orders: "+heartbeatRequest.getProcessingOrders());
+        Log.d(TAG, "HEARTBEAT_REQUEST"+ HEARTBEAT_COUNT + " : Latlng: "+ latLng + ", processed_orders: "+heartbeatRequest.getProcessingOrders());
         apiInterface.scheduleHeartbeat(heartbeatRequest).enqueue(new Callback<HeartBeatResponse>() {
             @Override
             public void onResponse(Call<HeartBeatResponse> call, Response<HeartBeatResponse> response) {
@@ -340,11 +342,13 @@ public class EndlessService extends Service {
 
     private void handleHeartbeatResponse(HeartBeatResponse heartBeatResponse){
         if (heartBeatResponse == null) return;
+//        Log.d(TAG, "RESPONSE: " + heartBeatResponse.getCountAcceptedOrders());
 //        System.out.println("#####################################################");
 //        System.out.println("NEW_ORDERS: " + heartBeatResponse.getNewOrders());
 //        System.out.println("ACCEPTED_ORDERS: " + heartBeatResponse.getAcceptedOrders());
 //        System.out.println("PICKEDUP_ORDERS: " + heartBeatResponse.getPickedupOrders());
 //        System.out.println("#####################################################");
+        if(HEARTBEAT_COUNT > 1)countAcceptedOrders.setValue(heartBeatResponse.getCountAcceptedOrders());
         heartBeatResponse.getNewOrders().forEach(this::pushNewOrder);
         heartBeatResponse.getCancelledOrders().forEach(this::pushCancelledOrder);
 

@@ -19,4 +19,7 @@ public class HeartBeatResponse {
     private List<Order> cancelledOrders;
     @SerializedName("transferred_orders")
     private List<Order> transferredOrders;
+
+    @SerializedName("count_accepted_order")
+    private int countAcceptedOrders;
 }

@@ -6,6 +6,9 @@
     <data>
         <import type="android.view.View"/>
         <variable
+            name="isLoading"
+            type="Boolean" />
+        <variable
             name="order"
             type="com.pureeats.driverapp.models.Order" />
 
@@ -185,5 +188,11 @@
                 app:slider_locked="false" />
 
         </LinearLayout>
+
+        <ProgressBar
+            android:visibility="@{isLoading ? View.VISIBLE : View.GONE}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
     </RelativeLayout>
 </layout>

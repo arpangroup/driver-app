@@ -132,7 +132,7 @@ public abstract class BaseDialogFragment<VM extends BaseViewModel, B extends Vie
         switch (orderStatus){
             case ORDER_RECEIVED:
             case ORDER_READY:
-                AcceptOrderDialog.newInstance(new Gson().toJson(order)).show(mContext.getSupportFragmentManager(), AcceptOrderDialog.class.getName());
+                AcceptOrderDialog.newInstance(order.getId(), order.getUniqueOrderId()).show(mContext.getSupportFragmentManager(), AcceptOrderDialog.class.getName());
                 //removeCurrentFragment(AcceptOrderDialog.class.getName());
                 break;
             case DELIVERY_GUY_ASSIGNED://On the way to pickup you order from restaurant

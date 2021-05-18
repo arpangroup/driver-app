@@ -1,6 +1,7 @@
 package com.pureeats.driverapp.views.order;
 
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,74 +10,71 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.TaskStackBuilder;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.gson.Gson;
 import com.pureeats.driverapp.commons.Actions;
+import com.pureeats.driverapp.commons.Constants;
 import com.pureeats.driverapp.commons.OrderStatus;
 import com.pureeats.driverapp.databinding.ActivityDialogBinding;
 import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.sharedprefs.UserSession;
+import com.pureeats.driverapp.utils.CommonUiUtils;
 
 public class DialogActivity extends AppCompatActivity {
     private final String TAG = getClass().getSimpleName();
     private ActivityDialogBinding mBinding;
     private UserSession userSession;
     public static String INTENT_EXTRA_ORDER = "extra_order";
-    Order mOrder = null;
+    int mOrderId;
+    String mUniqueOrderId = null;
+
+    public static Intent getIntent(Context context, int orderId, String uniqueOrderId){
+        Intent intent = new Intent(context, DialogActivity.class);
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        taskStackBuilder.addNextIntentWithParentStack(intent);
+        intent.setAction(Actions.ACCEPT_ORDER_FRAGMENT.name());
+        intent.putExtra(Constants.STR_ORDER_ID, orderId);
+        intent.putExtra(Constants.STR_UNIQUE_ORDER_ID, uniqueOrderId);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
+    }
+    public static PendingIntent getPendingIntent(Context context, int orderId, String uniqueOrderId){
+        Intent intent = getIntent(context, orderId, uniqueOrderId);
+        return PendingIntent.getActivity(context, orderId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "onReceive........");
-            Log.d(TAG, "EXTRA: " + intent.getStringExtra(INTENT_EXTRA_ORDER));
-            Log.d(TAG, "ACTIONS: " + intent.getAction());
+            int orderId = intent.getIntExtra(Constants.STR_ORDER_ID, -1);
+            String uniqueOrderId = intent.getStringExtra(Constants.STR_UNIQUE_ORDER_ID);
+            String actionName = intent.getAction();
+            String title = intent.getStringExtra(Constants.STR_TITLE);
+            String message = intent.getStringExtra(Constants.STR_MESSAGE);
+            Log.d(TAG, "ORDER_ID: " + orderId + ", ACTION: "+ actionName +", UNIQUE_ORDER_ID: " + uniqueOrderId );
+            Actions action = Actions.getAction(actionName);
 
-            if(intent.getAction().equals(Actions.ORDER_TRANSFERRED.name())){
-               String uniqueOrderId = intent.getStringExtra("unique_order_id");
-               String orderId = intent.getStringExtra("order_id");
-                Log.d(TAG, "UNIQUE_ORDER_ID: " + uniqueOrderId);
-                Log.d(TAG, "ORDER_ID: " + orderId);
-                Log.d(TAG, "mUNIQUE_ORDER_ID: " + mOrder.getUniqueOrderId());
-               if(mOrder.getUniqueOrderId().equalsIgnoreCase(uniqueOrderId)){
-                   Log.d(TAG, "Show alertDialog");
-                   new android.app.AlertDialog.Builder(DialogActivity.this)
-                           .setTitle(intent.getStringExtra("title"))
-                           .setMessage(intent.getStringExtra("message"))
-                           .setCancelable(false)
-                           .setPositiveButton("OK", (dialogInterface, i) -> finish()).show();
-               }
-
-            }else if(intent.getAction().equals(Actions.ORDER_CANCELLED.name())){
-                if(intent.hasExtra(INTENT_EXTRA_ORDER)){
-                    String orderJson = intent.getStringExtra(INTENT_EXTRA_ORDER);
-                    Order order = new Gson().fromJson(orderJson, Order.class);
-                    Log.d(TAG, "ORDER_ID: " + order.getId());
-                    Log.d(TAG, "mORDER_ID: " + mOrder.getId());
-                    Log.d(TAG, "ORDER_STATUS: " + order.getOrderStatusId());
-                    if (order.getId() != mOrder.getId()) return;
-                    OrderStatus orderStatus = OrderStatus.getStatus(order.getOrderStatusId());
-                    if (orderStatus == null) return;
-                    Log.d(TAG, "ORDER_STATUS: " + orderStatus.name());
-
-                    switch (orderStatus){
-                        case CANCELED:
-                            showAlert("Order Cancelled by the user");
-                            break;
-                    }
+            if(orderId != -1 && action != null && uniqueOrderId.equals(mUniqueOrderId) ){
+                switch (action){
+                    case ORDER_TRANSFERRED:
+                    case ORDER_CANCELLED:
+                        new android.app.AlertDialog.Builder(DialogActivity.this)
+                                .setTitle(title)
+                                .setMessage(message)
+                                .setCancelable(false)
+                                .setPositiveButton("OK", (d, i) -> finish())
+                                .show();
+                        break;
+                    case DELIVERY_ASSIGNED:
+                        CommonUiUtils.showSnackBar(getWindow().getDecorView(), "Delivery guy assigned");
+                        break;
                 }
             }
-
-
         }
     };
-
-    private void showAlert(String title){
-        new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setCancelable(false)
-                .setPositiveButton("OK", (dialog, i) -> finish()).show();
-    }
 
 
     public static void start(Context context, Order order){
@@ -91,18 +89,16 @@ public class DialogActivity extends AppCompatActivity {
         mBinding = ActivityDialogBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
         userSession = new UserSession(getApplicationContext());
-        String orderJson = getIntent().getStringExtra(INTENT_EXTRA_ORDER);
-        mOrder = new Gson().fromJson(orderJson, Order.class);
-
-
-        AcceptOrderDialog.newInstance(orderJson).show(getSupportFragmentManager(), AcceptOrderDialog.class.getName());
+        mUniqueOrderId = getIntent().getStringExtra(Constants.STR_UNIQUE_ORDER_ID);
+        mOrderId = getIntent().getIntExtra(Constants.STR_ORDER_ID, 0);
+        AcceptOrderDialog.newInstance(mOrderId, mUniqueOrderId).show(getSupportFragmentManager(), AcceptOrderDialog.class.getName());
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        IntentFilter intentFilter1 = new IntentFilter(Actions.ORDER_CANCELLED.name());
         IntentFilter intentFilter2 = new IntentFilter(Actions.ORDER_TRANSFERRED.name());
+        IntentFilter intentFilter1 = new IntentFilter(Actions.ORDER_CANCELLED.name());
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter1);
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter2);
     }

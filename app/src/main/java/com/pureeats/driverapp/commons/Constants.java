@@ -33,5 +33,16 @@ public class Constants {
     public static final int ORDER_READY_WAITING_TIME = 1000*60*15;//15-min
 
 
+    public static final String STR_TITLE = "title";
+    public static final String STR_MESSAGE = "message";
+    public static final String STR_ORDER_ID = "order_id";
+    public static final String STR_UNIQUE_ORDER_ID = "unique_order_id";
+    public static final String STR_BADGE = "badge";
+    public static final String STR_ICON = "icon";
+    public static final String STR_CLICK_ACTION = "click_action";
+    public static final String STR_NOTIFICATION_TYPE = "notification_type";
+    public static final String STR_ORDER_STATUS_ID = "order_status_id";
+
+
 
 }

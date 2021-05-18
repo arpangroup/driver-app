@@ -116,6 +116,7 @@ public class ReachDirectionFragment extends BaseDialogFragment<OrderViewModel, F
         Log.d(TAG, "LATLNG_RESTAURANT: " + latLngRestaurant);
         Log.d(TAG, "LATLNG_CUSTOMER: " + latLngCustomer);
         Log.d(TAG, "LATLNG_DELIVERY_GUY: " + latLngDeliveryGuy);
+        if(latLngDeliveryGuy == null) latLngDeliveryGuy = Constants.DEFAULT_LOCATION;
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
        // mBinding.progressBar.setVisibility(View.VISIBLE);
         mBinding.toolbar.back.setOnClickListener(view -> dismissOrderDialog());

@@ -85,10 +85,9 @@ public class MainActivity extends AppCompatActivity {
         mBinding.toolbar.navMenu.setOnClickListener(view -> mBinding.drawerLayout.openDrawer(GravityCompat.START));
         initClicks();
         //mBinding.btnView.setOnClickListener(view -> AcceptOrderDialog.newInstance(1).show(getSupportFragmentManager().beginTransaction(), AcceptOrderDialog.class.getName()));
-        EndlessService.getOngoingOrders().observe(this, orders -> {
-            Log.d(TAG, "getOngoingOrders.....");
-            mBinding.setOngoingOrders(orders);
-        });
+
+        EndlessService.getOngoingOrders().observe(this, count -> mBinding.setCountOngoingOrders(count));
+
     }
 
     @Override

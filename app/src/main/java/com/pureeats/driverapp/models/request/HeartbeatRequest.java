@@ -17,10 +17,11 @@ import lombok.Setter;
 @Setter
 public class HeartbeatRequest extends RequestToken {
     @SerializedName("lat")
-    private double deliveryLat;
+    private String deliveryLat = null;
     @SerializedName("lng")
-    private double deliveryLong;
+    private String deliveryLong = null;
     private String heading;
+    private int count = 0;
 
     @SerializedName("bearing")
     private float bearing;
@@ -33,26 +34,13 @@ public class HeartbeatRequest extends RequestToken {
         setToken(requestToken.getToken());
         setUserId(requestToken.getUserId());
         //setDeliveryGuyId(requestToken.getDeliveryGuyId());
-        this.deliveryLat = latLng.latitude;
-        this.deliveryLong = latLng.longitude;
+        if(latLng != null){
+            this.deliveryLat = String.valueOf(latLng.latitude);
+            this.deliveryLong = String.valueOf(latLng.longitude);
+        }
     }
 
-    public HeartbeatRequest(RequestToken requestToken, double lat, double lng) {
-        setToken(requestToken.getToken());
-        setUserId(requestToken.getUserId());
-        //setDeliveryGuyId(requestToken.getDeliveryGuyId());
-        this.deliveryLat = lat;
-        this.deliveryLong = lng;
-    }
 
-    public HeartbeatRequest(RequestToken requestToken, Location location) {
-        setToken(requestToken.getToken());
-        setUserId(requestToken.getUserId());
-        //setDeliveryGuyId(requestToken.getDeliveryGuyId());
-        this.deliveryLat = location.getLatitude();
-        this.deliveryLong = location.getLongitude();
-        this.bearing = location.getBearing();
-    }
 
     public void addProcessdOrders(List<Order> orders){
         orders.forEach(order -> processingOrders.add(order.getId()));

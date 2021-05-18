@@ -1,5 +1,7 @@
 package com.pureeats.driverapp.firebase;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -9,6 +11,8 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.pureeats.driverapp.commons.Actions;
 import com.pureeats.driverapp.models.Notification;
 import com.pureeats.driverapp.receivers.OrderSyncBroadcastReceiver;
+import com.pureeats.driverapp.services.EndlessService;
+import com.pureeats.driverapp.sharedprefs.ServiceTracker;
 import com.pureeats.driverapp.views.App;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -17,7 +21,6 @@ import java.util.Map;
 
 public class MessagingService extends FirebaseMessagingService {
     private final String TAG = this.getClass().getSimpleName();
-    Intent broadcastIntent;
     public static final String SERVICE_MESSAGE = "MessagingService";
     public static final String MESSAGE_ORDER_STATUS = "MESSAGE_ORDER_STATUS";
     public static final String INTENT_EXTRA_ORDER_STATUS = "INTENT_EXTRA_ORDER_STATUS";
@@ -50,37 +53,24 @@ public class MessagingService extends FirebaseMessagingService {
         data.forEach((k, v) -> System.out.println(k + " : " + v));
         Log.d(TAG, "#######################################################################");
         Notification notification = Notification.mapFrom(data);
+        Log.d(TAG, "IS_ENDLESS_SERVICE_RUNNING: " + isEndlessServiceRunning());
 
 
         switch (notification.getNotificationType()){
             case ORDER_ARRIVED:
-                broadcastIntent = OrderSyncBroadcastReceiver.getIntent(Actions.NEW_ORDER_ARRIVED, notification.getOrderId(), notification.getUniqueOrderId(), getApplicationContext());
-                sendBroadcast(broadcastIntent);
-                break;
             case DELIVERY_ASSIGNED:
-                broadcastIntent = OrderSyncBroadcastReceiver.getIntent(Actions.NEW_ORDER_ARRIVED, notification.getOrderId(), notification.getUniqueOrderId(), getApplicationContext());
-                sendBroadcast(broadcastIntent);
-                break;
             case DELIVERY_RE_ASSIGNED:
-                broadcastIntent = OrderSyncBroadcastReceiver.getIntent(Actions.NEW_ORDER_ARRIVED, notification.getOrderId(), notification.getUniqueOrderId(), getApplicationContext());
-                sendBroadcast(broadcastIntent);
-                break;
             case ORDER_CANCELLED:
-                broadcastIntent = OrderSyncBroadcastReceiver.getIntent(Actions.NEW_ORDER_ARRIVED, notification.getOrderId(), notification.getUniqueOrderId(), getApplicationContext());
-                sendBroadcast(broadcastIntent);
-                break;
             case ORDER_TRANSFERRED:
-                broadcastIntent = OrderSyncBroadcastReceiver.getIntent(Actions.NEW_ORDER_ARRIVED, notification.getOrderId(), notification.getUniqueOrderId(), getApplicationContext());
-                sendBroadcast(broadcastIntent);
-                break;
+                if(isEndlessServiceRunning()){
+                    sendBroadcast(OrderSyncBroadcastReceiver.getIntent(getApplicationContext(), notification));
+                }
             default:
                 break;
         }
 
-
+        /*
         if(notification.getNotificationType() != null){
-
-
             String type = data.get("type");
             if(Actions.ORDER_TRANSFERRED.name().equals(type)){
                 Intent broadcastIntent = new Intent(getApplicationContext(), OrderSyncBroadcastReceiver.class);
@@ -94,8 +84,9 @@ public class MessagingService extends FirebaseMessagingService {
                 return;
             }
         }
+        */
 
-
+        /*
         int orderStatusId = notification.getOrderStatus().status();
         if(orderStatusId == 2 || orderStatusId == 7){//ORDER_ACCEPTED_BY_RESTAURANT AND ORDER_READY_BY_RESTAURANT
             Log.d(TAG, "#######################################################################");
@@ -131,6 +122,7 @@ public class MessagingService extends FirebaseMessagingService {
                     break;
             }
         }
+        */
 
     }
 
@@ -208,6 +200,22 @@ public class MessagingService extends FirebaseMessagingService {
             notificationSource = PUSH_NOTIFICATION_SOURCE.UNKNOWN_SOURCE;
         }
         return notificationSource;
+    }
+
+
+    private boolean isEndlessServiceRunning(){
+        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        if(activityManager != null){
+            for (ActivityManager.RunningServiceInfo serviceInfo : activityManager.getRunningServices(Integer.MAX_VALUE)){
+                if(EndlessService.class.getName().equals(serviceInfo.service.getClassName())){
+                    if(serviceInfo.foreground){
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        return false;
     }
 
 

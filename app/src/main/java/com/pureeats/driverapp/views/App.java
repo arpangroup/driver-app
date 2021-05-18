@@ -24,6 +24,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.commons.Actions;
+import com.pureeats.driverapp.commons.Constants;
 import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.sharedprefs.UserSession;
 import com.pureeats.driverapp.utils.CommonUtils;
@@ -42,7 +43,7 @@ public class App extends Application {
     private int ORDER_ARRIVED_SOUND;
     private int ORDER_CANCELLED_SOUND;
     private int LOOP_INDEFINITE = -1; // -1: Infinite; 2: 2 times, 3: 3 times; 0: no loop
-    private HashMap<Integer, Integer> orderIdStreamIdMap = new HashMap<>();// Usesd to stop the sound/sytream
+    private static HashMap<Integer, Integer> orderIdStreamIdMap = new HashMap<>();// Usesd to stop the sound/sytream
 
     public static final String CHANNEL_ID_NEW_ORDER = "channel_new_orders";
     public static final String CHANNEL_ID_PUSH_NOTIFICATION = "channel_push_notifications";
@@ -84,6 +85,7 @@ public class App extends Application {
         }
         createNotificationChannels();
         initSoundPools();
+        if(orderIdStreamIdMap == null) orderIdStreamIdMap = new HashMap<>();
     }
 
     public static synchronized App getInstance(){
@@ -199,7 +201,7 @@ public class App extends Application {
         if (mSoundPool == null || orderIdStreamIdMap == null) return;;
        try{
            //mSoundPool.autoPause();
-           if(orderIdStreamIdMap.get(orderId) != null)mSoundPool.pause(orderIdStreamIdMap.getOrDefault(orderId, 0));//if same is orderid is already playing
+           if(orderIdStreamIdMap.get(orderId) != null)mSoundPool.pause(orderIdStreamIdMap.getOrDefault(orderId, 0));//if same orderid is already playing
            int streamId = mSoundPool.play(ORDER_ARRIVED_SOUND, 0.1f, 0.1f, 0, LOOP_INDEFINITE, 1);
            System.out.println("######## PlayingOrderArrivedSoundInStreamId: " + streamId + ", OrderId: " + orderId);
            orderIdStreamIdMap.put(orderId, streamId);
@@ -209,7 +211,7 @@ public class App extends Application {
     }
 
     public void stopOrderArrivedRingTone(int orderId){
-        Log.d(TAG, "stopOrderArrivedTone... OrderId: "+ orderId);
+        Log.d(TAG, "######## stopOrderArrivedTone... OrderId: "+ orderId);
         orderIdStreamIdMap.forEach((k, v) -> System.out.println("Key : " + k + ", Value : " + v));
         try {
             int streamId = orderIdStreamIdMap.get(orderId);
@@ -274,4 +276,6 @@ public class App extends Application {
         playOrderArrivedTone(order.getId());
 
     }
+
+
 }

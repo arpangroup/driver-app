@@ -59,8 +59,8 @@ public class OrderViewModel extends BaseViewModel {
     public LiveData<Resource<DeliveryOrderResponse>> getDeliveryOrders(){
         return orderRepository.getAllDeliverableOrders();
     }
-    public LiveData<Resource<Order>> getSingleDeliveryOrder(Order order){
-        return orderRepository.getSingleDeliveryOrder(order.getUniqueOrderId());
+    public LiveData<Resource<Order>> getSingleDeliveryOrder(String uniqueOrderId){
+        return orderRepository.getSingleDeliveryOrder(uniqueOrderId);
     }
     public LiveData<Resource<ApiResponse<UpdateDeliveryUserInfoResponse>>> getUsersOrderStatistics(){
         return orderRepository.getUsersOrderStatistics();

@@ -160,7 +160,7 @@ public class PickOrderFragment extends BaseDialogFragment<OrderViewModel, Fragme
     }
 
     private void fetchOrderStatus(){
-        viewModel.getSingleDeliveryOrder(mOrder).observe(this, resource -> {
+        viewModel.getSingleDeliveryOrder(mOrder.getUniqueOrderId()).observe(this, resource -> {
             if (resource.status == Resource.Status.SUCCESS && resource.data != null) {
                 if(mOrder.getOrderStatusId() != resource.data.getOrderStatusId()){
                     handleStatus(resource.data);

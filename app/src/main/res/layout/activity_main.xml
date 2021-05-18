@@ -7,8 +7,8 @@
         <import type="android.view.View"/>
         <import type="com.google.android.gms.common.util.CollectionUtils"/>
         <variable
-            name="ongoingOrders"
-            type="java.util.List&lt;com.pureeats.driverapp.models.Order>" />
+            name="countOngoingOrders"
+            type="Integer" />
 
     </data>
 
@@ -43,7 +43,7 @@
 
             <RelativeLayout
                 android:id="@+id/snackbar"
-                android:visibility="@{CollectionUtils.isEmpty(ongoingOrders) ? View.GONE : View.VISIBLE}"
+                android:visibility="@{countOngoingOrders > 0 ? View.VISIBLE : View.GONE}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -97,7 +97,7 @@
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                android:text="@{ongoingOrders.size() + ` orders yet to be delivered`, default= `10 orders yet to be delivered`}"
+                                android:text="@{countOngoingOrders + ` orders yet to be delivered`, default= `10 orders yet to be delivered`}"
                                 android:textColor="@android:color/white" />
                         </LinearLayout>
 

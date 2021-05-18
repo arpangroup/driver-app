@@ -2,6 +2,7 @@ package com.pureeats.driverapp.models;
 
 import android.util.Log;
 
+import com.pureeats.driverapp.commons.Constants;
 import com.pureeats.driverapp.commons.NotificationType;
 import com.pureeats.driverapp.commons.OrderStatus;
 
@@ -28,16 +29,16 @@ public class Notification {
     public static Notification mapFrom(Map<String, String> data){
         Notification notification = new Notification();
         try{
-            notification.setTitle(data.get("title"));
-            notification.setMessage(data.get("message"));
-            notification.setUniqueOrderId(data.get("unique_order_id"));
-            notification.setBadge(data.get("badge"));
-            notification.setIcon(data.get("icon"));
-            notification.setClickAction("click_action");
+            notification.setTitle(data.get(Constants.STR_TITLE));
+            notification.setMessage(data.get(Constants.STR_MESSAGE));
+            notification.setUniqueOrderId(data.get(Constants.STR_UNIQUE_ORDER_ID));
+            notification.setBadge(data.get(Constants.STR_BADGE));
+            notification.setIcon(data.get(Constants.STR_ICON));
+            notification.setClickAction(data.get(Constants.STR_CLICK_ACTION));
 
             // set OrderId:
             try{
-                String orderId = data.get("order_id");
+                String orderId = data.get(Constants.STR_ORDER_ID);
                 if(orderId != null) notification.setOrderId(Integer.parseInt(orderId));
             }catch (Exception e){
                 e.printStackTrace();
@@ -45,7 +46,7 @@ public class Notification {
 
             // set NotificationType:
             try{
-                String notificationTypeStr = data.get("notification_type");
+                String notificationTypeStr = data.get(Constants.STR_NOTIFICATION_TYPE);
                 NotificationType notificationType = NotificationType.getType(notificationTypeStr);
                 if(notificationType == null) notificationType = NotificationType.DEFAULT;
                 notification.setNotificationType(notificationType);
@@ -53,7 +54,7 @@ public class Notification {
 
             // set OrderStatus:
             try{
-                String orderStatusStr = data.get("order_status_id");
+                String orderStatusStr = data.get(Constants.STR_ORDER_STATUS_ID);
                 OrderStatus orderStatus = null;
                 if(orderStatusStr != null){
                     orderStatus = OrderStatus.getStatus(Integer.parseInt(orderStatusStr));

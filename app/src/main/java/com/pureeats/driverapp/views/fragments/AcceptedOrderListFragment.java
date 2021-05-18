@@ -57,7 +57,7 @@ public class AcceptedOrderListFragment extends BaseDialogFragment<OrderViewModel
     private void processOrder(Order order){
         //DialogActivity.start(mContext, order);
         // First check the order details, because in the mean time the status might changed in server side
-        viewModel.getSingleDeliveryOrder(order).observe(mContext, resource -> {
+        viewModel.getSingleDeliveryOrder(order.getUniqueOrderId()).observe(mContext, resource -> {
             switch (resource.status){
                 case LOADING:
                     progressDialog.show();

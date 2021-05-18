@@ -218,6 +218,35 @@ public class CommonUtils {
     }
 
 
+
+    public static void showOrderArriveNotification(Context context, int orderId, String uniqueOrderId) {
+        //Log.d(TAG, "showOrderArriveNotification...");
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, App.CHANNEL_ID_PUSH_NOTIFICATION);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            PendingIntent pendingIntent = DialogActivity.getPendingIntent(context, orderId, uniqueOrderId);
+            builder.setSmallIcon(R.drawable.ic_launcher_background)
+                    .setContentTitle("New Order Arrive")
+                    .setContentText("Order # " + uniqueOrderId)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setCategory(NotificationCompat.CATEGORY_CALL)
+                    .setFullScreenIntent(pendingIntent, true)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setOngoing(true);
+            android.app.Notification notification = builder.build();
+
+            //Log.d(TAG, "Opening DialogActivity from Notification......");
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            notificationManager.notify(orderId, notification);
+        }else{
+            //Log.d(TAG, "Starting DialogActivity......");
+            context.startActivity(DialogActivity.getIntent(context, orderId, uniqueOrderId));
+        }
+
+    }
+
+
     public static void displayNotification(Context context, String title, String message, NotificationSoundType soundType) {
         displayNotification(context, title, message);
         playNotificationSound(context, soundType);

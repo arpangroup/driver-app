@@ -4,7 +4,9 @@ public enum Actions {
     START("START"),
     STOP("STOP"),
 
-    NEW_ORDER_ARRIVED("NEW_ORDER_ARRIVED"),
+    ORDER_ARRIVED("ORDER_ARRIVED"),
+    DELIVERY_ASSIGNED("DELIVERY_ASSIGNED"),
+    DELIVERY_RE_ASSIGNED("DELIVERY_RE_ASSIGNED"),
     ORDER_CANCELLED("ORDER_CANCELLED"),
     ORDER_TRANSFERRED("ORDER_TRANSFERRED"),
     DISMISS_ORDER_NOTIFICATION("DISMISS_ORDER_NOTIFICATION"),
@@ -26,7 +28,7 @@ public enum Actions {
         return actionName;
     }
 
-    public static Actions getStatus(String actionName){
+    public static Actions getAction(String actionName){
         for (Actions action : values()){
             if(action.actionName == actionName){
                 return action;
