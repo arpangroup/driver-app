@@ -9,6 +9,7 @@ import lombok.Data;
 
 @Data
 public class HeartBeatResponse {
+    private boolean success;
     @SerializedName("new_orders")
     private List<Order> newOrders;
     @SerializedName("accepted_orders")

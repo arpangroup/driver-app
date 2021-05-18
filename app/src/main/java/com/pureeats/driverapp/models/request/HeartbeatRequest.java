@@ -40,6 +40,11 @@ public class HeartbeatRequest extends RequestToken {
         }
     }
 
+    public HeartbeatRequest(RequestToken requestToken) {
+        setToken(requestToken.getToken());
+        setUserId(requestToken.getUserId());
+    }
+
 
 
     public void addProcessdOrders(List<Order> orders){
