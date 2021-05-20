@@ -45,10 +45,12 @@ public class App extends Application {
     private int LOOP_INDEFINITE = -1; // -1: Infinite; 2: 2 times, 3: 3 times; 0: no loop
     private static HashMap<Integer, Integer> orderIdStreamIdMap = new HashMap<>();// Usesd to stop the sound/sytream
 
+    public static final String CHANNEL_ID_SYNC_ORDER = "sync order";
     public static final String CHANNEL_ID_NEW_ORDER = "channel_new_orders";
     public static final String CHANNEL_ID_PUSH_NOTIFICATION = "channel_push_notifications";
     public static final String CHANNEL_ID_NEW_ORDER_FETCH_SERVICE = "channel_new_order_fetch_service";
     public static final String CHANNEL_NAME_NEW_ORDER = "channel new orders";
+    public static final String CHANNEL_NAME_SYNC_ORDER = "Sync Order Channel";
     public static final String CHANNEL_NAME_PUSH_NOTIFICATION = "channel push notifications";
     public static final String CHANNEL_NAME_NEW_ORDER_FETCH_SERVICE = "channel new order fetch service";
     public static final int NOTIFICATION_CHANNEL_ID_RUNNING_ORDER = 600;
@@ -99,6 +101,12 @@ public class App extends Application {
 
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel notificationChannelSyncOrder = new NotificationChannel(
+                    CHANNEL_ID_SYNC_ORDER,
+                    CHANNEL_NAME_SYNC_ORDER,
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+
             NotificationChannel notificationChannelNewOrder = new NotificationChannel(
                     CHANNEL_ID_NEW_ORDER,
                     CHANNEL_NAME_NEW_ORDER,
@@ -122,8 +130,14 @@ public class App extends Application {
                     .setUsage(AudioAttributes.USAGE_ALARM)
                     .build();
 
-            notificationChannelNewOrder.setSound(emergencySoundUri, attributes);
+            //notificationChannelNewOrder.setSound(emergencySoundUri, attributes);
 
+            notificationChannelSyncOrder.setDescription("Sync Order Notification Channel");
+            notificationChannelSyncOrder.enableLights(true);
+            notificationChannelSyncOrder.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            notificationChannelSyncOrder.setLightColor(Color.RED);
+            notificationChannelSyncOrder.enableVibration(true);
+            notificationChannelSyncOrder.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
 
             notificationChannelNewOrder.setDescription("This is New Order Notification Channel");
             notificationChannelNewOrder.enableLights(true);
@@ -152,6 +166,7 @@ public class App extends Application {
             // Register the channels with Notification Framework
             //NotificationManager notificationManager = getSystemService(NotificationManager.class);
             NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(notificationChannelSyncOrder);
             manager.createNotificationChannel(notificationChannelNewOrder);
             manager.createNotificationChannel(notificationChannelPushNotification);
             manager.createNotificationChannel(serviceChannel);
@@ -234,47 +249,6 @@ public class App extends Application {
         }catch (Throwable t){
             t.printStackTrace();
         }
-    }
-
-
-    public void showOrderArriveNotification(Order order) {
-        //Log.d(TAG, "showOrderArriveNotification...");
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID_PUSH_NOTIFICATION);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            Intent fullScreenIntent = new Intent(this, DialogActivity.class);
-            TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(getApplicationContext());
-            taskStackBuilder.addNextIntentWithParentStack(fullScreenIntent);
-            fullScreenIntent.setAction(Actions.ACCEPT_ORDER_FRAGMENT.name());
-            fullScreenIntent.putExtra(DialogActivity.INTENT_EXTRA_ORDER, new Gson().toJson(order));
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, order.getId(), fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            builder.setSmallIcon(R.drawable.ic_launcher_background)
-                    .setContentTitle("New Order Arrive")
-                    .setContentText("Order # " + order.getUniqueOrderId())
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setCategory(NotificationCompat.CATEGORY_CALL)
-                    .setFullScreenIntent(pendingIntent, true)
-                    .setContentIntent(pendingIntent)
-                    .setAutoCancel(true)
-                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                    .setOngoing(true);
-            Notification notification = builder.build();
-
-            //Log.d(TAG, "Opening DialogActivity from Notification......");
-            NotificationManager notificationManager = this.getSystemService(NotificationManager.class);
-            notificationManager.notify(order.getId(), notification);
-        }else{
-            Intent intent = new Intent(this, DialogActivity.class);
-            TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);
-            taskStackBuilder.addNextIntentWithParentStack(intent);
-            intent.putExtra(DialogActivity.INTENT_EXTRA_ORDER, new Gson().toJson(order));
-            intent.setAction(Actions.ACCEPT_ORDER_FRAGMENT.name());
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            //Log.d(TAG, "Starting DialogActivity......");
-            startActivity(intent);
-        }
-        playOrderArrivedTone(order.getId());
-
     }
 
 

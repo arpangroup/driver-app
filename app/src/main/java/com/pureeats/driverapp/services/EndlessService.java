@@ -290,15 +290,15 @@ public class EndlessService extends Service {
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, App.CHANNEL_ID_NEW_ORDER);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, App.CHANNEL_ID_SYNC_ORDER);
         builder.setContentTitle("Fetching New Order")
                 .setContentText("Tap for more options")
                 .setSmallIcon(R.drawable.ic_baseline_sync_24)
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .setChannelId(App.CHANNEL_ID_NEW_ORDER)
+                .setAutoCancel(false)
+                .setChannelId(App.CHANNEL_ID_SYNC_ORDER)
                 .setOngoing(true);
         Notification notification = builder.build();
 
