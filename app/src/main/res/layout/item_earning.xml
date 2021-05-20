@@ -107,6 +107,7 @@
                                 android:text="@{earning.createdAt}"
                                 android:hint="16-Oct-2020" />
                             <TextView
+                                android:visibility="gone"
                                 android:id="@+id/distance"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"

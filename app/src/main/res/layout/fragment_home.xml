@@ -39,6 +39,7 @@
                 <include
                     android:id="@+id/layout_delivered_orders"
                     bind:title="@{`Delivered Orders`}"
+                    bind:dashboard="@{dashboard}"
                     layout="@layout/layout_delivered_orders"/>
 
                 <LinearLayout
