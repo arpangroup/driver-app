@@ -174,7 +174,7 @@ public class App extends Application {
         }
     }
 
-    private void generatePushNotificationToken(){
+    public void generatePushNotificationToken(){
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
@@ -184,7 +184,7 @@ public class App extends Application {
 
                     // Get new FCM registration token
                     String token = task.getResult();
-                    userSession.savePushToken(token);
+                    if(token != null)userSession.savePushToken(token);
                     System.out.println("############################## PUSH_TOKEN ###########################");
                     System.out.println(token);
                     System.out.println("#####################################################################");
@@ -217,7 +217,7 @@ public class App extends Application {
        try{
            //mSoundPool.autoPause();
            if(orderIdStreamIdMap.get(orderId) != null)mSoundPool.pause(orderIdStreamIdMap.getOrDefault(orderId, 0));//if same orderid is already playing
-           int streamId = mSoundPool.play(ORDER_ARRIVED_SOUND, 0.1f, 0.1f, 0, LOOP_INDEFINITE, 1);
+           int streamId = mSoundPool.play(ORDER_ARRIVED_SOUND, 1f, 1f, 0, LOOP_INDEFINITE, 1);
            System.out.println("######## PlayingOrderArrivedSoundInStreamId: " + streamId + ", OrderId: " + orderId);
            orderIdStreamIdMap.put(orderId, streamId);
        }catch (Throwable t){

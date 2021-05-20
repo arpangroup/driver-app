@@ -10,12 +10,14 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.pureeats.driverapp.databinding.ActivityAuthBinding;
+import com.pureeats.driverapp.sharedprefs.UserSession;
 import com.pureeats.driverapp.views.App;
 
 public class AuthActivity extends AppCompatActivity {
     private final String TAG = getClass().getSimpleName();
     private ActivityAuthBinding mBinding;
-    App app = App.getInstance();
+    UserSession userSession;
+    App app;
 
     public static Intent getIntent(Context context){
         return new Intent(context, AuthActivity.class);
@@ -27,6 +29,9 @@ public class AuthActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userSession = new UserSession(this);
+        app = App.getInstance();
+        if(userSession.getPushToken() == null)app.generatePushNotificationToken();
         mBinding = ActivityAuthBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
         // In Activity's onCreate() for instance

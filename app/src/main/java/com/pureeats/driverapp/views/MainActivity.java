@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
         userSession = new UserSession(getApplicationContext());
+        Log.d(TAG, "PUSH_TOKEN: " + userSession.getPushToken());
         navController = Navigation.findNavController(this, R.id.navHostFragmentMain);
         NavigationUI.setupWithNavController(mBinding.navView, navController);
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> mBinding.toolbar.title.setText(destination.getLabel()));

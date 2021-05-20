@@ -31,6 +31,7 @@ public class AuthFragment extends BaseDialogFragment<AuthViewModel, FragmentAuth
     @Override
     public void onViewCreated(@NonNull View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
+        if(userSession.getPushToken() == null)app.generatePushNotificationToken();
         navController = Navigation.findNavController(rootView);
         mBinding.btnVerify.setOnClickListener(view -> verifyPhoneNumber());
     }
