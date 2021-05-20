@@ -35,7 +35,7 @@ import com.pureeats.driverapp.views.order.TripDetailsFragment;
 
 
 public abstract class BaseDialogFragment<VM extends BaseViewModel, B extends ViewBinding, R extends BaseRepository> extends DialogFragment {
-    private static String TAG = "BaseBottomSheetDialogFragment";
+    private static String TAG = "BaseDialogFragment";
     protected FragmentActivity mContext;
     protected UserSession userSession;
     protected B mBinding;
@@ -48,14 +48,6 @@ public abstract class BaseDialogFragment<VM extends BaseViewModel, B extends Vie
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
-            @Override
-            public void handleOnBackPressed() {
-                // Handle the back button even
-                Log.d("BACKBUTTON", "Back button clicks");
-            }
-        };
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     @NonNull
@@ -90,6 +82,17 @@ public abstract class BaseDialogFragment<VM extends BaseViewModel, B extends Vie
     public abstract Class<VM> getViewModel();
     public abstract B getBinding(LayoutInflater inflater, ViewGroup container);
     public abstract R getRepository();
+
+    public void disableBackButton(){
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                // Handle the back button even
+                Log.d(TAG, "Back button clicks");
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+    }
 
     public void logout(){
 

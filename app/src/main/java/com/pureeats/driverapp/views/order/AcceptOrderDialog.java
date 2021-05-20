@@ -58,10 +58,14 @@ public class AcceptOrderDialog extends BaseDialogFragment<OrderViewModel, Fragme
     @Override
     public void onViewCreated(@NonNull View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
+        disableBackButton();
         app = App.getInstance();
         mBinding.setLifecycleOwner(this);
         String uniqueOrderId = getArguments().getString(Constants.STR_UNIQUE_ORDER_ID);
         int orderId = getArguments().getInt(Constants.STR_ORDER_ID);
+        Log.d(TAG, "UNIQUE_ORDER_ID: " + uniqueOrderId);
+        Log.d(TAG, "ORDER_ID: " + orderId);
+        init(uniqueOrderId);
         mBinding.btnClose.setOnClickListener(view -> {stopOrderArrivedTone(orderId); mContext.finish();});
         mBinding.btnAccept.setOnSlideCompleteListener(slideToActView -> processOrder(mOrder));
         startTimer();

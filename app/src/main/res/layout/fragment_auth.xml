@@ -110,7 +110,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:layout_marginLeft="16dp"
-                            android:text="Please enter your mobile numver to receive \n a verification code"
+                            android:text="Please enter your mobile number to receive \n a verification code"
                             android:textAlignment="textStart"
                             style="@style/TextAppearance.AppCompat.Subhead" />
 

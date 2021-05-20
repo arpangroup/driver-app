@@ -77,11 +77,7 @@ public class DialogActivity extends AppCompatActivity {
     };
 
 
-    public static void start(Context context, Order order){
-        Intent intent = new Intent(context, DialogActivity.class);
-        intent.putExtra(INTENT_EXTRA_ORDER, new Gson().toJson(order));
-        context.startActivity(intent);
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +86,9 @@ public class DialogActivity extends AppCompatActivity {
         setContentView(mBinding.getRoot());
         userSession = new UserSession(getApplicationContext());
         mUniqueOrderId = getIntent().getStringExtra(Constants.STR_UNIQUE_ORDER_ID);
-        mOrderId = getIntent().getIntExtra(Constants.STR_ORDER_ID, 0);
+        mOrderId = getIntent().getIntExtra(Constants.STR_ORDER_ID, -1);
+        Log.d(TAG, "UNIQUE_ORDER_ID: " + mUniqueOrderId);
+        Log.d(TAG, "ORDER_ID: " + mOrderId);
         AcceptOrderDialog.newInstance(mOrderId, mUniqueOrderId).show(getSupportFragmentManager(), AcceptOrderDialog.class.getName());
     }
 

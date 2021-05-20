@@ -93,6 +93,7 @@ public class ReachDirectionFragment extends BaseDialogFragment<OrderViewModel, F
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        disableBackButton();
         Log.d(TAG, "Inside onActivityCreated()...................................");
 
         mBinding.mapView.onCreate(savedInstanceState);
