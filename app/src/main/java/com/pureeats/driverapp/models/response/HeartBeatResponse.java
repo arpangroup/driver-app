@@ -21,6 +21,8 @@ public class HeartBeatResponse {
     @SerializedName("transferred_orders")
     private List<Order> transferredOrders;
 
-    @SerializedName("count_accepted_order")
-    private int countAcceptedOrders;
+    @SerializedName("on_going_deliveries_count")
+    private int onGoingDeliveriesCount;
+    @SerializedName("completed_deliveries_count")
+    private int completedDeliveriesCount;
 }

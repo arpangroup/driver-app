@@ -348,7 +348,7 @@ public class EndlessService extends Service {
 //        System.out.println("ACCEPTED_ORDERS: " + heartBeatResponse.getAcceptedOrders());
 //        System.out.println("PICKEDUP_ORDERS: " + heartBeatResponse.getPickedupOrders());
 //        System.out.println("#####################################################");
-        if(HEARTBEAT_COUNT > 1)countAcceptedOrders.setValue(heartBeatResponse.getCountAcceptedOrders());
+        if(HEARTBEAT_COUNT > 1)countAcceptedOrders.setValue(heartBeatResponse.getOnGoingDeliveriesCount());
         heartBeatResponse.getNewOrders().forEach(this::pushNewOrder);
         heartBeatResponse.getCancelledOrders().forEach(this::pushCancelledOrder);
 
