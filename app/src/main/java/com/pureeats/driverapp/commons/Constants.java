@@ -12,7 +12,7 @@ public class Constants {
     public static final int REQUEST_IMAGE = 105;
     public static final int REQUEST_IMAGE_CAPTURE = 106;
     public static final int REQUEST_IMAGE_EXTERNAL = 107;
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 108;
+    public static final int REQUEST_LOCATION_PERMISSION = 108;
     public static final int REQUEST_NO_INTERNET_ACTIVITY = 200;
 
     public static final int PER_KM_DELIVERY_TIME_IN_MINUTE = 6;
