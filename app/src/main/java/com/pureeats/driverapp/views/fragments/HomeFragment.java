@@ -2,6 +2,7 @@ package com.pureeats.driverapp.views.fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +12,16 @@ import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.common.util.CollectionUtils;
 import com.pureeats.driverapp.databinding.FragmentHomeBinding;
 import com.pureeats.driverapp.models.ApiResponse;
+import com.pureeats.driverapp.models.ChartData;
 import com.pureeats.driverapp.models.response.Dashboard;
 import com.pureeats.driverapp.network.api.Api;
 import com.pureeats.driverapp.repositories.OrderRepositoryImpl;
@@ -25,6 +30,7 @@ import com.pureeats.driverapp.viewmodels.OrderViewModel;
 import com.pureeats.driverapp.views.base.BaseDialogFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class HomeFragment extends BaseDialogFragment<OrderViewModel, FragmentHomeBinding, OrderRepositoryImpl> {
@@ -49,7 +55,9 @@ public class HomeFragment extends BaseDialogFragment<OrderViewModel, FragmentHom
                case SUCCESS:
                    ApiResponse<Dashboard> apiResponse = resource.data;
                    if(apiResponse.isSuccess()){
-                        mBinding.setDashboard(apiResponse.getData());
+                       Dashboard dashboard = apiResponse.getData();
+                        mBinding.setDashboard(dashboard);
+                        setUpBarChart(dashboard.getChartData());
                    }else {
                        CommonUiUtils.showSnackBar(getView(), apiResponse.getMessage());
                    }
@@ -58,15 +66,23 @@ public class HomeFragment extends BaseDialogFragment<OrderViewModel, FragmentHom
         });
     }
 
-    private void setUpBarChart(){
+    private void setUpBarChart(List<ChartData> chartDataList){
+        if(CollectionUtils.isEmpty(chartDataList)) return;
+        Log.d(TAG, "CHART_DATA_LIST......" );
+        chartDataList.stream().forEach(chartData -> {
+            System.out.println(chartData.getX() + ":" + chartData.getY());
+        });
         ArrayList<BarEntry> visitors = new ArrayList<>();
-        visitors.add(new BarEntry(2014, 420));
-        visitors.add(new BarEntry(2015, 475));
-        visitors.add(new BarEntry(2016, 300));
-        visitors.add(new BarEntry(2017, 500));
-        visitors.add(new BarEntry(2018, 200));
-        visitors.add(new BarEntry(2019, 300));
-        visitors.add(new BarEntry(2020, 470));
+//        visitors.add(new BarEntry(2014, 420));
+//        visitors.add(new BarEntry(2015, 475));
+//        visitors.add(new BarEntry(2016, 300));
+//        visitors.add(new BarEntry(2017, 500));
+//        visitors.add(new BarEntry(2018, 200));
+//        visitors.add(new BarEntry(2019, 300));
+//        visitors.add(new BarEntry(2020, 470));
+        for (int i=0; i< chartDataList.size(); i++){
+            visitors.add(new BarEntry(i, chartDataList.get(i).getY()));
+        }
 
         BarDataSet barDataSet =  new BarDataSet(visitors, "Visitors");
         barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
@@ -75,10 +91,23 @@ public class HomeFragment extends BaseDialogFragment<OrderViewModel, FragmentHom
 
         BarData barData  = new BarData(barDataSet);
 
-        mBinding.layoutDeliveredOrders.barChart.setFitBars(true);
-        mBinding.layoutDeliveredOrders.barChart.setData(barData);
-        mBinding.layoutDeliveredOrders.barChart.getDescription().setText("Earnings");
-        mBinding.layoutDeliveredOrders.barChart.animateY(2000);
+        //String[] days = new String[] {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+        String[] days = chartDataList.stream().map(ChartData::getX).toArray(String[]::new);
+        XAxis xAxis = mBinding.barChart.getXAxis();
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(days));
+        xAxis.setCenterAxisLabels(true);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setGranularity(1);
+        xAxis.setGranularityEnabled(true);
+
+
+
+
+
+        mBinding.barChart.setFitBars(true);
+        mBinding.barChart.setData(barData);
+        mBinding.barChart.getDescription().setText("Earnings");
+        mBinding.barChart.animateY(2000);
     }
 
     @Override

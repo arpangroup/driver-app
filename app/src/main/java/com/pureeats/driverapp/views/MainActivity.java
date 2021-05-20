@@ -208,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void logout(){
+        actionOnService(Actions.STOP);
         userSession.clear();
         AuthActivity.start(this);
         finishAffinity();
