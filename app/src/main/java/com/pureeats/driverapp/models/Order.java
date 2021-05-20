@@ -127,7 +127,9 @@ public class Order implements Comparable{
         long createdTimeInLong = FormatDate.getTimeFromDateString(this.restaurantAcceptAt);
         int deliveryTimeInMin = Integer.parseInt(restaurant.getDeliveryTime());
         //long targetTime = createdTimeInLong + this.prepareTime;
-        long targetTime = createdTimeInLong + (this.prepareTime * 1000 * 60);//30 min
+        int deliveryTime = this.getRestaurant() != null ? Integer.parseInt(this.getRestaurant().getDeliveryTime()) : 0;
+        int prepareTime = this.prepareTime + deliveryTime;
+        long targetTime = createdTimeInLong + (prepareTime * 1000 * 60);//30 min
 
         DateFormat dateFormat = new SimpleDateFormat("hh:mm aa");
         Date date = new Date(targetTime);
