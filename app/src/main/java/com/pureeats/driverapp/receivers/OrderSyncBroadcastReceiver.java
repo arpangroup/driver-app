@@ -1,32 +1,22 @@
 package com.pureeats.driverapp.receivers;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.util.Log;
 
-import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.google.gson.Gson;
-import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.commons.Actions;
 import com.pureeats.driverapp.commons.Constants;
 import com.pureeats.driverapp.commons.NotificationSoundType;
 import com.pureeats.driverapp.models.Notification;
-import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.utils.CommonUtils;
 import com.pureeats.driverapp.views.App;
-import com.pureeats.driverapp.views.order.DialogActivity;
-
-import java.util.Objects;
 
 
 public class OrderSyncBroadcastReceiver extends BroadcastReceiver {
-    private static final String TAG = "OrderArrivedReceiver";
+    private static final String TAG = "OrderSyncBR";
     private App app;
 
     private final String ORDER_CANCELLED_TITLE = "Order Cancelled";
@@ -35,6 +25,7 @@ public class OrderSyncBroadcastReceiver extends BroadcastReceiver {
     private final String ORDER_TRANSFERRED_MESSAGE = "##UNIQUE_ORDER_ID## is transferred to other delivery";
 
     public static Intent getIntent(Context context, Notification notification){
+        Log.d(TAG, "getIntent: " + notification.getNotificationType().name());
         Intent broadcastIntent = new Intent(context, OrderSyncBroadcastReceiver.class);
         Actions action = Actions.getAction(notification.getNotificationType().name());
         if(action == null) return null;
@@ -79,7 +70,7 @@ public class OrderSyncBroadcastReceiver extends BroadcastReceiver {
                 app.stopOrderArrivedRingTone(orderId);//remove any ongoing notification is showing in statusbar
                 CommonUtils.cancelNotification(context, orderId);
 
-                sendLocalBroadcast(context, action, intent, null, null);
+                sendOrderStatusChangedLocalBroadcast(context, action, intent, "Delivery  assigned", "Delivery Guy already assigned for the order "+ uniqueOrderId);
                 break;
             case ORDER_TRANSFERRED:
             case ORDER_CANCELLED:
@@ -96,12 +87,12 @@ public class OrderSyncBroadcastReceiver extends BroadcastReceiver {
                 CommonUtils.displayNotification(context, title, message, NotificationSoundType.ORDER_CANCELED);
 
                 //step3: Send the broadcat for any further action
-                sendLocalBroadcast(context, action, intent, title, message);
+                sendOrderStatusChangedLocalBroadcast(context, action, intent, title, message);
                 break;
         }
     }
 
-    private void sendLocalBroadcast(Context context, Actions action, Intent intent, String title, String message){
+    private void sendOrderStatusChangedLocalBroadcast(Context context, Actions action, Intent intent, String title, String message){
         intent.setAction(action.name());
         intent.putExtra(Constants.STR_TITLE, title);
         intent.putExtra(Constants.STR_NOTIFICATION_TYPE, message);

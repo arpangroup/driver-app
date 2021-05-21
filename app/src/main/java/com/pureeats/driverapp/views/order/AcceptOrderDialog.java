@@ -31,7 +31,7 @@ import java.util.Locale;
 import java.util.Timer;
 
 
-public class AcceptOrderDialog extends BaseDialogFragment<OrderViewModel, FragmentAcceptOrderBinding, OrderRepositoryImpl> {
+public class AcceptOrderDialog extends AbstractOrderDialog<OrderViewModel, FragmentAcceptOrderBinding, OrderRepositoryImpl> {
     private final String TAG = getClass().getName();
     private Order mOrder;
 
@@ -61,12 +61,12 @@ public class AcceptOrderDialog extends BaseDialogFragment<OrderViewModel, Fragme
         disableBackButton();
         app = App.getInstance();
         mBinding.setLifecycleOwner(this);
-        String uniqueOrderId = getArguments().getString(Constants.STR_UNIQUE_ORDER_ID);
-        int orderId = getArguments().getInt(Constants.STR_ORDER_ID);
-        Log.d(TAG, "UNIQUE_ORDER_ID: " + uniqueOrderId);
-        Log.d(TAG, "ORDER_ID: " + orderId);
-        init(uniqueOrderId);
-        mBinding.btnClose.setOnClickListener(view -> {stopOrderArrivedTone(orderId); mContext.finish();});
+        mUniqueOrderId = getArguments().getString(Constants.STR_UNIQUE_ORDER_ID);
+        mOrderId = getArguments().getInt(Constants.STR_ORDER_ID);
+        Log.d(TAG, "UNIQUE_ORDER_ID: " + mUniqueOrderId);
+        Log.d(TAG, "ORDER_ID: " + mOrderId);
+        init(mUniqueOrderId);
+        mBinding.btnClose.setOnClickListener(view -> {stopOrderArrivedTone(mOrderId); mContext.finish();});
         mBinding.btnAccept.setOnSlideCompleteListener(slideToActView -> processOrder(mOrder));
         startTimer();
     }
@@ -109,13 +109,7 @@ public class AcceptOrderDialog extends BaseDialogFragment<OrderViewModel, Fragme
                     showAlert(resource.message);
                     break;
                 case SUCCESS:
-                    Order currentOrder = resource.data;
-                    if(!currentOrder.isAlreadyAccepted()){
-                        gotoNextActivity(currentOrder);
-                    }else{
-                       showAlert("Order is already accepted");
-                    }
-
+                    gotoNextActivity(resource.data);
                     break;
             }
         });
@@ -160,7 +154,7 @@ public class AcceptOrderDialog extends BaseDialogFragment<OrderViewModel, Fragme
 
                 int secondsRemaining = (int) (millisUntilFinished / 1000);
                 int progressPercentage = (int) ((numberOfSeconds-secondsRemaining) * factor) ;
-                Log.d("PROGRESS_PERCENTAGE: ", progressPercentage +"");
+                //Log.d("PROGRESS_PERCENTAGE: ", progressPercentage +"");
                 if(mBinding != null)mBinding.progressBar.setProgress(progressPercentage);
             }
 

@@ -95,16 +95,16 @@ public class DialogActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        IntentFilter intentFilter2 = new IntentFilter(Actions.ORDER_TRANSFERRED.name());
-        IntentFilter intentFilter1 = new IntentFilter(Actions.ORDER_CANCELLED.name());
-        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter1);
-        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter2);
+//        IntentFilter intentFilter2 = new IntentFilter(Actions.ORDER_TRANSFERRED.name());
+//        IntentFilter intentFilter1 = new IntentFilter(Actions.ORDER_CANCELLED.name());
+//        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter1);
+//        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter2);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(mReceiver);
+        //LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(mReceiver);
     }
 
     @Override

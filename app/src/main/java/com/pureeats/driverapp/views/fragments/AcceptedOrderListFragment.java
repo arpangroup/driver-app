@@ -22,6 +22,7 @@ import com.pureeats.driverapp.network.api.Api;
 import com.pureeats.driverapp.repositories.OrderRepositoryImpl;
 import com.pureeats.driverapp.viewmodels.OrderViewModel;
 import com.pureeats.driverapp.views.base.BaseDialogFragment;
+import com.pureeats.driverapp.views.order.AbstractOrderDialog;
 import com.pureeats.driverapp.views.order.ReachDirectionFragment;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class AcceptedOrderListFragment extends BaseDialogFragment<OrderViewModel, FragmentAcceptedOrderListBinding, OrderRepositoryImpl> {
+public class AcceptedOrderListFragment extends AbstractOrderDialog<OrderViewModel, FragmentAcceptedOrderListBinding, OrderRepositoryImpl> {
     private final String TAG = getClass().getName();
     private List<Order> acceptedOrders = new ArrayList<>();
     private AcceptedOrderListAdapter adapter;

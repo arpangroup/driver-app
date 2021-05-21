@@ -8,11 +8,13 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.google.gson.Gson;
 import com.pureeats.driverapp.commons.Actions;
 import com.pureeats.driverapp.models.Notification;
 import com.pureeats.driverapp.receivers.OrderSyncBroadcastReceiver;
 import com.pureeats.driverapp.services.EndlessService;
 import com.pureeats.driverapp.sharedprefs.ServiceTracker;
+import com.pureeats.driverapp.sharedprefs.UserSession;
 import com.pureeats.driverapp.views.App;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -21,6 +23,7 @@ import java.util.Map;
 
 public class MessagingService extends FirebaseMessagingService {
     private final String TAG = this.getClass().getSimpleName();
+    private UserSession userSession;
     public static final String SERVICE_MESSAGE = "MessagingService";
     public static final String MESSAGE_ORDER_STATUS = "MESSAGE_ORDER_STATUS";
     public static final String INTENT_EXTRA_ORDER_STATUS = "INTENT_EXTRA_ORDER_STATUS";
@@ -35,6 +38,7 @@ public class MessagingService extends FirebaseMessagingService {
     @Override
     public void onCreate() {
         super.onCreate();
+        userSession = new UserSession(getApplicationContext());
         Log.d(TAG, "onCreate()...................");
     }
 
@@ -49,11 +53,17 @@ public class MessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
         PUSH_NOTIFICATION_SOURCE notificationSource = getNotificationSource(remoteMessage);
         Map<String, String> data = remoteMessage.getData();
-        Log.d(TAG, "#################### MEsSAGE ##########################################");
-        data.forEach((k, v) -> System.out.println(k + " : " + v));
+        Log.d(TAG, "#################### MESSAGE ##########################################\n");
+        data.forEach((k, v) -> System.out.println(k + " :: " + v));
         Log.d(TAG, "#######################################################################");
         Notification notification = Notification.mapFrom(data);
+        //Log.d(TAG, "NOTIFICATION: " + new Gson().toJson(notification));
         Log.d(TAG, "IS_ENDLESS_SERVICE_RUNNING: " + isEndlessServiceRunning());
+        Log.d(TAG, "USER_SESSION_USER_ID:" + userSession.getRequestToken().getUserId());
+        if(userSession.getRequestToken() == null) return;
+        boolean isValidUser = notification.getUserId() == Integer.parseInt(userSession.getRequestToken().getUserId().trim());
+        Log.d(TAG, "IS_VALID_USER: " + isValidUser);
+
 
 
         switch (notification.getNotificationType()){
@@ -62,7 +72,7 @@ public class MessagingService extends FirebaseMessagingService {
             case DELIVERY_RE_ASSIGNED:
             case ORDER_CANCELLED:
             case ORDER_TRANSFERRED:
-                if(isEndlessServiceRunning()){
+                if(isEndlessServiceRunning() && isValidUser){
                     sendBroadcast(OrderSyncBroadcastReceiver.getIntent(getApplicationContext(), notification));
                 }
             default:

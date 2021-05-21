@@ -36,7 +36,7 @@ import com.pureeats.driverapp.views.base.BaseDialogFragment;
 import java.util.ArrayList;
 
 
-public class DeliverOrderFragment extends BaseDialogFragment<OrderViewModel, FragmentDeliverOrderBinding, OrderRepositoryImpl> {
+public class DeliverOrderFragment extends AbstractOrderDialog<OrderViewModel, FragmentDeliverOrderBinding, OrderRepositoryImpl> {
     private final String TAG = getClass().getName();
     private Order mOrder;
     private boolean toggleItems = false;
@@ -57,6 +57,8 @@ public class DeliverOrderFragment extends BaseDialogFragment<OrderViewModel, Fra
         disableBackButton();
         mBinding.setLifecycleOwner(this);
         mOrder = new Gson().fromJson(getArguments().getString("order_json"), Order.class);
+        mOrderId = mOrder.getId(); //important
+        mUniqueOrderId = mOrder.getUniqueOrderId();//important
         mBinding.setOrder(mOrder);
         mBinding.btnAccept.setLocked(true);
         mBinding.setToggleItems(toggleItems);

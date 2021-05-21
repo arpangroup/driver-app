@@ -23,7 +23,7 @@ import com.pureeats.driverapp.viewmodels.OrderViewModel;
 import com.pureeats.driverapp.views.base.BaseDialogFragment;
 
 
-public class TripDetailsFragment extends BaseDialogFragment<OrderViewModel, FragmentTripDetailsBinding, OrderRepositoryImpl> {
+public class TripDetailsFragment extends AbstractOrderDialog<OrderViewModel, FragmentTripDetailsBinding, OrderRepositoryImpl> {
     private final String TAG = getClass().getName();
     private Order mOrder;
 
@@ -43,6 +43,8 @@ public class TripDetailsFragment extends BaseDialogFragment<OrderViewModel, Frag
         disableBackButton();
         mBinding.setLifecycleOwner(this);
         mOrder = new Gson().fromJson(getArguments().getString("order_json"), Order.class);
+        mOrderId = mOrder.getId(); //important
+        mUniqueOrderId = mOrder.getUniqueOrderId();//important
         mBinding.setOrder(mOrder);
         mBinding.toolbar.back.setOnClickListener(view -> dismissOrderDialog());
         mBinding.btnFinish.setOnClickListener(view -> dismissOrderDialog());

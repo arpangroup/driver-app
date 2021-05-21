@@ -39,7 +39,7 @@ import java.util.Date;
 import java.util.List;
 
 
-public class PickOrderFragment extends BaseDialogFragment<OrderViewModel, FragmentPickOrderBinding, OrderRepositoryImpl> {
+public class PickOrderFragment extends AbstractOrderDialog<OrderViewModel, FragmentPickOrderBinding, OrderRepositoryImpl> {
     private final String TAG = getClass().getName();
     private boolean toggleItems = false;
     private static final long ONE_SECOND = 1000;
@@ -71,6 +71,8 @@ public class PickOrderFragment extends BaseDialogFragment<OrderViewModel, Fragme
         disableBackButton();
         mBinding.setLifecycleOwner(this);
         mOrder = new Gson().fromJson(getArguments().getString("order_json"), Order.class);
+        mOrderId = mOrder.getId(); //important
+        mUniqueOrderId = mOrder.getUniqueOrderId();//important
         mBinding.setOrder(mOrder);
         mBinding.btnAccept.setLocked(true);
         mBinding.setToggleItems(toggleItems);

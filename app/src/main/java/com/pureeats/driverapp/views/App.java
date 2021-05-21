@@ -32,6 +32,7 @@ import com.pureeats.driverapp.views.order.DialogActivity;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class App extends Application {
     private final String TAG = "Application";
@@ -43,7 +44,7 @@ public class App extends Application {
     private int ORDER_ARRIVED_SOUND;
     private int ORDER_CANCELLED_SOUND;
     private int LOOP_INDEFINITE = -1; // -1: Infinite; 2: 2 times, 3: 3 times; 0: no loop
-    private static HashMap<Integer, Integer> orderIdStreamIdMap = new HashMap<>();// Usesd to stop the sound/sytream
+    private ConcurrentHashMap<Integer, Integer> orderIdStreamIdMap;// Usesd to stop the sound/sytream
 
     public static final String CHANNEL_ID_SYNC_ORDER = "sync order";
     public static final String CHANNEL_ID_NEW_ORDER = "channel_new_orders";
@@ -78,6 +79,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        if(orderIdStreamIdMap == null) orderIdStreamIdMap = new ConcurrentHashMap<>();
         userSession = new UserSession(this);
         if(userSession.getPushToken() == null) generatePushNotificationToken();
         else{
@@ -87,7 +89,6 @@ public class App extends Application {
         }
         createNotificationChannels();
         initSoundPools();
-        if(orderIdStreamIdMap == null) orderIdStreamIdMap = new HashMap<>();
     }
 
     public static synchronized App getInstance(){
@@ -217,7 +218,7 @@ public class App extends Application {
        try{
            //mSoundPool.autoPause();
            if(orderIdStreamIdMap.get(orderId) != null)mSoundPool.pause(orderIdStreamIdMap.getOrDefault(orderId, 0));//if same orderid is already playing
-           int streamId = mSoundPool.play(ORDER_ARRIVED_SOUND, 1f, 1f, 0, LOOP_INDEFINITE, 1);
+           int streamId = mSoundPool.play(ORDER_ARRIVED_SOUND, 0.11f, 0.1f, 0, LOOP_INDEFINITE, 1);
            System.out.println("######## PlayingOrderArrivedSoundInStreamId: " + streamId + ", OrderId: " + orderId);
            orderIdStreamIdMap.put(orderId, streamId);
        }catch (Throwable t){

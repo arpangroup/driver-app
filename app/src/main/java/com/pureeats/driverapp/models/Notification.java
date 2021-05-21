@@ -2,6 +2,7 @@ package com.pureeats.driverapp.models;
 
 import android.util.Log;
 
+import com.google.gson.annotations.SerializedName;
 import com.pureeats.driverapp.commons.Constants;
 import com.pureeats.driverapp.commons.NotificationType;
 import com.pureeats.driverapp.commons.OrderStatus;
@@ -23,6 +24,9 @@ public class Notification {
     private String clickAction;
     private OrderStatus orderStatus;
 
+
+    @SerializedName("user_id")
+    private int userId;
 
 
 
@@ -60,6 +64,12 @@ public class Notification {
                     orderStatus = OrderStatus.getStatus(Integer.parseInt(orderStatusStr));
                 }
                 notification.setOrderStatus(orderStatus);
+            }catch (Exception e){e.printStackTrace();}
+
+            // set userId:
+            try{
+                String userIdStr = data.get(Constants.STR_USER_ID);
+                if(userIdStr != null) notification.setUserId(Integer.parseInt(userIdStr));
             }catch (Exception e){e.printStackTrace();}
 
 

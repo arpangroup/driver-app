@@ -59,20 +59,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "onReceive........");
-            if(intent.getAction().equals(Actions.ORDER_TRANSFERRED.name())){
-                new android.app.AlertDialog.Builder(MainActivity.this)
-                        .setTitle(intent.getStringExtra("title"))
-                        .setMessage(intent.getStringExtra("message"))
-                        .setCancelable(false)
-                        .setPositiveButton("OK", null).show();
-            }
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,16 +80,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        IntentFilter intentFilter1 = new IntentFilter(Actions.ORDER_CANCELLED.name());
-        IntentFilter intentFilter2 = new IntentFilter(Actions.ORDER_TRANSFERRED.name());
-        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter1);
-        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mReceiver, intentFilter2);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(mReceiver);
     }
 
 

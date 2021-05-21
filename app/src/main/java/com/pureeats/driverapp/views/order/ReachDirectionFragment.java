@@ -55,7 +55,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class ReachDirectionFragment extends BaseDialogFragment<OrderViewModel, FragmentReachDirectionBinding, OrderRepositoryImpl> implements OnMapReadyCallback {
+public class ReachDirectionFragment extends AbstractOrderDialog<OrderViewModel, FragmentReachDirectionBinding, OrderRepositoryImpl> implements OnMapReadyCallback {
     private final String TAG = getClass().getName();
     private FusedLocationProviderClient mFusedLocationClient;
     private Order mOrder;
@@ -108,6 +108,8 @@ public class ReachDirectionFragment extends BaseDialogFragment<OrderViewModel, F
         super.onViewCreated(rootView, savedInstanceState);
         mBinding.setLifecycleOwner(this);
         mOrder = new Gson().fromJson(getArguments().getString("order_json"), Order.class);
+        mOrderId = mOrder.getId(); //important
+        mUniqueOrderId = mOrder.getUniqueOrderId();//important
         isOrderPicked = getArguments().getBoolean("is_order_picked");
         //isOrderPicked = mOrder.getOrderStatusId() > OrderStatus.DELIVERY_GUY_ASSIGNED.status();
         mBinding.setOrder(mOrder);
