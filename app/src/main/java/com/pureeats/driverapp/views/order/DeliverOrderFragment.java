@@ -47,7 +47,7 @@ public class DeliverOrderFragment extends AbstractOrderFragment<OrderViewModel, 
     @Override
     public void onViewCreated(@NonNull View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
-        disableBackButton();
+        //disableBackButton();
         mBinding.setLifecycleOwner(this);
         navController = Navigation.findNavController(rootView);
         mOrder = new Gson().fromJson(getArguments().getString("order_json"), Order.class);

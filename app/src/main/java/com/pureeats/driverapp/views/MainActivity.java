@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
@@ -44,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding mBinding;
     NavController navController;
     UserSession userSession;
+
+    private long backPressedTime;
+    Toast backToast;
 
     public static void start(Context context){
         Intent intent = new Intent(context, MainActivity.class);
@@ -219,6 +223,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if(backPressedTime + 2000 > System.currentTimeMillis()){
+            backToast.cancel();
+            super.onBackPressed();
+            return;
+        }else{
+            backToast = Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT);
+            backToast.show();
+        }
+        backPressedTime =  System.currentTimeMillis();
     }
 }

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,7 +36,16 @@ public abstract class AbstractOrderFragment<VM extends BaseViewModel, B extends 
     private AlertDialog alertDialog;
 
 
-
+    public void disableBackButton(){
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                // Handle the back button even
+                Log.d(TAG, "Back button clicks");
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+    }
 
 
     public void gotoNextActivity1(Order order){

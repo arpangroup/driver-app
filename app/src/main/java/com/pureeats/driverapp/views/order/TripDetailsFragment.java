@@ -35,7 +35,7 @@ public class TripDetailsFragment extends AbstractOrderFragment<OrderViewModel, F
     @Override
     public void onViewCreated(@NonNull View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
-        disableBackButton();
+        //disableBackButton();
         mBinding.setLifecycleOwner(this);
         mOrder = new Gson().fromJson(getArguments().getString("order_json"), Order.class);
         mOrderId = mOrder.getId(); //important

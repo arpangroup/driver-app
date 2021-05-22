@@ -236,7 +236,7 @@ public class App extends Application {
             mSoundPool.stop(streamId);
             CommonUtils.cancelNotification(getApplicationContext(), orderId);
         }catch (Throwable t){
-            t.printStackTrace();
+            //t.printStackTrace();
         }
     }
 

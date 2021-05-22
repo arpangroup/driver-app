@@ -23,9 +23,11 @@ import com.pureeats.driverapp.databinding.ActivityDialogBinding;
 import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.sharedprefs.UserSession;
 import com.pureeats.driverapp.utils.CommonUiUtils;
+import com.pureeats.driverapp.views.App;
 
 public class DialogActivity extends AbstractProcessOrderActivity {
     private final String TAG = getClass().getSimpleName();
+    private App app;
     private ActivityDialogBinding mBinding;
     private UserSession userSession;
     public static String INTENT_EXTRA_ORDER = "extra_order";
@@ -45,6 +47,7 @@ public class DialogActivity extends AbstractProcessOrderActivity {
         super.onCreate(savedInstanceState);
         mBinding = ActivityDialogBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
+        app = App.getInstance();
         navController = Navigation.findNavController(this, R.id.navHostFragmentProcessOrder); // important
         userSession = new UserSession(getApplicationContext());
         resolveDestination(getIntent());
@@ -62,12 +65,12 @@ public class DialogActivity extends AbstractProcessOrderActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        app.stopOrderArrivedRingTone(mOrderId);
     }
 
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
-        // skip......Disable the back button
-        return;
+        app.stopOrderArrivedRingTone(mOrderId);
+        finish();
     }
 }

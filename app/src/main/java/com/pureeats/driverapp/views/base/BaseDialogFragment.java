@@ -75,16 +75,7 @@ public abstract class BaseDialogFragment<VM extends BaseViewModel, B extends Vie
     public abstract B getBinding(LayoutInflater inflater, ViewGroup container);
     public abstract R getRepository();
 
-    public void disableBackButton(){
-        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
-            @Override
-            public void handleOnBackPressed() {
-                // Handle the back button even
-                Log.d(TAG, "Back button clicks");
-            }
-        };
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
-    }
+
 
     public void logout(){
 

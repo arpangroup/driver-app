@@ -27,7 +27,7 @@ public abstract class AbstractProcessOrderActivity extends AppCompatActivity {
     private static final String TAG = "ProcessOrderActivity";
     protected NavController navController;
     private String mUniqueOrderId;
-    private int mOrderId;
+    protected int mOrderId;
 
     private static final Class<?> TARGET_ACTIVITY = DialogActivity.class;
 
@@ -233,15 +233,7 @@ public abstract class AbstractProcessOrderActivity extends AppCompatActivity {
         Actions action = null;
         if(fragment != null){
             String fragmentName = getForegroundFragment().getClass().getName();
-            Log.d(TAG, "FRAGMENT_NAME: " + fragmentName);
-            String packageName = this.getPackageName();
-            Log.d(TAG, "PACKAGE_NAME: " + packageName);
-
-            Log.d(TAG, "ORDER_ARRIVE_FRAGMENT: " + Constants.ORDER_ARRIVE_FRAGMENT);
-            Log.d(TAG, "REACH_DIRECTION_FRAGMENT: " + Constants.REACH_DIRECTION_FRAGMENT);
-            Log.d(TAG, "PICK_ORDER_FRAGMENT: " + Constants.PICK_ORDER_FRAGMENT);
-            Log.d(TAG, "DELIVER_ORDER_FRAGMENT: " + Constants.DELIVER_ORDER_FRAGMENT);
-            Log.d(TAG, "TRIP_DETAILS_FRAGMENT: " + Constants.TRIP_DETAILS_FRAGMENT);
+            //Log.d(TAG, "FRAGMENT_NAME: " + fragmentName);
 
             if(Constants.ORDER_ARRIVE_FRAGMENT.equalsIgnoreCase(fragmentName)){
                 action = Actions.ORDER_ARRIVED;
