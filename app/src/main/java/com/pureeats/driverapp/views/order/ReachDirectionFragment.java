@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -48,14 +49,13 @@ import com.pureeats.driverapp.utils.CommonUiUtils;
 import com.pureeats.driverapp.utils.CommonUtils;
 import com.pureeats.driverapp.utils.MapUtils;
 import com.pureeats.driverapp.viewmodels.OrderViewModel;
-import com.pureeats.driverapp.views.base.BaseDialogFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 
-public class ReachDirectionFragment extends AbstractOrderDialog<OrderViewModel, FragmentReachDirectionBinding, OrderRepositoryImpl> implements OnMapReadyCallback {
+public class ReachDirectionFragment extends AbstractOrderFragment<OrderViewModel, FragmentReachDirectionBinding, OrderRepositoryImpl> implements OnMapReadyCallback {
     private final String TAG = getClass().getName();
     private FusedLocationProviderClient mFusedLocationClient;
     private Order mOrder;
@@ -107,10 +107,12 @@ public class ReachDirectionFragment extends AbstractOrderDialog<OrderViewModel, 
     public void onViewCreated(@NonNull View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
         mBinding.setLifecycleOwner(this);
+        navController = Navigation.findNavController(rootView);
         mOrder = new Gson().fromJson(getArguments().getString("order_json"), Order.class);
         mOrderId = mOrder.getId(); //important
         mUniqueOrderId = mOrder.getUniqueOrderId();//important
         isOrderPicked = getArguments().getBoolean("is_order_picked");
+        mBinding.setIsOrderPicked(isOrderPicked); //important
         //isOrderPicked = mOrder.getOrderStatusId() > OrderStatus.DELIVERY_GUY_ASSIGNED.status();
         mBinding.setOrder(mOrder);
         latLngRestaurant = CommonUtils.getRestaurantLocation(mOrder.getRestaurant());
@@ -145,7 +147,13 @@ public class ReachDirectionFragment extends AbstractOrderDialog<OrderViewModel, 
                 CommonUiUtils.showSnackBar(getView(), resource.message);
                 break;
             case SUCCESS:
-                gotoNextActivity(resource.data);
+                Order order = resource.data;
+                OrderStatus orderStatus = OrderStatus.getStatus(order.getOrderStatusId());
+                if(isOrderPicked){
+                    gotoNextFragment(R.id.action_reachDirectionFragment_to_deliverOrrderFragment, order);
+                }else{
+                    gotoNextFragment(R.id.action_reachDirectionFragment_to_pickOrderFragment, order);
+                }
                 break;
         }
     }

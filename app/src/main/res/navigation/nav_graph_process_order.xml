@@ -3,19 +3,82 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_process_order"
-    app:startDestination="@id/acceptOrderDialog">
-
+    app:startDestination="@id/loaderFragment">
 
     <fragment
-        android:id="@+id/acceptOrderDialog"
-        android:name="com.pureeats.driverapp.views.order.AcceptOrderDialog"
+        android:id="@+id/loaderFragment"
+        android:name="com.pureeats.driverapp.views.order.LoaderFragment"
+        tools:layout="@layout/fragment_loader"
+        android:label="" >
+        <action
+            android:id="@+id/action_loaderFragment_to_acceptOrderFragment"
+            app:destination="@id/acceptOrderFragment" />
+        <action
+            android:id="@+id/action_loaderFragment_to_reachDirectionFragment"
+            app:destination="@id/reachDirectionFragment" />
+        <action
+            android:id="@+id/action_loaderFragment_to_deliverOrrderFragment"
+            app:destination="@id/deliverOrrderFragment" />
+        <action
+            android:id="@+id/action_loaderFragment_to_pickOrderFragment"
+            app:destination="@id/pickOrderFragment" />
+        <!--        <argument-->
+<!--            android:name="order_id"-->
+<!--            app:argType="integer"-->
+<!--            android:defaultValue="0" />-->
+<!--        <argument-->
+<!--            android:name="unique_order_id"-->
+<!--            app:argType="string" />-->
+    </fragment>
+
+    <fragment
+        android:id="@+id/acceptOrderFragment"
+        android:name="com.pureeats.driverapp.views.order.AcceptOrderFragment"
+        tools:layout="@layout/fragment_accept_order"
         android:label="AcceptOrderDialog" >
         <action
-            android:id="@+id/action_acceptOrderDialog_to_reachDirectionFragment"
+            android:id="@+id/action_acceptOrderFragment_to_reachDirectionFragment"
             app:destination="@id/reachDirectionFragment" />
     </fragment>
     <fragment
         android:id="@+id/reachDirectionFragment"
         android:name="com.pureeats.driverapp.views.order.ReachDirectionFragment"
-        android:label="ReachDirectionFragment" />
+        tools:layout="@layout/fragment_reach_direction"
+        android:label="ReachDirectionFragment" >
+        <action
+            android:id="@+id/action_reachDirectionFragment_to_pickOrderFragment"
+            app:destination="@id/pickOrderFragment" />
+        <action
+            android:id="@+id/action_reachDirectionFragment_to_deliverOrrderFragment"
+            app:destination="@id/deliverOrrderFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pickOrderFragment"
+        android:name="com.pureeats.driverapp.views.order.PickOrderFragment"
+        tools:layout="@layout/fragment_pick_order"
+        android:label="Pick Order" >
+        <action
+            android:id="@+id/action_pickOrderFragment_to_reachDirectionFragment"
+            app:destination="@id/reachDirectionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/deliverOrrderFragment"
+        android:name="com.pureeats.driverapp.views.order.DeliverOrderFragment"
+        tools:layout="@layout/fragment_deliver_order"
+        android:label="Deliver Order" >
+        <action
+            android:id="@+id/action_deliverOrrderFragment_to_tripDetailsFragment"
+            app:destination="@id/tripDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/tripDetailsFragment"
+        android:name="com.pureeats.driverapp.views.order.TripDetailsFragment"
+        tools:layout="@layout/fragment_trip_details"
+        android:label="Trip Summary" >
+    </fragment>
+    <fragment
+        android:id="@+id/acceptedOrderListFragment"
+        android:name="com.pureeats.driverapp.views.fragments.AcceptedOrderListFragment"
+        tools:layout="@layout/fragment_accepted_order_list"
+        android:label="Accepted Orders" />
 </navigation>

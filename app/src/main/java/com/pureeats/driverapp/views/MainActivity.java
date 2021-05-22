@@ -5,16 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import android.app.ActivityManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,14 +23,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
-import com.google.gson.Gson;
 import com.pureeats.driverapp.R;
-import com.pureeats.driverapp.adapters.AcceptedOrderListAdapter;
 import com.pureeats.driverapp.commons.Actions;
 import com.pureeats.driverapp.commons.Constants;
-import com.pureeats.driverapp.commons.OrderStatus;
 import com.pureeats.driverapp.databinding.ActivityMainBinding;
-import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.models.User;
 import com.pureeats.driverapp.services.EndlessService;
 import com.pureeats.driverapp.sharedprefs.ServiceTracker;
@@ -43,7 +36,6 @@ import com.pureeats.driverapp.utils.CommonUtils;
 import com.pureeats.driverapp.utils.GpsUtils;
 import com.pureeats.driverapp.views.auth.AuthActivity;
 import com.pureeats.driverapp.views.fragments.AcceptedOrderListFragment;
-import com.pureeats.driverapp.views.order.AcceptOrderDialog;
 
 import static com.pureeats.driverapp.sharedprefs.ServiceTracker.getServiceState;
 

@@ -1,37 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".views.fragments.AcceptedOrderListFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <import type="android.view.View"/>
+        <import type="com.google.android.gms.common.util.CollectionUtils"/>
+        <variable
+            name="isLoading"
+            type="Boolean" />
+        <variable
+            name="orders"
+            type="java.util.List&lt;com.pureeats.driverapp.models.Order>" />
+    </data>
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
-        app:title="Accepted Orders"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/order_recycler"
-        android:layout_below="@+id/toolbar"
-        android:layout_marginTop="4dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_accepted_order"/>
-    <RelativeLayout
-        android:visibility="gone"
-        android:id="@+id/progressbar"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        tools:context=".views.fragments.AcceptedOrderListFragment">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
+            app:title="Accepted Orders" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:visibility="@{isLoading || CollectionUtils.isEmpty(orders) ? View.GONE : View.VISIBLE, default=`visible`}"
+            android:id="@+id/order_recycler"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_below="@+id/toolbar"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            tools:listitem="@layout/item_accepted_order" />
+
+
         <ProgressBar
+            android:visibility="@{isLoading ? View.VISIBLE : View.GONE}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"/>
-    </RelativeLayout>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-</RelativeLayout>
+        <LinearLayout
+            android:visibility="@{!isLoading &amp; CollectionUtils.isEmpty(orders) ? View.VISIBLE : View.GONE}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/img_no_order" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/sfpro_display_heavy"
+                android:text="No Orders found"
+                android:textAlignment="center" />
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

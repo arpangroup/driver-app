@@ -44,6 +44,11 @@ public class HomeFragment extends BaseDialogFragment<OrderViewModel, FragmentHom
         observeViewModel();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     private void observeViewModel(){
         viewModel.getDashboard().observe(mContext, resource -> {
             if(mBinding == null) return;

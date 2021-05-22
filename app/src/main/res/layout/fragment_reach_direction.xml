@@ -9,6 +9,10 @@
         <import type="android.view.View"/>
         <import type="com.pureeats.driverapp.utils.CommonUtils"/>
         <import type="com.pureeats.driverapp.commons.OrderStatus"/>
+
+        <variable
+            name="isOrderPicked"
+            type="Boolean" />
         <variable
             name="order"
             type="com.pureeats.driverapp.models.Order" />
@@ -24,7 +28,7 @@
 
         <include
             android:id="@+id/toolbar"
-            bind:title="@{order.orderStatusId > 3 ? `Reach Drop Location` : `Reach Pickup Locaton`}"
+            bind:title="@{isOrderPicked ? `Reach Drop Location` : `Reach Pickup Locaton`}"
             layout="@layout/toolbar_reach_restaurant" />
 
         <LinearLayout
@@ -104,7 +108,7 @@
                     android:orientation="vertical">
 
                     <androidx.cardview.widget.CardView
-                        android:visibility="@{order.orderStatusId !=  4 ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{isOrderPicked ? View.GONE : View.VISIBLE}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:elevation="0dp"
@@ -189,7 +193,7 @@
                     </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
-                        android:visibility="@{order.orderStatusId == 4 ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{isOrderPicked ? View.VISIBLE : View.GONE}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:elevation="0dp"
@@ -314,7 +318,7 @@
             app:slider_icon="@drawable/slidetoact_ic_arrow"
             app:slider_icon_color="@color/blue"
             app:border_radius="30dp"
-            app:text="@{order.orderStatusId >3  ? `Reached Drop Location` : `Reached Pickup Locaton`}"
+            app:text="@{isOrderPicked  ? `Reached Drop Location` : `Reached Pickup Locaton`}"
             app:text_style="bold"
             app:text_size="16sp"
             app:slider_height="60dp"

@@ -324,7 +324,7 @@
                             android:layout_marginBottom="16dp"
                             android:background="@drawable/rounded_green_button"
                             android:padding="16dp"
-                            android:text="Given item to Custome"
+                            android:text="Given item to Customer"
                             android:textColor="@color/white"
                             bind:layout_constraintBottom_toBottomOf="parent"
                             bind:layout_constraintEnd_toEndOf="parent"

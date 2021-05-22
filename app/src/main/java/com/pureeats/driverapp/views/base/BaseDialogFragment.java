@@ -17,21 +17,13 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewbinding.ViewBinding;
 
-import com.google.gson.Gson;
-import com.pureeats.driverapp.commons.OrderStatus;
-import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.network.datasource.RemoteDataSource;
 import com.pureeats.driverapp.repositories.BaseRepository;
 import com.pureeats.driverapp.sharedprefs.UserSession;
 import com.pureeats.driverapp.viewmodels.BaseViewModel;
 import com.pureeats.driverapp.viewmodels.ViewModelFactory;
 import com.pureeats.driverapp.views.App;
-import com.pureeats.driverapp.views.order.AcceptOrderDialog;
-import com.pureeats.driverapp.views.order.DeliverOrderFragment;
 import com.pureeats.driverapp.views.order.DialogActivity;
-import com.pureeats.driverapp.views.order.PickOrderFragment;
-import com.pureeats.driverapp.views.order.ReachDirectionFragment;
-import com.pureeats.driverapp.views.order.TripDetailsFragment;
 
 
 public abstract class BaseDialogFragment<VM extends BaseViewModel, B extends ViewBinding, R extends BaseRepository> extends DialogFragment {

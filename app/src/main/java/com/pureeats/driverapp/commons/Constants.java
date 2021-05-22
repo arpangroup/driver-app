@@ -1,6 +1,11 @@
 package com.pureeats.driverapp.commons;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.pureeats.driverapp.views.order.AcceptOrderFragment;
+import com.pureeats.driverapp.views.order.DeliverOrderFragment;
+import com.pureeats.driverapp.views.order.PickOrderFragment;
+import com.pureeats.driverapp.views.order.ReachDirectionFragment;
+import com.pureeats.driverapp.views.order.TripDetailsFragment;
 
 public class Constants {
     public static final String GOOGLE_MAP_AUTH_KEY = "AIzaSyCt_14My2CYghVw6eZFSYFlFPBOK29lkww";
@@ -23,8 +28,8 @@ public class Constants {
     private static LatLng DEFAULT_LOCATION_KOLKATA = new LatLng(22.5714427, 88.3428709);
     private static LatLng DEFAULT_LOCATION_WESTBENGAL = new LatLng(22.9868, 87.8550);
     public static LatLng DEFAULT_LOCATION = DEFAULT_LOCATION_WESTBENGAL;
-//    public static final String WEBSITE_URL = "https://admin.pureeatstest.xyz/";
-    public static final String WEBSITE_URL = "http://192.168.0.100:8000/";
+    public static final String WEBSITE_URL = "https://admin.pureeatstest.xyz/";
+//    public static final String WEBSITE_URL = "http://192.168.0.100:8000/";
 //    public static final String WEBSITE_URL = "https://admin.pureeats.in/";
     public static final String DELIVERY_IMAGE_URL = WEBSITE_URL + "assets/img/delivery/";
 
@@ -43,6 +48,16 @@ public class Constants {
     public static final String STR_NOTIFICATION_TYPE = "notification_type";
     public static final String STR_ORDER_STATUS_ID = "order_status_id";
     public static final String STR_USER_ID = "user_id";
+
+    public static final String STR_ORDER_JSON = "order_json";
+    public static final String STR_IS_ORDER_PICKED= "is_order_picked";
+
+
+    public static final String ORDER_ARRIVE_FRAGMENT = AcceptOrderFragment.class.getName();
+    public static final String REACH_DIRECTION_FRAGMENT = ReachDirectionFragment.class.getName();
+    public static final String PICK_ORDER_FRAGMENT = PickOrderFragment.class.getName();
+    public static final String DELIVER_ORDER_FRAGMENT = DeliverOrderFragment.class.getName();
+    public static final String TRIP_DETAILS_FRAGMENT = TripDetailsFragment.class.getName();
 
 
 

@@ -93,9 +93,12 @@ public class OrderSyncBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void sendOrderStatusChangedLocalBroadcast(Context context, Actions action, Intent intent, String title, String message){
+        Log.d(TAG, "sendOrderStatusChangedLocalBroadcast");
+        Log.d(TAG, "ACTION: "+ action.name());
         intent.setAction(action.name());
         intent.putExtra(Constants.STR_TITLE, title);
-        intent.putExtra(Constants.STR_NOTIFICATION_TYPE, message);
+        intent.putExtra(Constants.STR_MESSAGE, message);
+        Log.d(TAG, "SENDING LOCAL BROADCAST.....: ");
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 }

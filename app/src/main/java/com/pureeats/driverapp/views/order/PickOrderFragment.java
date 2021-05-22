@@ -1,7 +1,6 @@
 package com.pureeats.driverapp.views.order;
 
 import android.app.AlertDialog;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -10,15 +9,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.MutableLiveData;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.common.util.CollectionUtils;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.gson.Gson;
 import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.adapters.DishListAdapter;
@@ -32,14 +30,13 @@ import com.pureeats.driverapp.repositories.OrderRepositoryImpl;
 import com.pureeats.driverapp.utils.CommonUiUtils;
 import com.pureeats.driverapp.utils.CommonUtils;
 import com.pureeats.driverapp.viewmodels.OrderViewModel;
-import com.pureeats.driverapp.views.base.BaseDialogFragment;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 
-public class PickOrderFragment extends AbstractOrderDialog<OrderViewModel, FragmentPickOrderBinding, OrderRepositoryImpl> {
+public class PickOrderFragment extends AbstractOrderFragment<OrderViewModel, FragmentPickOrderBinding, OrderRepositoryImpl> {
     private final String TAG = getClass().getName();
     private boolean toggleItems = false;
     private static final long ONE_SECOND = 1000;
@@ -70,6 +67,7 @@ public class PickOrderFragment extends AbstractOrderDialog<OrderViewModel, Fragm
         super.onViewCreated(rootView, savedInstanceState);
         disableBackButton();
         mBinding.setLifecycleOwner(this);
+        navController = Navigation.findNavController(rootView);
         mOrder = new Gson().fromJson(getArguments().getString("order_json"), Order.class);
         mOrderId = mOrder.getId(); //important
         mUniqueOrderId = mOrder.getUniqueOrderId();//important
@@ -94,23 +92,37 @@ public class PickOrderFragment extends AbstractOrderDialog<OrderViewModel, Fragm
             }
         });
 
-        mBinding.btnClickPhoto.setOnClickListener(view -> new VerifyBillDialog.Builder(mContext)
-                .setPhotoClickListener((dialog, base64EnodedText) -> {
-                    billPhotos.add(base64EnodedText);
-                    System.out.println("################ HOME_FRAGMENT_BASE_64 ############################");
-                    System.out.println(base64EnodedText);
-                    System.out.println("#####################################################");
+        mBinding.btnClickPhoto.setOnClickListener(view ->{
+            if(!isReadyMarked){
+                new AlertDialog.Builder(mContext)
+                        .setTitle("Order is not ready yet")
+                        .setMessage("Please wait till the order ready")
+                        .show();
 
-                    if(billPhotos.size() == Constants.BILL_PHOTO_REQUIRED){
-                        mBinding.btnClickPhoto.setText("Confirm items to proceed");
-                        mBinding.radioConfirm.setEnabled(true);
-                        mBinding.btnClickPhoto.setEnabled(false);
-                    }else{
-                        int remaingPhoto = Constants.BILL_PHOTO_REQUIRED - billPhotos.size();
-                        mBinding.btnClickPhoto.setText("Click " + remaingPhoto + " more photos to proceed");
-                    }
-                })
-                .show());
+            }else{
+                new VerifyBillDialog.Builder(mContext)
+                        .setPhotoClickListener((dialog, base64EnodedText) -> {
+                            billPhotos.add(base64EnodedText);
+                            System.out.println("################ HOME_FRAGMENT_BASE_64 ############################");
+                            System.out.println(base64EnodedText);
+                            System.out.println("#####################################################");
+
+                            if(billPhotos.size() == Constants.BILL_PHOTO_REQUIRED){
+                                mBinding.btnClickPhoto.setText("Confirm items to proceed");
+                                mBinding.radioConfirm.setEnabled(true);
+                                mBinding.btnClickPhoto.setEnabled(false);
+                            }else{
+                                int remaingPhoto = Constants.BILL_PHOTO_REQUIRED - billPhotos.size();
+                                mBinding.btnClickPhoto.setText("Click " + remaingPhoto + " more photos to proceed");
+                            }
+                        })
+                        .show();
+            }
+        });
+
+
+
+
         handleStatus(mOrder);
     }
 
@@ -181,7 +193,7 @@ public class PickOrderFragment extends AbstractOrderDialog<OrderViewModel, Fragm
                     CommonUiUtils.showSnackBar(getView(), resource.message);
                     break;
                 case SUCCESS:
-                    gotoNextActivity(resource.data);
+                    gotoNextFragment(R.id.action_pickOrderFragment_to_reachDirectionFragment, resource.data);
                     break;
             }
         });

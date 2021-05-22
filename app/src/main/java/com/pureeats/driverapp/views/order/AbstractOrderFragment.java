@@ -3,78 +3,42 @@ package com.pureeats.driverapp.views.order;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.viewbinding.ViewBinding;
 
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.commons.Actions;
 import com.pureeats.driverapp.commons.Constants;
 import com.pureeats.driverapp.commons.OrderStatus;
 import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.repositories.BaseRepository;
-import com.pureeats.driverapp.utils.CommonUiUtils;
 import com.pureeats.driverapp.viewmodels.BaseViewModel;
-import com.pureeats.driverapp.viewmodels.OrderViewModel;
 import com.pureeats.driverapp.views.base.BaseDialogFragment;
 
-public abstract class AbstractOrderDialog<VM extends BaseViewModel, B extends ViewBinding, R extends BaseRepository > extends BaseDialogFragment<VM , B , R> {
+public abstract class AbstractOrderFragment<VM extends BaseViewModel, B extends ViewBinding, R extends BaseRepository > extends BaseDialogFragment<VM , B , R> {
     private final String TAG = "AbstractOrderDialog";
+    NavController navController;
     protected int mOrderId;
     protected String mUniqueOrderId;
     private AlertDialog alertDialog;
 
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "onReceive........");
-            Log.d(TAG, "mOrderID: " + mOrderId);
-            int orderId = intent.getIntExtra(Constants.STR_ORDER_ID, -1);
-            String uniqueOrderId = intent.getStringExtra(Constants.STR_UNIQUE_ORDER_ID);
-            String actionName = intent.getAction();
-            String title = intent.getStringExtra(Constants.STR_TITLE);
-            String message = intent.getStringExtra(Constants.STR_MESSAGE);
-            Log.d(TAG, "ORDER_ID: " + orderId + ", ACTION: "+ actionName +", UNIQUE_ORDER_ID: " + uniqueOrderId );
-            Actions action = Actions.getAction(actionName);
 
-            if(orderId != -1 && action != null && uniqueOrderId.equals(mUniqueOrderId) ){
-                switch (action){
-                    case ORDER_TRANSFERRED:
-                    case ORDER_CANCELLED:
-                    case DELIVERY_ASSIGNED:
-                        showAlert(title, message);
-                }
-            }
-        }
-    };
 
-    private void showAlert(String title, String message){
-        alertDialog = new android.app.AlertDialog.Builder(mContext)
-                .setTitle(title)
-                .setMessage(message)
-                .setCancelable(false)
-                .setPositiveButton("OK", (dialogInterface, i) -> {
-                    dismissOrderDialog();
-                })
-                .create();
-        alertDialog.show();
-    }
 
-    @Override
-    public void dismissOrderDialog() {
-        if (alertDialog != null){
-            alertDialog.hide();
-        }
-        super.dismissOrderDialog();
 
-    }
-
-    public void gotoNextActivity(Order order){
+    public void gotoNextActivity1(Order order){
         OrderStatus orderStatus = OrderStatus.getStatus(order.getOrderStatusId());
         mOrderId = order.getId();
         mUniqueOrderId = order.getUniqueOrderId();
@@ -82,14 +46,14 @@ public abstract class AbstractOrderDialog<VM extends BaseViewModel, B extends Vi
         switch (orderStatus){
             case ORDER_RECEIVED:
             case ORDER_READY:
-                AcceptOrderDialog.newInstance(order.getId(), order.getUniqueOrderId()).show(mContext.getSupportFragmentManager(), AcceptOrderDialog.class.getName());
+                AcceptOrderFragment.newInstance(order.getId(), order.getUniqueOrderId()).show(mContext.getSupportFragmentManager(), AcceptOrderFragment.class.getName());
                 //removeCurrentFragment(AcceptOrderDialog.class.getName());
                 break;
             case DELIVERY_GUY_ASSIGNED://On the way to pickup you order from restaurant
             case ORDER_READY_AND_DELIVERY_ASSIGNED://On the way to pickup you order from restaurant
                 ReachDirectionFragment.newInstance(order, false).show(mContext.getSupportFragmentManager(), ReachDirectionFragment.class.getName());
                 //removeCurrentFragment(ReachDirectionFragment.class.getName());
-                removeCurrentFragment(AcceptOrderDialog.class.getName());
+                removeCurrentFragment(AcceptOrderFragment.class.getName());
                 break;
             case ORDER_READY_AND_DELIVERY_REACHED_TO_PICKUP:
             case REACHED_PICKUP_LOCATION:
@@ -115,29 +79,17 @@ public abstract class AbstractOrderDialog<VM extends BaseViewModel, B extends Vi
         }
 
     }
+    public void gotoNextFragment(@IdRes int resId, Order order){
+        Log.d(TAG, "gotoNextFragment...");
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constants.STR_ORDER_ID, order.getId());
+        bundle.putString(Constants.STR_UNIQUE_ORDER_ID,  order.getUniqueOrderId());
+        bundle.putString(Constants.STR_ORDER_JSON, new Gson().toJson(order));
 
+        OrderStatus orderStatus = OrderStatus.getStatus(order.getOrderStatusId());
+        Log.d(TAG, "ORDER_STATUS: " + orderStatus.name());
+        if (orderStatus == OrderStatus.ON_THE_WAY) bundle.putBoolean(Constants.STR_IS_ORDER_PICKED, true);
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart......");
-        IntentFilter[] intentFilters = {
-                new IntentFilter(Actions.DELIVERY_ASSIGNED.name()),
-                new IntentFilter(Actions.ORDER_CANCELLED.name()),
-                new IntentFilter(Actions.ORDER_TRANSFERRED.name())
-        };
-
-        for (IntentFilter intentFilter : intentFilters) {
-            LocalBroadcastManager.getInstance(mContext).registerReceiver(mReceiver, intentFilter);
-        }
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop......");
-        LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mReceiver);
+        navController.navigate(resId, bundle);
     }
 }

@@ -13,38 +13,35 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.navigation.Navigation;
 
 import com.google.gson.Gson;
 import com.pureeats.driverapp.R;
-import com.pureeats.driverapp.commons.Actions;
 import com.pureeats.driverapp.commons.Constants;
-import com.pureeats.driverapp.commons.OrderStatus;
 import com.pureeats.driverapp.databinding.FragmentAcceptOrderBinding;
 import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.network.api.Api;
 import com.pureeats.driverapp.repositories.OrderRepositoryImpl;
 import com.pureeats.driverapp.viewmodels.OrderViewModel;
 import com.pureeats.driverapp.views.App;
-import com.pureeats.driverapp.views.base.BaseDialogFragment;
 
 import java.util.Locale;
-import java.util.Timer;
 
 
-public class AcceptOrderDialog extends AbstractOrderDialog<OrderViewModel, FragmentAcceptOrderBinding, OrderRepositoryImpl> {
+public class AcceptOrderFragment extends AbstractOrderFragment<OrderViewModel, FragmentAcceptOrderBinding, OrderRepositoryImpl> {
     private final String TAG = getClass().getName();
     private Order mOrder;
 
 
     private int mProgress = 0;
-    private static long ORDER_ACCEPT_TIME = 3 * 60 * 1000;
+    private static long ORDER_ACCEPT_TIME = 1 * 60 * 1000;
     private long mTimeLeftInMills = ORDER_ACCEPT_TIME;
     private boolean isMusicEnable = true;
     private MediaPlayer mMediaPlayer;
     private CountDownTimer countDownTimer;
 
-    public static AcceptOrderDialog newInstance(int orderId, String uniqueOrderId){
-        AcceptOrderDialog dialog = new AcceptOrderDialog();
+    public static AcceptOrderFragment newInstance(int orderId, String uniqueOrderId){
+        AcceptOrderFragment dialog = new AcceptOrderFragment();
         dialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogFragmentTheme);
         Bundle args = new Bundle();
         args.putInt(Constants.STR_ORDER_ID, orderId);
@@ -60,6 +57,7 @@ public class AcceptOrderDialog extends AbstractOrderDialog<OrderViewModel, Fragm
         super.onViewCreated(rootView, savedInstanceState);
         disableBackButton();
         app = App.getInstance();
+        navController = Navigation.findNavController(rootView);
         mBinding.setLifecycleOwner(this);
         mUniqueOrderId = getArguments().getString(Constants.STR_UNIQUE_ORDER_ID);
         mOrderId = getArguments().getInt(Constants.STR_ORDER_ID);
@@ -109,7 +107,9 @@ public class AcceptOrderDialog extends AbstractOrderDialog<OrderViewModel, Fragm
                     showAlert(resource.message);
                     break;
                 case SUCCESS:
-                    gotoNextActivity(resource.data);
+                    countDownTimer.cancel();
+                    countDownTimer = null;
+                    gotoNextFragment(R.id.action_acceptOrderFragment_to_reachDirectionFragment, order);
                     break;
             }
         });
@@ -166,6 +166,7 @@ public class AcceptOrderDialog extends AbstractOrderDialog<OrderViewModel, Fragm
                 if(mBinding != null)mBinding.progressBar.setProgress(100);
                 if(mBinding != null)mBinding.txtProgress.setText("00:00");
                 try{
+                    app.stopOrderArrivedRingTone(mOrderId);
                     requireActivity().finish();
                 }catch (Exception e){
                     e.printStackTrace();
@@ -210,6 +211,14 @@ public class AcceptOrderDialog extends AbstractOrderDialog<OrderViewModel, Fragm
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mTimeLeftInMills = 0;
+        if(countDownTimer != null) countDownTimer.cancel();
+        countDownTimer = null;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
         mTimeLeftInMills = 0;
         if(countDownTimer != null) countDownTimer.cancel();
         countDownTimer = null;

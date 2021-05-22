@@ -11,19 +11,14 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.gson.Gson;
 import com.pureeats.driverapp.R;
-import com.pureeats.driverapp.databinding.ActivityMainBinding;
 import com.pureeats.driverapp.databinding.FragmentTripDetailsBinding;
 import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.network.api.Api;
-import com.pureeats.driverapp.repositories.AuthRepositoryImpl;
-import com.pureeats.driverapp.repositories.BaseRepository;
 import com.pureeats.driverapp.repositories.OrderRepositoryImpl;
-import com.pureeats.driverapp.viewmodels.BaseViewModel;
 import com.pureeats.driverapp.viewmodels.OrderViewModel;
-import com.pureeats.driverapp.views.base.BaseDialogFragment;
 
 
-public class TripDetailsFragment extends AbstractOrderDialog<OrderViewModel, FragmentTripDetailsBinding, OrderRepositoryImpl> {
+public class TripDetailsFragment extends AbstractOrderFragment<OrderViewModel, FragmentTripDetailsBinding, OrderRepositoryImpl> {
     private final String TAG = getClass().getName();
     private Order mOrder;
 

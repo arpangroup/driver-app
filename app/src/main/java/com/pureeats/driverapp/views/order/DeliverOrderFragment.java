@@ -8,35 +8,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.MutableLiveData;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.common.util.CollectionUtils;
 import com.google.gson.Gson;
 import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.adapters.DishListAdapter;
-import com.pureeats.driverapp.commons.OrderStatus;
-import com.pureeats.driverapp.databinding.ActivityMainBinding;
 import com.pureeats.driverapp.databinding.FragmentDeliverOrderBinding;
 import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.network.api.Api;
-import com.pureeats.driverapp.repositories.AuthRepositoryImpl;
-import com.pureeats.driverapp.repositories.BaseRepository;
 import com.pureeats.driverapp.repositories.OrderRepositoryImpl;
 import com.pureeats.driverapp.utils.CommonUiUtils;
 import com.pureeats.driverapp.utils.CommonUtils;
-import com.pureeats.driverapp.viewmodels.BaseViewModel;
 import com.pureeats.driverapp.viewmodels.OrderViewModel;
-import com.pureeats.driverapp.views.base.BaseDialogFragment;
 
 import java.util.ArrayList;
 
 
-public class DeliverOrderFragment extends AbstractOrderDialog<OrderViewModel, FragmentDeliverOrderBinding, OrderRepositoryImpl> {
+public class DeliverOrderFragment extends AbstractOrderFragment<OrderViewModel, FragmentDeliverOrderBinding, OrderRepositoryImpl> {
     private final String TAG = getClass().getName();
     private Order mOrder;
     private boolean toggleItems = false;
@@ -56,6 +49,7 @@ public class DeliverOrderFragment extends AbstractOrderDialog<OrderViewModel, Fr
         super.onViewCreated(rootView, savedInstanceState);
         disableBackButton();
         mBinding.setLifecycleOwner(this);
+        navController = Navigation.findNavController(rootView);
         mOrder = new Gson().fromJson(getArguments().getString("order_json"), Order.class);
         mOrderId = mOrder.getId(); //important
         mUniqueOrderId = mOrder.getUniqueOrderId();//important
@@ -137,7 +131,7 @@ public class DeliverOrderFragment extends AbstractOrderDialog<OrderViewModel, Fr
                 case ERROR:
                     break;
                 case SUCCESS:
-                    gotoNextActivity(resource.data);
+                    gotoNextFragment(R.id.action_deliverOrrderFragment_to_tripDetailsFragment, order);
                     break;
             }
         });

@@ -14,7 +14,6 @@ import androidx.fragment.app.DialogFragment;
 import com.google.android.gms.common.util.CollectionUtils;
 import com.pureeats.driverapp.R;
 import com.pureeats.driverapp.adapters.AcceptedOrderListAdapter;
-import com.pureeats.driverapp.commons.OrderStatus;
 import com.pureeats.driverapp.databinding.FragmentAcceptedOrderListBinding;
 import com.pureeats.driverapp.models.Order;
 import com.pureeats.driverapp.models.response.DeliveryOrderResponse;
@@ -22,15 +21,15 @@ import com.pureeats.driverapp.network.api.Api;
 import com.pureeats.driverapp.repositories.OrderRepositoryImpl;
 import com.pureeats.driverapp.viewmodels.OrderViewModel;
 import com.pureeats.driverapp.views.base.BaseDialogFragment;
-import com.pureeats.driverapp.views.order.AbstractOrderDialog;
-import com.pureeats.driverapp.views.order.ReachDirectionFragment;
+import com.pureeats.driverapp.views.order.AbstractOrderFragment;
+import com.pureeats.driverapp.views.order.DialogActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 
-public class AcceptedOrderListFragment extends AbstractOrderDialog<OrderViewModel, FragmentAcceptedOrderListBinding, OrderRepositoryImpl> {
+public class AcceptedOrderListFragment extends BaseDialogFragment<OrderViewModel, FragmentAcceptedOrderListBinding, OrderRepositoryImpl> {
     private final String TAG = getClass().getName();
     private List<Order> acceptedOrders = new ArrayList<>();
     private AcceptedOrderListAdapter adapter;
@@ -59,6 +58,7 @@ public class AcceptedOrderListFragment extends AbstractOrderDialog<OrderViewMode
         //DialogActivity.start(mContext, order);
         // First check the order details, because in the mean time the status might changed in server side
         viewModel.getSingleDeliveryOrder(order.getUniqueOrderId()).observe(mContext, resource -> {
+            if(mBinding == null) return;
             switch (resource.status){
                 case LOADING:
                     progressDialog.show();
@@ -69,7 +69,10 @@ public class AcceptedOrderListFragment extends AbstractOrderDialog<OrderViewMode
                 case SUCCESS:
                     progressDialog.dismiss();
                     Order currentOrder = resource.data;
-                    if(!currentOrder.isAlreadyAccepted())gotoNextActivity(resource.data);
+                    if(!currentOrder.isAlreadyAccepted()){
+                        //gotoNextActivity(resource.data);
+                        DialogActivity.start(mContext, currentOrder);
+                    }
                     else new AlertDialog.Builder(mContext).setTitle("Order is already accepted").show();
                     break;
             }
@@ -88,16 +91,17 @@ public class AcceptedOrderListFragment extends AbstractOrderDialog<OrderViewMode
             if (mBinding == null) return;
             switch (resource.status){
                 case LOADING:
-                    mBinding.progressbar.setVisibility(View.VISIBLE);
+                    mBinding.setIsLoading(true);
                     break;
                 case ERROR:
-                    mBinding.progressbar.setVisibility(View.GONE);
+                    mBinding.setIsLoading(false);
                     break;
                 case SUCCESS:
-                    mBinding.progressbar.setVisibility(View.GONE);
+                    mBinding.setIsLoading(false);
                     DeliveryOrderResponse deliveryOrderResponse =  resource.data;
                     if(deliveryOrderResponse != null){
                         acceptedOrders = deliveryOrderResponse.getAcceptedOrders();
+                        mBinding.setOrders(acceptedOrders);
                         if (!CollectionUtils.isEmpty(deliveryOrderResponse.getPickedupOrders())) {
                             acceptedOrders.addAll(deliveryOrderResponse.getPickedupOrders());
                         }
