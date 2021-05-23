@@ -131,6 +131,7 @@ public class DeliverOrderFragment extends AbstractOrderFragment<OrderViewModel, 
                 case ERROR:
                     break;
                 case SUCCESS:
+                    earningSession.addCommission(Float.parseFloat(order.getCommission()));
                     gotoNextFragment(R.id.action_deliverOrrderFragment_to_tripDetailsFragment, order);
                     break;
             }

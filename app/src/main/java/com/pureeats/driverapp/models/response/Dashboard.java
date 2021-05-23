@@ -3,6 +3,7 @@ package com.pureeats.driverapp.models.response;
 import com.google.gson.annotations.SerializedName;
 import com.pureeats.driverapp.models.ChartData;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Data;
@@ -42,5 +43,5 @@ public class Dashboard {
     private double last_payment;
 
     @SerializedName("chartData")
-    private List<ChartData> chartData;
+    private List<ChartData> chartData= new ArrayList<>();
 }

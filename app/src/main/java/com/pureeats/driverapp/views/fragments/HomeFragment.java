@@ -2,6 +2,7 @@ package com.pureeats.driverapp.views.fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +10,10 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -37,11 +40,27 @@ public class HomeFragment extends BaseDialogFragment<OrderViewModel, FragmentHom
     private final String TAG = getClass().getName();
     private NavController navController;
 
+    private MutableLiveData<Dashboard> mutableDashboard = new MutableLiveData<>();
+
     @Override
     public void onViewCreated(@NonNull View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
         navController = Navigation.findNavController(rootView);
-        observeViewModel();
+        mutableDashboard.setValue(earningSession.getEarningDetails());
+        loadData();
+
+        mutableDashboard.observe(this, dashboard -> {
+            mBinding.setDashboard(dashboard);
+            setUpBarChart(dashboard.getChartData());
+        });
+
+        mBinding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadData();
+                new Handler().postDelayed(() -> {mBinding.swipeRefreshLayout.setRefreshing(false);}, 2000);
+            }
+        });
     }
 
     @Override
@@ -49,7 +68,7 @@ public class HomeFragment extends BaseDialogFragment<OrderViewModel, FragmentHom
         super.onResume();
     }
 
-    private void observeViewModel(){
+    private void loadData(){
         viewModel.getDashboard().observe(mContext, resource -> {
             if(mBinding == null) return;
            switch (resource.status){
@@ -61,8 +80,8 @@ public class HomeFragment extends BaseDialogFragment<OrderViewModel, FragmentHom
                    ApiResponse<Dashboard> apiResponse = resource.data;
                    if(apiResponse.isSuccess()){
                        Dashboard dashboard = apiResponse.getData();
-                        mBinding.setDashboard(dashboard);
-                        setUpBarChart(dashboard.getChartData());
+                       earningSession.setEarningDetails(dashboard);
+                       mutableDashboard.setValue(dashboard);
                    }else {
                        CommonUiUtils.showSnackBar(getView(), apiResponse.getMessage());
                    }

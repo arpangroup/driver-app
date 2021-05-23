@@ -30,6 +30,7 @@ import com.pureeats.driverapp.commons.Constants;
 import com.pureeats.driverapp.databinding.ActivityMainBinding;
 import com.pureeats.driverapp.models.User;
 import com.pureeats.driverapp.services.EndlessService;
+import com.pureeats.driverapp.sharedprefs.EarningSession;
 import com.pureeats.driverapp.sharedprefs.ServiceTracker;
 import com.pureeats.driverapp.sharedprefs.UserSession;
 import com.pureeats.driverapp.utils.CommonUiUtils;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding mBinding;
     NavController navController;
     UserSession userSession;
+    EarningSession earningSession;
 
     private long backPressedTime;
     Toast backToast;
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
         userSession = new UserSession(getApplicationContext());
+        earningSession = new EarningSession(getApplicationContext());
         Log.d(TAG, "PUSH_TOKEN: " + userSession.getPushToken());
         navController = Navigation.findNavController(this, R.id.navHostFragmentMain);
         NavigationUI.setupWithNavController(mBinding.navView, navController);
@@ -188,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
     private void logout(){
         actionOnService(Actions.STOP);
         userSession.clear();
+        earningSession.clear();
         AuthActivity.start(this);
         finishAffinity();
         finish();

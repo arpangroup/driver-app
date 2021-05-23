@@ -19,6 +19,7 @@ import androidx.viewbinding.ViewBinding;
 
 import com.pureeats.driverapp.network.datasource.RemoteDataSource;
 import com.pureeats.driverapp.repositories.BaseRepository;
+import com.pureeats.driverapp.sharedprefs.EarningSession;
 import com.pureeats.driverapp.sharedprefs.UserSession;
 import com.pureeats.driverapp.viewmodels.BaseViewModel;
 import com.pureeats.driverapp.viewmodels.ViewModelFactory;
@@ -30,6 +31,7 @@ public abstract class BaseDialogFragment<VM extends BaseViewModel, B extends Vie
     private static String TAG = "BaseDialogFragment";
     protected FragmentActivity mContext;
     protected UserSession userSession;
+    protected EarningSession earningSession;
     protected B mBinding;
     protected VM viewModel;
     protected RemoteDataSource remoteDataSource = new RemoteDataSource();
@@ -62,6 +64,7 @@ public abstract class BaseDialogFragment<VM extends BaseViewModel, B extends Vie
 
         mContext = requireActivity();
         userSession = new UserSession(mContext);
+        earningSession = new EarningSession(mContext);
         mBinding = getBinding(inflater, container);
         factory = new ViewModelFactory(getRepository());
         //viewModel = new ViewModelProvider(this, factory).get(getViewModel());

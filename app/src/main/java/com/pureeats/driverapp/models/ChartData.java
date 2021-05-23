@@ -6,4 +6,9 @@ import lombok.Data;
 public class ChartData {
     private String x;
     private float y;
+
+    public ChartData(String x, float y) {
+        this.x = x;
+        this.y = y;
+    }
 }
