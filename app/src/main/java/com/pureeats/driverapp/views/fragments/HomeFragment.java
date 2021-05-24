@@ -66,6 +66,8 @@ public class HomeFragment extends BaseDialogFragment<OrderViewModel, FragmentHom
     @Override
     public void onResume() {
         super.onResume();
+       mutableDashboard.setValue(earningSession.getEarningDetails());
+       loadData();
     }
 
     private void loadData(){

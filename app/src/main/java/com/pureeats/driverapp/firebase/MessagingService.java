@@ -15,6 +15,7 @@ import com.pureeats.driverapp.receivers.OrderSyncBroadcastReceiver;
 import com.pureeats.driverapp.services.EndlessService;
 import com.pureeats.driverapp.sharedprefs.ServiceTracker;
 import com.pureeats.driverapp.sharedprefs.UserSession;
+import com.pureeats.driverapp.utils.CommonUtils;
 import com.pureeats.driverapp.views.App;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -75,6 +76,8 @@ public class MessagingService extends FirebaseMessagingService {
                 if(isEndlessServiceRunning() && isValidUser){
                     sendBroadcast(OrderSyncBroadcastReceiver.getIntent(getApplicationContext(), notification));
                 }
+            case DEFAULT:
+                CommonUtils.displayNotification(this, notification.getTitle(), notification.getMessage());
             default:
                 break;
         }
